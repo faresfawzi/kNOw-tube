@@ -16,6 +16,7 @@ function App() {
   }, [])
 
   const [sizeControl, setSizeControl] = useState(0.3)
+  const [selectedIndex2, setSelectedIndex2] = useState<number | null>(null)
   const [selectedFeatureIndex, setSelectedFeatureIndex] = useState<number | null>(null)
   const [currentSmallWheelOffset, setCurrentSmallWheelOffset] = useState(0)
 
@@ -61,6 +62,7 @@ function App() {
           console.log('Button actions:', dataString)
           if (dataString === 'moveRight') {
             console.log('Moving card right')
+          }
         }
       }
 
