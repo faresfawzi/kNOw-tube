@@ -12,7 +12,7 @@ function Layout({ component1, component2, component3, component4 }: LayoutProps)
   // 0 = first panel maximum, others thin
   // 1 = last panel maximum, others thin
   // In between = middle panels expand/shrink smoothly
-  const [sizeControl, setSizeControl] = useState(0) // 0 to 1
+  const [sizeControl, setSizeControl] = useState(0.3) // 0 to 1
   
   // Ratio constant: controls the difference between biggest and smallest panels
   // Higher value = more difference (more sensitive)
