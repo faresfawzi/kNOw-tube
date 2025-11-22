@@ -6,3 +6,11 @@ You can run in dev, with: `docker compose up --build`
 If you install new dependencies, then need to rerun: 
 1. `docker compose down`
 2. `docker compose up --build`
+
+To use the extension in Chrome:
+1. Go to `chrome://extensions/`
+2. Enable "Developer mode" (top right)
+3. Click "Load unpacked"
+4. Select the `kNOwtube-chrome-plugin` folder
+5. The extension should now be loaded and ready to use!
+
