@@ -2,7 +2,9 @@ annotated-doc==0.0.4
 annotated-types==0.7.0
 anyio==4.11.0
 certifi==2025.11.12
+charset-normalizer==3.4.4
 click==8.3.1
+defusedxml==0.7.1
 dnspython==2.8.0
 email-validator==2.3.0
 fastapi==0.121.3
@@ -24,6 +26,7 @@ Pygments==2.19.2
 python-dotenv==1.2.1
 python-multipart==0.0.20
 PyYAML==6.0.3
+requests==2.32.5
 rich==14.2.0
 rich-toolkit==0.16.0
 rignore==0.7.6
@@ -39,3 +42,4 @@ uvicorn==0.38.0
 uvloop==0.22.1
 watchfiles==1.1.1
 websockets==15.0.1
+youtube-transcript-api==1.2.3
