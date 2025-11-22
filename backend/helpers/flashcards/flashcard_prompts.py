@@ -39,6 +39,7 @@ Requirements
 	•	Each flashcard must be concise, clear, and factually accurate.
 	•	The four flashcards must cover important and non-redundant aspects of the transcript.
 	•	You must output valid JSON only, with no extra text before or after.
+	•	When you want to quote something from the video, do not use quotation marks. 
 
 JSON Output Format
 

@@ -124,6 +124,9 @@ def generate_quiz_from_transcript(
             json_object = json_object[10:15]
         return random.sample(json_object, len(json_object))
     except json.JSONDecodeError as exc:
+        # Save quiz_text for debugging
+        with open("quiz_debug.txt", "w", encoding="utf-8") as debug_file:
+            debug_file.write(quiz_text)
         raise RuntimeError(
-            "Together response was not valid JSON. Inspect quiz_text for debugging."
+            "Together response was not valid JSON. Inspect quiz_text for debugging." + quiz_text
         ) from exc
