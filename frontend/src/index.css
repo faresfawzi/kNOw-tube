@@ -75,3 +75,17 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+.card {
+  container-type: inline-size;
+}
+
+@container (max-width: 200px) {
+  .title {
+    display: none;
+  }
+
+  .card-content {
+    display: none;
+  }
+} 

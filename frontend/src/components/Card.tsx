@@ -6,6 +6,7 @@ interface CardProps {
   onMouseLeave?: () => void
 }
 
+
 function Card({ 
   title = "Card Title", 
   content = "This is some dummy text content for the card. It demonstrates the liquid glass effect with a beautiful glassmorphism design.",
@@ -15,6 +16,7 @@ function Card({
 }: CardProps) {
   return (
     <div
+      className="card"
       style={{
         background: 'rgba(255, 255, 255, 0.1)',
         backdropFilter: 'blur(10px)',
@@ -65,10 +67,10 @@ function Card({
           }}
         />
       )}
-      <h3 style={{ margin: '0 0 12px 0', fontSize: '1.2em', fontWeight: 600 }}>
+      <h3 className="title" style={{ margin: '0 0 12px 0', fontSize: '1.2em', fontWeight: 600 }}>
         {title}
       </h3>
-      <p style={{ margin: 0, fontSize: '0.95em', lineHeight: '1.6', opacity: 0.9 }}>
+      <p className="card-content" style={{ margin: 0, fontSize: '0.95em', lineHeight: '1.6', opacity: 0.9 }}>
         {content}
       </p>
     </div>

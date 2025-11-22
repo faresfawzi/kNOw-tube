@@ -58,6 +58,8 @@ function App() {
           }
         } else { // button
           console.log('Button actions:', dataString)
+          if (dataString === 'moveRight') {
+            console.log('Moving card right')
         }
       }
 
@@ -124,7 +126,7 @@ function App() {
   return (
     <>
       <div>
-        <div>
+        {/* <div>
           <label>Card List 1</label>
           <div>
             <button onClick={() => handleIndexChange(selectedIndex1, setSelectedIndex1, cards.length - 1, 'up')}>
@@ -147,10 +149,10 @@ function App() {
             </button>
           </div>
           <span>{selectedIndex2 !== null ? selectedIndex2 : 'None'}</span>
-        </div>
+        </div> */}
       </div>
       <Layout
-        component1={<div>Component 1</div>}
+        component1={<div>Concept Graph</div>}
         component2={<Youtube url={url} />}
         component3={<CardList cards={cards} selectedIndex={selectedIndex1} setSelectedIndex={setSelectedIndex1} currentSmallWheelOffset={currentSmallWheelOffset} />}
         component4={<CardList cards={cards2} selectedIndex={selectedIndex2} setSelectedIndex={setSelectedIndex2} currentSmallWheelOffset={currentSmallWheelOffset} />}

@@ -24,7 +24,7 @@ function Layout({ component1, component2, component3, component4, sizeControl, s
     const mu4 = 1;
 
     // Shared standard deviation
-    const sigma = 0.2; // adjust as needed
+    const sigma = 0.15; // adjust as needed
     const twoSigma2 = 2 * sigma * sigma;
 
     const gaussian = (x: number, mu: number) =>
@@ -44,7 +44,7 @@ function Layout({ component1, component2, component3, component4, sizeControl, s
     const p4 = g4 / total;
 
     // Reserve space for all 4 panels
-    const minWidth = 10; // adjust as needed
+    const minWidth = 7; // adjust as needed
     const available = 100 - 4 * minWidth;
 
     const w1 = minWidth + available * p1;
