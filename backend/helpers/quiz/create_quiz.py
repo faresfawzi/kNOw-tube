@@ -13,7 +13,7 @@ from together import Together
 from .quiz_prompts import get_prompt_generate_quiz_questions
 from helpers.transcripts import get_transcript
 
-DEFAULT_MODEL = "openai/gpt-oss-120b"
+DEFAULT_MODEL = "moonshotai/Kimi-K2-Instruct-0905"
 
 
 def _collapse_transcript_text(

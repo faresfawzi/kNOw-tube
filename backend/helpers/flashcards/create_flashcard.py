@@ -12,7 +12,7 @@ from together import Together
 
 from .flashcard_prompts import get_prompt_generate_multitype_flashcards, get_prompt_generate_qa_flashcards
 from helpers.transcripts import get_transcript
-DEFAULT_MODEL = "openai/gpt-oss-120b"
+DEFAULT_MODEL = "moonshotai/Kimi-K2-Instruct-0905"
 
 
 
