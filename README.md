@@ -29,3 +29,6 @@ response = client.chat.completions.create(
     )
 ```
 
+# Logitech plugin
+1. Install Logitech Options+ from https://www.logitech.com/de-ch/software/logi-options-plus.html
+2. open ./logitech-plugin/ExamplePlugin/Example.lplug4  with LogiPluginService
