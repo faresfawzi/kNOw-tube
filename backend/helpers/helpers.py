@@ -24,7 +24,7 @@ def fetch_transcript(video_id: str, language_code: Optional[str] = None) -> "Fet
         ytt_api = YouTubeTranscriptApi()
         
         if language_code:
-            fetched_transcript = ytt_api.fetch(video_id, language_codes=[language_code])
+            fetched_transcript = ytt_api.fetch(video_id)
         else:
             fetched_transcript = ytt_api.fetch(video_id)
         

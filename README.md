@@ -13,4 +13,5 @@ To use the extension in Chrome:
 3. Click "Load unpacked"
 4. Select the `kNOwtube-chrome-plugin` folder
 5. The extension should now be loaded and ready to use!
+6. Use together client for the LLMs
 

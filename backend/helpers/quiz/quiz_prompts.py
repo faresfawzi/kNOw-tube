@@ -55,17 +55,16 @@ Below are the quiz questions and the student's wrong answers to base the flashca
 """
 
 def get_prompt_generate_quiz_questions(transcript_text: str, difficulty_level: str) -> str:
-    # difficulty_level_description = ""
-    # if difficulty_level == "easy":
-    #     difficulty_level_description = "easy; suitable for beginners with basic knowledge of the subject"
-    # elif difficulty_level == "medium":
-    #     difficulty_level_description = "medium; suitable for learners with some prior knowledge of the subject"
-    # elif difficulty_level == "hard":
-    #     difficulty_level_description = "hard; suitable for advanced learners with substantial knowledge of the subject"
-    # else:
-    #     difficulty_level_description = "of varying difficulty levels to challenge learners at all stages"
-    # return PROMPT_GENERATE_QUIZ_QUESTIONS.replace("DIFFICULTY_LEVEL_PLACEHOLDER", difficulty_level_description) + transcript_text
-    return PROMPT_GENERATE_QUIZ_QUESTIONS + transcript_text
+    difficulty_level_description = ""
+    if difficulty_level == "easy":
+        difficulty_level_description = "easy; suitable for beginners with basic knowledge of the subject"
+    elif difficulty_level == "medium":
+        difficulty_level_description = "medium; suitable for learners with some prior knowledge of the subject"
+    elif difficulty_level == "hard":
+        difficulty_level_description = "hard; suitable for advanced learners with substantial knowledge of the subject"
+    else:
+        difficulty_level_description = "of varying difficulty levels to challenge learners at all stages"
+    return PROMPT_GENERATE_QUIZ_QUESTIONS.replace("DIFFICULTY_LEVEL_PLACEHOLDER", difficulty_level_description) + transcript_text
 
 # Expects as input:
 # [
