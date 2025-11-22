@@ -1,8 +1,22 @@
+import os
+from pathlib import Path
+
+from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from together import Together
 from routes import transcript, quiz, graph
 
 app = FastAPI()
+
+load_dotenv(Path(__file__).resolve().parent / ".env")
+
+
+TOGETHER_API_KEY = os.getenv("TOGETHER_API_KEY")
+together_client = Together()
+
+
+app.state.together_client = together_client
 
 # --- CORS CONFIGURATION ---
 # This allows your React app to talk to this backend without "Blocked by CORS" errors
@@ -37,4 +51,3 @@ def get_data():
 app.include_router(transcript.router)
 app.include_router(quiz.router)
 app.include_router(graph.router)
-
