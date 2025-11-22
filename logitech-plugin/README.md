@@ -1,9 +1,10 @@
 We use the [Logi Actions SDK](https://logitech.github.io/actions-sdk-docs/)
 
+# Setup
 Install Logitech Options+ from https://www.logitech.com/de-ch/software/logi-options-plus.html (Wrong link in the SDK documentation)
 Install Loupedeck Software from https://loupedeck.com/downloads/
 
-For development:
+# Development
 Install the latest .NET 8 SDK:
 
 You can download it from https://dotnet.microsoft.com/download/dotnet/8.0
@@ -18,3 +19,10 @@ cd ~/Library/Application\ Support/Logi/LogiPluginService/
 mkdir Plugins
 
 In VS CODE install C# Dev Kit extension
+
+
+# Usage
+Install the plugin:
+```bash
+logiplugintool install ./Example.lplug4
+```
