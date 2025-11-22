@@ -6,6 +6,7 @@ interface CardProps {
   isHighlighted?: boolean
   onMouseEnter?: () => void
   onMouseLeave?: () => void
+  hideTitle?: boolean
 }
 
 function Card({
@@ -14,6 +15,7 @@ function Card({
   isHighlighted = false,
   onMouseEnter,
   onMouseLeave,
+  hideTitle = false,
 }: CardProps) {
   const contentStyles = {
     margin: 0,
@@ -80,8 +82,11 @@ function Card({
           }}
         />
       )}
-      {}
-      <h3 className="title" style={{ margin: '0 0 12px 0', fontSize: '1.2em', fontWeight: 600 }}>{title}</h3>
+      {!hideTitle && (
+        <h3 className="title" style={{ margin: '0 0 12px 0', fontSize: '1.2em', fontWeight: 600 }}>
+          {title}
+        </h3>
+      )}
       {body}
     </div>
   )

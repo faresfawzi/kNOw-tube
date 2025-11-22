@@ -5,6 +5,7 @@ export interface CardItem {
   title: string
   content: ReactNode
   forceHighlight?: boolean
+  hideTitle?: boolean
 }
 
 interface CardListProps {
@@ -71,6 +72,7 @@ function CardList({
             title={card.title}
             content={card.content}
             isHighlighted={Boolean(shouldHighlight)}
+            hideTitle={card.hideTitle}
             onMouseEnter={() => handleEnter(index)}
             onMouseLeave={handleLeave}
           />

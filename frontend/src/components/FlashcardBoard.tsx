@@ -66,12 +66,7 @@ export function FlashcardBoard({ videoUrl, moveCardRight, setMoveCardRight, setS
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [refreshIndex, setRefreshIndex] = useState(0)
-  const [currentCardView, setCurrentCardView] = useState(0)
-  useEffect(() => {
-    if (currentCardView >= multitypeFlashcards.length) {
-      setCurrentCardView(0)
-    }
-  }, [currentCardView, multitypeFlashcards.length])
+  const [cardViewSelections, setCardViewSelections] = useState<Record<number, number>>({})
 
   useEffect(() => {
     if (!videoId) {
@@ -170,6 +165,25 @@ export function FlashcardBoard({ videoUrl, moveCardRight, setMoveCardRight, setS
     color: 'rgba(255, 255, 255, 0.75)',
   }
 
+  useEffect(() => {
+    if (!multitypeFlashcards.length) {
+      setCardViewSelections({})
+      return
+    }
+    setCardViewSelections((prev) => {
+      let changed = false
+      const maxIndex = multitypeFlashcards.length - 1
+      const next: Record<number, number> = {}
+      Object.entries(prev).forEach(([slotIndex, value]) => {
+        const numSlot = Number(slotIndex)
+        const clamped = Math.min(Math.max(0, value), maxIndex)
+        next[numSlot] = clamped
+        if (clamped !== value) changed = true
+      })
+      return changed ? next : prev
+    })
+  }, [multitypeFlashcards.length])
+
   const multitypeCardItems: ListCardItem[] = multitypeFlashcards.map(formatMultiTypeCard)
   const qaCardItems: ListCardItem[] = qaFlashcards.map((card, index) => ({
     title: `Reinforcement Card ${index + 1}`,
@@ -225,72 +239,92 @@ export function FlashcardBoard({ videoUrl, moveCardRight, setMoveCardRight, setS
     content: 'There are no multitype flashcards to display at this time.',
   }
 
-  const selectedMultitypeCard = multitypeCardItems[currentCardView] ?? fallbackMultitypeCard
-  const multiTypeCardWithPicker: ListCardItem = {
-    ...selectedMultitypeCard,
-    title: selectedMultitypeCard.title,
-    content: (
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-        {multitypeFlashcards.length > 1 && (
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-            }}
-          >
-            {/* <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
-              <span style={{ fontWeight: 600, fontSize: '0.95rem', letterSpacing: '0.02em' }}>Card view</span>
-              <span style={{ opacity: 0.8, fontSize: '0.85rem' }}>Choose the flashcard style for this card</span>
-            </div> */}
-            <div>&nbsp;</div>
-            <div style={{ position: 'relative', minWidth: '220px' }}>
-              <select
-                value={currentCardView}
-                onChange={(e) => setCurrentCardView(Number(e.target.value))}
+  const multiTypeCardsWithPicker: ListCardItem[] = (multitypeFlashcards.length ? multitypeCardItems : [null]).map(
+    (_card, slotIndex) => {
+      const hasOptions = multitypeCardItems.length > 0
+      const defaultIndex = slotIndex < multitypeCardItems.length ? slotIndex : 0
+      const maxIndex = Math.max(0, multitypeCardItems.length - 1)
+      const selectedIndex = hasOptions
+        ? Math.min(Math.max(0, cardViewSelections[slotIndex] ?? defaultIndex), maxIndex)
+        : 0
+      const selectedMultitypeCard = hasOptions
+        ? multitypeCardItems[selectedIndex] ?? fallbackMultitypeCard
+        : fallbackMultitypeCard
+
+      return {
+        ...selectedMultitypeCard,
+        hideTitle: selectedMultitypeCard.hideTitle,
+        content: (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            {multitypeFlashcards.length > 1 && (
+              <div
                 style={{
-                  width: '100%',
-                  padding: '10px 14px',
-                  borderRadius: '10px',
-                  border: '1px solid rgba(255, 255, 255, 0.25)',
-                  background: 'rgba(15, 23, 42, 0.6)',
-                  color: '#fff',
-                  appearance: 'none' as const,
-                  WebkitAppearance: 'none',
-                  fontWeight: 600,
-                  boxShadow: '0 8px 25px rgba(99, 102, 241, 0.25)',
-                  backdropFilter: 'blur(8px)',
-                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  gap: '12px',
+                  padding: '10px 12px',
+                  borderRadius: '12px',
+                  background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(59, 130, 246, 0.12))',
+                  border: '1px solid rgba(255, 255, 255, 0.12)',
+                  boxShadow: '0 10px 30px rgba(0, 0, 0, 0.25)',
                 }}
               >
-                {multitypeOptions.map((option) => (
-                  <option key={option.value} value={option.value} style={{ color: '#000' }}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-              <span
-                aria-hidden
-                style={{
-                  position: 'absolute',
-                  right: '14px',
-                  top: '50%',
-                  transform: 'translateY(-50%)',
-                  pointerEvents: 'none',
-                  color: 'rgba(255, 255, 255, 0.8)',
-                  fontSize: '0.8rem',
-                }}
-              >
-                ▼
-              </span>
-            </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                  <span style={{ fontWeight: 600, fontSize: '0.95rem', letterSpacing: '0.02em' }}>Card view</span>
+                  <span style={{ opacity: 0.8, fontSize: '0.85rem' }}>Choose the flashcard style for this card</span>
+                </div>
+                <div style={{ position: 'relative', minWidth: '220px' }}>
+                  <select
+                    value={selectedIndex}
+                    onChange={(e) => setCardViewSelections((prev) => ({
+                      ...prev,
+                      [slotIndex]: Number(e.target.value),
+                    }))}
+                    style={{
+                      width: '100%',
+                      padding: '10px 14px',
+                      borderRadius: '10px',
+                      border: '1px solid rgba(255, 255, 255, 0.25)',
+                      background: 'rgba(15, 23, 42, 0.6)',
+                      color: '#fff',
+                      appearance: 'none' as const,
+                      WebkitAppearance: 'none',
+                      fontWeight: 600,
+                      boxShadow: '0 8px 25px rgba(99, 102, 241, 0.25)',
+                      backdropFilter: 'blur(8px)',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    {multitypeOptions.map((option) => (
+                      <option key={option.value} value={option.value} style={{ color: '#000' }}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+                  <span
+                    aria-hidden
+                    style={{
+                      position: 'absolute',
+                      right: '14px',
+                      top: '50%',
+                      transform: 'translateY(-50%)',
+                      pointerEvents: 'none',
+                      color: 'rgba(255, 255, 255, 0.8)',
+                      fontSize: '0.8rem',
+                    }}
+                  >
+                    ▼
+                  </span>
+                </div>
+              </div>
+            )}
+            {selectedMultitypeCard.content}
           </div>
-        )}
-        {selectedMultitypeCard.content}
-      </div>
-    ),
-  }
->>>>>>> 62876f3 (Change)
+        ),
+      }
+    },
+  )
 
   return (
     <div style={{ padding: '24px 5%' }}>
@@ -333,7 +367,7 @@ export function FlashcardBoard({ videoUrl, moveCardRight, setMoveCardRight, setS
       <section>
         {/* <h3 style={sectionTitleStyles}>Multitype Flashcards</h3> */}
         <CardList
-          cards={[multiTypeCardWithPicker]}
+          cards={multiTypeCardsWithPicker}
           emptyState={(
             <Card
               title="No flashcards yet"
@@ -488,6 +522,7 @@ function formatMultiTypeCard(card: MultiTypeFlashcard): ListCardItem {
     return {
       title: 'Multiple Choice Challenge',
       content,
+      hideTitle: true,
     }
   }
 
@@ -502,6 +537,7 @@ function formatMultiTypeCard(card: MultiTypeFlashcard): ListCardItem {
           )}
         </div>
       ),
+      hideTitle: true,
     }
   }
 
@@ -516,6 +552,7 @@ function formatMultiTypeCard(card: MultiTypeFlashcard): ListCardItem {
         )}
       </div>
     ),
+    hideTitle: true,
   }
 }
 
