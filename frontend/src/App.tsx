@@ -14,6 +14,10 @@ function App() {
     return `https://www.youtube.com/watch?v=${v}`
   }, [])
 
+  const [sizeControl, setSizeControl] = useState(0.3) // 0 to 1
+
+  const SENSITIVITY = 1000
+
   // WebSocket integration
   const [wsStatus, setWsStatus] = useState<string>('Disconnected')
   const [wsMessages, setWsMessages] = useState<string[]>([])
@@ -37,7 +41,9 @@ function App() {
 
         setWsMessages((prev: string[]) => [...prev, dataString])
         console.log('WebSocket message received:', dataString)
+        const parsed = parseInt(dataString, 10)
 
+        setSizeControl((prev: number) => Math.min(1, Math.max(0, prev + parsed / SENSITIVITY)))
       }
 
       ws.onclose = () => {
@@ -86,6 +92,7 @@ function App() {
       component2={<Youtube url={url} />}
       component3={<CardList cards={cards} />}
       component4={<CardList cards={cards2} />}
+      sizeControl={sizeControl}
     />
   )
 }
