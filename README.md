@@ -15,3 +15,17 @@ To use the extension in Chrome:
 5. The extension should now be loaded and ready to use!
 6. Use together client for the LLMs
 
+-- 
+## Example for together
+
+``` 
+response = client.chat.completions.create(
+        model=model,
+        messages=[
+            {"role": "user", "content": prompt},
+        ],
+        temperature=temperature,
+        # max_tokens=max_output_tokens,
+    )
+```
+
