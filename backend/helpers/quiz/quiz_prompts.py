@@ -7,6 +7,9 @@ You are an expert at creating educational content. Your task is to generate a se
 4. The questions should cover a range of topics discussed in the transcript to ensure a comprehensive understanding.
 5. Make the questions clear and concise, avoiding ambiguity.
 6. The first five questions should be of easy difficulty (suitable for beginners with basic knowledge of the subject), the next five should be of medium difficulty (suitable for learners with some prior knowledge of the subject), and the last five should be of hard difficulty (suitable for advanced learners with substantial knowledge of the subject). All should be answerable solely based on the transcript.
+7. Avoid using "all of the above" or "none of the above" as answer options.
+8. The correct answer should be random every time; i.e., do not always make "A" the correct answer.
+9. Don't mention the word "transcript" and use "video" or "video content" instead.
 
 You need to output the questions in the following JSON format:
 [

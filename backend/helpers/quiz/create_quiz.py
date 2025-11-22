@@ -5,6 +5,7 @@ Utilities for generating quizzes from video transcripts with Together's GPT-OSS 
 from __future__ import annotations
 
 import json
+import random
 from typing import Mapping, Sequence, Union
 
 from together import Together
@@ -107,13 +108,22 @@ def generate_quiz_from_transcript(
     )
 
     quiz_text = _response_text(response)
-    print("Generated Quiz Text:", quiz_text)
-    print("###################")
     if quiz_text.startswith("```json"):
         quiz_text = "\n".join(quiz_text.splitlines()[1:-1])
 
     try:
-        return json.loads(quiz_text)
+        json_object = json.loads(quiz_text)
+        if len(json_object) != 15:
+            raise RuntimeError(
+                f"Expected 15 quiz questions, but got {len(json_object)}. Inspect quiz_text for debugging."
+            )
+        if difficulty_level == "easy":
+            json_object = json_object[:5]
+        elif difficulty_level == "medium":
+            json_object = json_object[5:10]
+        elif difficulty_level == "hard":
+            json_object = json_object[10:15]
+        return random.sample(json_object, len(json_object))
     except json.JSONDecodeError as exc:
         raise RuntimeError(
             "Together response was not valid JSON. Inspect quiz_text for debugging."
