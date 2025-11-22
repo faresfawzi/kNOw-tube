@@ -67,6 +67,11 @@ export function FlashcardBoard({ videoUrl, moveCardRight, setMoveCardRight, setS
   const [error, setError] = useState<string | null>(null)
   const [refreshIndex, setRefreshIndex] = useState(0)
   const [currentCardView, setCurrentCardView] = useState(0)
+  useEffect(() => {
+    if (currentCardView >= multitypeFlashcards.length) {
+      setCurrentCardView(0)
+    }
+  }, [currentCardView, multitypeFlashcards.length])
 
   useEffect(() => {
     if (!videoId) {
@@ -191,6 +196,7 @@ export function FlashcardBoard({ videoUrl, moveCardRight, setMoveCardRight, setS
     )
   }
 
+<<<<<<< HEAD
   useEffect(() => {
     console.log("moveCardRight changed:", moveCardRight);
     console.log("Current qaFlashcards:", qaFlashcards);
@@ -201,6 +207,90 @@ export function FlashcardBoard({ videoUrl, moveCardRight, setMoveCardRight, setS
       // setMoveCardRight(false)
     }
   }, [moveCardRight, qaFlashcards, setMoveCardRight, setSendCardRight])
+=======
+  const mappingIndexToType: Record<number, string> = {
+    0: 'Knowledge Summary',
+    1: 'Multiple Choice Challenge',
+    2: 'Cloze Recall Card',
+    3: 'Q&A Flashcard',
+  }
+
+  const multitypeOptions = multitypeFlashcards.map((_, index) => ({
+    label: mappingIndexToType[index] || `Card ${index + 1}`,
+    value: index,
+  }))
+
+  const fallbackMultitypeCard: ListCardItem = {
+    title: 'No flashcards available',
+    content: 'There are no multitype flashcards to display at this time.',
+  }
+
+  const selectedMultitypeCard = multitypeCardItems[currentCardView] ?? fallbackMultitypeCard
+  const multiTypeCardWithPicker: ListCardItem = {
+    ...selectedMultitypeCard,
+    title: selectedMultitypeCard.title,
+    content: (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+        {multitypeFlashcards.length > 1 && (
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            }}
+          >
+            {/* <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+              <span style={{ fontWeight: 600, fontSize: '0.95rem', letterSpacing: '0.02em' }}>Card view</span>
+              <span style={{ opacity: 0.8, fontSize: '0.85rem' }}>Choose the flashcard style for this card</span>
+            </div> */}
+            <div>&nbsp;</div>
+            <div style={{ position: 'relative', minWidth: '220px' }}>
+              <select
+                value={currentCardView}
+                onChange={(e) => setCurrentCardView(Number(e.target.value))}
+                style={{
+                  width: '100%',
+                  padding: '10px 14px',
+                  borderRadius: '10px',
+                  border: '1px solid rgba(255, 255, 255, 0.25)',
+                  background: 'rgba(15, 23, 42, 0.6)',
+                  color: '#fff',
+                  appearance: 'none' as const,
+                  WebkitAppearance: 'none',
+                  fontWeight: 600,
+                  boxShadow: '0 8px 25px rgba(99, 102, 241, 0.25)',
+                  backdropFilter: 'blur(8px)',
+                  cursor: 'pointer',
+                }}
+              >
+                {multitypeOptions.map((option) => (
+                  <option key={option.value} value={option.value} style={{ color: '#000' }}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+              <span
+                aria-hidden
+                style={{
+                  position: 'absolute',
+                  right: '14px',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  pointerEvents: 'none',
+                  color: 'rgba(255, 255, 255, 0.8)',
+                  fontSize: '0.8rem',
+                }}
+              >
+                ▼
+              </span>
+            </div>
+          </div>
+        )}
+        {selectedMultitypeCard.content}
+      </div>
+    ),
+  }
+>>>>>>> 62876f3 (Change)
 
   return (
     <div style={{ padding: '24px 5%' }}>
@@ -208,7 +298,7 @@ export function FlashcardBoard({ videoUrl, moveCardRight, setMoveCardRight, setS
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', alignItems: 'center', justifyContent: 'space-between' }}>
         <div>
           <h2 style={{ margin: '0 0 4px 0' }}>Flashcard Workspace</h2>
-          <p style={{ margin: 0, opacity: 0.7 }}>Video ID: {videoId}</p>
+          {/* <p style={{ margin: 0, opacity: 0.7 }}>Video ID: {videoId}</p> */}
         </div>
         <button
           type="button"
@@ -240,37 +330,10 @@ export function FlashcardBoard({ videoUrl, moveCardRight, setMoveCardRight, setS
         />
       )}
 
-      {!isLoading && !error && multitypeFlashcards.length > 1 && (
-          <div style={{ marginBottom: '16px', display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-            {multitypeFlashcards.map((_, index) => (
-              <button
-                key={index}
-                type="button"
-                onClick={() => setCurrentCardView(index)}
-                style={{
-                  padding: '8px 12px',
-                  borderRadius: '6px',
-                  border: '1px solid rgba(255, 255, 255, 0.2)',
-                  background: currentCardView === index ? 'rgba(99, 102, 241, 0.8)' : 'transparent',
-                  color: '#fff',
-                  cursor: 'pointer',
-                  fontSize: '0.9rem',
-                  transition: 'background 0.2s ease',
-                }}
-              >
-                Card {index + 1}
-              </button>
-            ))}
-          </div>
-      )}
-
       <section>
-        <h3 style={sectionTitleStyles}>Multitype Flashcards</h3>
+        {/* <h3 style={sectionTitleStyles}>Multitype Flashcards</h3> */}
         <CardList
-          cards={[multitypeCardItems[currentCardView] ? multitypeCardItems[currentCardView] : {
-            title: 'No flashcards available',
-            content: 'There are no multitype flashcards to display at this time.',
-          }]}
+          cards={[multiTypeCardWithPicker]}
           emptyState={(
             <Card
               title="No flashcards yet"
@@ -281,7 +344,7 @@ export function FlashcardBoard({ videoUrl, moveCardRight, setMoveCardRight, setS
         />
       </section>
 
-      <section>
+      {/* <section>
         <h3 style={sectionTitleStyles}>Q&A Flashcards</h3>
         <CardList
           cards={qaCardItems}
@@ -293,7 +356,7 @@ export function FlashcardBoard({ videoUrl, moveCardRight, setMoveCardRight, setS
           )}
           containerStyle={{ padding: 0 }}
         />
-      </section>
+      </section> */}
     </div>
   )
 }

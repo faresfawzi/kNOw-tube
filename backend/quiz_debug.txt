@@ -1,148 +1,153 @@
 [
     {
-        "question": "What three functions does the iPhone combine according to the video?",
+        "question": "What year did Apple introduce the first iPod?",
         "options": {
-            "A": "Camera, music player, and GPS",
-            "B": "iPod, phone, and internet communicator",
-            "C": "Tablet, smartwatch, and e‑reader",
-            "D": "Gaming console, calculator, and radio"
+            "A": "2000",
+            "B": "2001",
+            "C": "2002",
+            "D": "2003"
         },
         "correct_answer": "B"
     },
     {
-        "question": "Which revolutionary Apple product was introduced in 1984?",
+        "question": "Which three products did Steve Jobs initially claim were being introduced before revealing they were one device?",
         "options": {
-            "A": "iPod",
-            "B": "Apple Watch",
-            "C": "Macintosh",
-            "D": "iPhone"
+            "A": "iPod, camera, internet Communicator",
+            "B": "iPod, phone, internet Communicator",
+            "C": "iPod, tablet, phone",
+            "D": "phone, camera, tablet"
+        },
+        "correct_answer": "B"
+    },
+    {
+        "question": "What did Apple call the new device that combined an iPod, a phone, and an internet Communicator?",
+        "options": {
+            "A": "iPod Phone",
+            "B": "Apple Phone",
+            "C": "iPhone",
+            "D": "SmartPod"
         },
         "correct_answer": "C"
     },
     {
-        "question": "What input method does the iPhone use instead of a stylus?",
+        "question": "What pointing device did Apple choose for the iPhone instead of a stylus?",
         "options": {
-            "A": "Voice commands",
-            "B": "Finger touch",
-            "C": "Eye tracking",
-            "D": "Physical joystick"
+            "A": "trackball",
+            "B": "trackpad",
+            "C": "mouse",
+            "D": "fingers"
+        },
+        "correct_answer": "D"
+    },
+    {
+        "question": "Which software does the iPhone run according to the video content?",
+        "options": {
+            "A": "iOS",
+            "B": "OS 10",
+            "C": "Windows Mobile",
+            "D": "Symbian"
         },
         "correct_answer": "B"
     },
     {
-        "question": "Which operating system does the iPhone run as mentioned in the video?",
+        "question": "What problem with existing smartphones did Apple aim to solve with the iPhone?",
         "options": {
-            "A": "Windows Mobile",
-            "B": "Android",
-            "C": "OS X",
-            "D": "Linux"
+            "A": "poor battery life",
+            "B": "lack of color screens",
+            "C": "fixed plastic buttons that can't change per app",
+            "D": "inability to send text messages"
         },
         "correct_answer": "C"
     },
     {
-        "question": "How does the iPhone sync media and data with a computer?",
+        "question": "What technology did Apple invent for the iPhone that allows multi-finger gestures and ignores unintended touches?",
         "options": {
-            "A": "Bluetooth transfer",
-            "B": "Wi‑Fi direct sync",
-            "C": "Through iTunes",
-            "D": "USB flash drive"
+            "A": "Force Touch",
+            "B": "multi-touch",
+            "C": "Capacitive Touch",
+            "D": "3D Touch"
+        },
+        "correct_answer": "B"
+    },
+    {
+        "question": "According to the video content, how far ahead is iPhone’s software compared to other phones?",
+        "options": {
+            "A": "2 years",
+            "B": "3 years",
+            "C": "5 years",
+            "D": "10 years"
         },
         "correct_answer": "C"
     },
     {
-        "question": "Which smartphones were listed as \"the usual suspects\" in the video?",
+        {
+        "question": "Which quote from Alan Kay is used to explain Apple’s approach to combining hardware and software?",
         "options": {
-            "A": "Samsung Galaxy, HTC One, LG Optimus, Sony Xperia",
-            "B": "Motorola Q, Blackberry, Palm Treo, Nokia e62",
-            "C": "Google Pixel, OnePlus, Xiaomi, Huawei",
-            "D": "Nokia 3310, Motorola Razr, Sony Walkman, Palm Pilot"
+            "A": "The best way to predict the future is to invent it",
+            "B": "People who are really serious about software should make their own hardware",
+            "C": "Simple can be harder than complex",
+            "D": "Innovation distinguishes between a leader and a follower"
         },
         "correct_answer": "B"
     },
     {
-        "question": "Before multi‑touch, which revolutionary user interface did Apple introduce after the mouse?",
+        "question": "Through which application does the iPhone sync media and data with a PC or Mac?",
         "options": {
-            "A": "Touch Bar",
-            "B": "Click wheel",
-            "C": "Force Touch",
-            "D": "Siri voice interface"
+            "A": "Finder",
+            "B": "iCloud",
+            "C": "iTunes",
+            "D": "Safari"
         },
-        "correct_answer": "B"
+        "correct_answer": "C"
     },
     {
-        "question": "Why are the fixed plastic keyboards on early smartphones considered problematic in the video?",
+        "question": "Which of these was NOT listed as a type of data that iTunes can sync to the iPhone?",
         "options": {
-            "A": "They consume too much battery power",
-            "B": "They cannot change to suit different applications",
-            "C": "They are too expensive to manufacture",
-            "D": "They interfere with Wi‑Fi signals"
+            "A": "bookmarks",
+            "B": "email account setup",
+            "C": "system preferences",
+            "D": "notes"
         },
-        "correct_answer": "B"
+        "correct_answer": "C"
     },
     {
-        "question": "What screen size does the video say the iPhone has?",
+        "question": "What screen size does the original iPhone have?",
         "options": {
-            "A": "2.8 inches",
+            "A": "3.0 inches",
             "B": "3.5 inches",
-            "C": "4.7 inches",
-            "D": "5.5 inches"
+            "C": "4.0 inches",
+            "D": "4.3 inches"
         },
         "correct_answer": "B"
     },
     {
-        "question": "Which quote is attributed to Alan Kay in the video?",
+        "question": "Which component of OS 10 is specifically mentioned as being built into the iPhone for graphics?",
         "options": {
-            "A": \"People who are really serious about software should make their own hardware\",\n            \"B\": \"Hardware is the foundation of all great software\",\n            \"C\": \"Software without hardware is just a dream\",\n            \"D\": \"The future belongs to those who code\"\n        },
-        "correct_answer": "A"
-    },
-    {
-        "question": "According to the video, how does multi‑touch handle unintended touches?",
-        "options": {
-            "A": "It magnifies them for clarity",
-            "B": "It registers them as double‑clicks",
-            "C": "It ignores them",
-            "D": "It converts them into voice commands"
+            "A": "Metal",
+            "B": "OpenGL",
+            "C": "Core Animation",
+            "D": "Quartz Extreme"
         },
         "correct_answer": "C"
     },
     {
-        "question": "Which four capabilities of OS X are highlighted as reasons for using it on the iPhone?",
+        "question": "What metaphor did Steve Jobs use to describe the iPhone’s position on a graph of smart versus easy to use?",
         "options": {
-            "A": "Multitasking, networking, power management, security",
-            "B": "Gaming, social media, AR, VR",
-            "C": "File compression, email, web browsing, printing",
-            "D": "Voice recognition, facial detection, GPS, NFC"
-        },
-        "correct_answer": "A"
-    },
-    {
-        "question": "What technology did Apple use 20 years ago to solve the problem of fixed buttons on devices?",
-        "options": {
-            "A": "Capacitive touch sensors",
-            "B": "Bitmap screen with a mouse",
-            "C": "Rotary dial interface",
-            "D": "Voice‑activated commands"
-        },
-        "correct_answer": "B"
-    },
-    {
-        "question": "How many iPods does the video say Apple shipped that year?",
-        "options": {
-            "A": "10 million",
-            "B": "50 million",
-            "C": "100 million",
-            "D": "200 million"
+            "A": "quantum leap",
+            "B": "paradigm shift",
+            "C": "leapfrog product",
+            "D": "disruptive innovation"
         },
         "correct_answer": "C"
     },
     {
-        "question": "What is the main advantage of using a bitmap screen and mouse over fixed buttons, as described in the video?",
+        "question": "Which of these smartphones was NOT shown among the usual suspects that Apple criticized for their user interfaces?",
         "options": {
-            "A": "It reduces the device’s weight dramatically",
-            "B": "It allows any user interface to be displayed and adapted per application",
-            "C": "It eliminates the need for a battery",
-            "D": "It makes the device waterproof"
+            "A": "Motorola Q",
+            "B": "BlackBerry",
+            "C": "Palm Treo",
+            "D": "HTC Dream"
         },
-        "correct_answer": "B"
+        "correct_answer": "D"
     }
 ]

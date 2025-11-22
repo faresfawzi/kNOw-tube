@@ -80,6 +80,7 @@ function Card({
           }}
         />
       )}
+      {}
       <h3 className="title" style={{ margin: '0 0 12px 0', fontSize: '1.2em', fontWeight: 600 }}>{title}</h3>
       {body}
     </div>
