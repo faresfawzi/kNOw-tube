@@ -6,9 +6,11 @@ interface LayoutProps {
   component3: ReactNode
   component4: ReactNode
   sizeControl: number
+  setSizeControl: React.Dispatch<React.SetStateAction<number>>
+  shouldSizeControlBeVisible?: boolean
 }
 
-function Layout({ component1, component2, component3, component4, sizeControl }: LayoutProps) {
+function Layout({ component1, component2, component3, component4, sizeControl, setSizeControl, shouldSizeControlBeVisible }: LayoutProps) {
   // Single control variable from 0 to 1
   // 0 = first panel maximum, others thin
   // 1 = last panel maximum, others thin
@@ -105,37 +107,40 @@ function Layout({ component1, component2, component3, component4, sizeControl }:
   return (
     <>
       {/* Temporary slider for sizeControl */}
-      <div style={{
-        position: 'fixed',
-        top: '20px',
-        left: '50%',
-        transform: 'translateX(-50%)',
-        zIndex: 1000,
-        background: 'rgba(255, 255, 255, 0.9)',
-        padding: '10px 20px',
-        borderRadius: '8px',
-        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.2)',
-        display: 'flex',
-        alignItems: 'center',
-        gap: '15px'
-      }}>
-        {/* {width1}<br /> {width2} <br /> {width3} <br /> {width4} */}
-        <label style={{ fontSize: '14px', fontWeight: 'bold' }}>
-          Size Control: {sizeControl.toFixed(2)}
-        </label>
-        <input
-          type="range"
-          min="0"
-          max="1"
-          step="0.01"
-          value={sizeControl}
-          onChange={(e) => setSizeControl(parseFloat(e.target.value))}
-          style={{
-            width: '300px',
-            cursor: 'pointer'
-          }}
-        />
-      </div>
+      {shouldSizeControlBeVisible && (
+        <div style={{
+          position: 'fixed',
+          top: '20px',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          zIndex: 1000,
+          background: 'rgba(255, 255, 255, 0.9)',
+          padding: '10px 20px',
+          borderRadius: '8px',
+          boxShadow: '0 2px 8px rgba(0, 0, 0, 0.2)',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '15px'
+        }}>
+          {/* {width1}<br /> {width2} <br /> {width3} <br /> {width4} */}
+          
+            <label style={{ fontSize: '14px', fontWeight: 'bold' }}>
+              Size Control: {sizeControl.toFixed(2)}
+            </label>
+            <input
+              type="range"
+              min="0"
+              max="1"
+              step="0.01"
+              value={sizeControl}
+              onChange={(e) => setSizeControl(parseFloat(e.target.value))}
+              style={{
+                width: '300px',
+                cursor: 'pointer'
+              }}
+            />
+        </div>
+      )}
       <div style={{
         display: 'flex',
         height: '100vh',

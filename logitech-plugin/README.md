@@ -6,7 +6,6 @@ Install Loupedeck Software from https://loupedeck.com/downloads/
 
 # Development
 Install the latest .NET 8 SDK:
-
 You can download it from https://dotnet.microsoft.com/download/dotnet/8.0
 dotnet tool install --global LogiPluginTool
 logiplugintool generate Example

@@ -4,15 +4,15 @@ namespace Loupedeck.ExamplePlugin
 
     // This class implements an example adjustment that counts the rotation ticks of a dial.
 
-    public class CounterAdjustment : PluginDynamicAdjustment
+    public class NormalScroll : PluginDynamicAdjustment
     {
         // This variable holds the current value of the counter.
         private Int32 _counter = 0;
 
         // Initializes the adjustment class.
         // When `hasReset` is set to true, a reset command is automatically created for this adjustment.
-        public CounterAdjustment()
-            : base(displayName: "Tick Counter kNOwTUBE", description: "Counts rotation ticks", groupName: "Adjustments", hasReset: true)
+        public NormalScroll()
+            : base(displayName: "Small wheel", description: "Counts rotation ticks", groupName: "Adjustments", hasReset: true)
         {
         }
 
@@ -21,7 +21,7 @@ namespace Loupedeck.ExamplePlugin
         {
             this._counter += diff; // Increase or decrease the counter by the number of ticks.
             this.AdjustmentValueChanged(); // Notify the plugin service that the adjustment value has changed.
-            WebSocketServerHost.Broadcast("bigWheel_" + diff.ToString());
+            WebSocketServerHost.Broadcast("smallWheel_" + diff.ToString());
 
             PluginLog.Info("Adjusted: " + diff);
         }

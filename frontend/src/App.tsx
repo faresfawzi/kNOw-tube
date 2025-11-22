@@ -17,6 +17,7 @@ function App() {
   const [sizeControl, setSizeControl] = useState(0.3) // 0 to 1
   const [selectedIndex1, setSelectedIndex1] = useState<number | null>(null)
   const [selectedIndex2, setSelectedIndex2] = useState<number | null>(null)
+  const [currentSmallWheelOffset, setCurrentSmallWheelOffset] = useState(0)
 
   const SENSITIVITY = 1000
 
@@ -43,9 +44,21 @@ function App() {
 
         setWsMessages((prev: string[]) => [...prev, dataString])
         console.log('WebSocket message received:', dataString)
-        const parsed = parseInt(dataString, 10)
-
-        setSizeControl((prev: number) => Math.min(1, Math.max(0, prev + parsed / SENSITIVITY)))
+        // Expecting messages like "smallWheel_1" or "bigWheel_-2"
+        const parts = dataString.split('_')
+        if (parts.length == 2) {
+          const wheelType = parts[0]
+          const valueString = parts[1]
+          const parsed = parseInt(valueString, 10)
+          if (wheelType === 'smallWheel') {
+            
+            setCurrentSmallWheelOffset(parsed)
+          } else if (wheelType === 'bigWheel') {
+            setSizeControl((prev: number) => Math.min(1, Math.max(0, prev + parsed / SENSITIVITY)))
+          }
+        } else { // button
+          console.log('Button actions:', dataString)
+        }
       }
 
       ws.onclose = () => {
@@ -137,11 +150,13 @@ function App() {
         </div>
       </div>
       <Layout
-        component1={<div>Component 1 - WS Status: {wsStatus}</div>}
+        component1={<div>Component 1</div>}
         component2={<Youtube url={url} />}
-        component3={<CardList cards={cards} selectedIndex={selectedIndex1} />}
-        component4={<CardList cards={cards2} selectedIndex={selectedIndex2} />}
+        component3={<CardList cards={cards} selectedIndex={selectedIndex1} setSelectedIndex={setSelectedIndex1} currentSmallWheelOffset={currentSmallWheelOffset} />}
+        component4={<CardList cards={cards2} selectedIndex={selectedIndex2} setSelectedIndex={setSelectedIndex2} currentSmallWheelOffset={currentSmallWheelOffset} />}
         sizeControl={sizeControl}
+        setSizeControl={setSizeControl}
+        shouldSizeControlBeVisible={false}
       />
     </>
   )
