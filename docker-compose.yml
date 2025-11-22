@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: know-tube-backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+      - /app/__pycache__
+      - /app/venv
+    environment:
+      - PYTHONUNBUFFERED=1
+    networks:
+      - know-tube-network
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: know-tube-frontend
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      - VITE_API_URL=http://backend:8000
+    networks:
+      - know-tube-network
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+networks:
+  know-tube-network:
+    driver: bridge
+

@@ -23,7 +23,7 @@ app.add_middleware(
 def read_root():
     return {"message": "Hello from FastAPI backend!"}
 
-@app.get("/api/data")
+@app.get("/data")
 def get_data():
     return {
         "users": [
