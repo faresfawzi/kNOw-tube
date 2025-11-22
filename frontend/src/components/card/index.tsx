@@ -131,24 +131,7 @@ function Card({
 
       {/* Representation Picker */}
       {hasRepresentations && representations.length > 1 && (
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            gap: '12px',
-            padding: '10px 12px',
-            borderRadius: '12px',
-            background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(59, 130, 246, 0.12))',
-            border: '1px solid rgba(255, 255, 255, 0.12)',
-            boxShadow: '0 10px 30px rgba(0, 0, 0, 0.25)',
-            marginBottom: '12px',
-          }}
-        >
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
-            <span style={{ fontWeight: 600, fontSize: '0.95rem', letterSpacing: '0.02em' }}>Card view</span>
-            <span style={{ opacity: 0.8, fontSize: '0.85rem' }}>Choose style</span>
-          </div>
+        <div style={{ position: 'absolute', top: '20px', right: '20px', zIndex: 10 }}>
           <div style={{ position: 'relative', minWidth: '180px' }}>
             <select
               value={selectedRepresentationIndex}
