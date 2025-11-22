@@ -27,12 +27,19 @@ function App() {
     { title: "Resources", content: "Access curated resources and materials to enhance your learning experience." },
   ]
 
+  const cards2 = [
+    { title: "Flashcards", content: "Create and review flashcards to reinforce your understanding of key concepts." },
+    { title: "Quizzes", content: "Test your knowledge with interactive quizzes based on the video content." },
+    { title: "Progress Tracker", content: "Monitor your learning progress and track your achievements over time." },
+    { title: "Community", content: "Connect with other learners and share insights about your learning journey." },
+  ]
+
   return (
     <Layout
       component1={<div>Component 1</div>}
       component2={<Youtube url={url} />}
       component3={<CardList cards={cards} />}
-      component4={<div>Component 4</div>}
+      component4={<CardList cards={cards2} />}
     />
   )
 }
