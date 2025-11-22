@@ -4,12 +4,14 @@ interface YoutubeProps {
   url?: string
   width?: string | number
   height?: string | number
+  active?: boolean
 }
 
 function Youtube({ 
   url = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
   width = '100%',
-  height = '100%'
+  height = '100%',
+  active = false
 }: YoutubeProps) {
   return (
     <div style={{ width, height }}>

@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from 'react'
+import React, { useState, type ReactNode } from 'react'
 
 interface LayoutProps {
   component1: ReactNode
@@ -69,7 +69,6 @@ function Layout({ component1, component2, component3, component4 }: LayoutProps)
     const prop1 = totalWeight > 0 ? weight1 / totalWeight : 0.25
     const prop2 = totalWeight > 0 ? weight2 / totalWeight : 0.25
     const prop3 = totalWeight > 0 ? weight3 / totalWeight : 0.25
-    const prop4 = totalWeight > 0 ? weight4 / totalWeight : 0.25 // Calc p4 for safety
     
     // FIX 2: Reserve space for ALL 4 panels
     const availableSpace = 100 - (minWidth * 4)
@@ -85,6 +84,22 @@ function Layout({ component1, component2, component3, component4 }: LayoutProps)
   }
   
   const { w1: width1, w2: width2, w3: width3, w4: width4 } = calculateWidths(sizeControl)
+
+  // Determine which component has the maximum width
+  const widths = [width1, width2, width3, width4]
+  const maxWidth = Math.max(...widths)
+  const active1 = width1 === maxWidth
+  const active2 = width2 === maxWidth
+  const active3 = width3 === maxWidth
+  const active4 = width4 === maxWidth
+
+  // Helper function to clone element and pass active prop
+  const cloneWithActive = (element: ReactNode, active: boolean): ReactNode => {
+    if (element && typeof element === 'object' && 'type' in element) {
+      return React.cloneElement(element as React.ReactElement<any>, { active })
+    }
+    return element
+  }
 
   return (
     <>
@@ -133,9 +148,11 @@ function Layout({ component1, component2, component3, component4 }: LayoutProps)
         flexGrow: 0,
         height: '100%',
         overflow: 'auto',
-        borderRight: '1px solid #ccc'
+        borderRight: active1 ? '3px solid rgba(147, 197, 253, 0.6)' : '1px solid #ccc',
+        boxShadow: active1 ? '2px 0 8px rgba(0, 0, 0, 0.15), -2px 0 8px rgba(0, 0, 0, 0.15)' : 'none',
+        transition: 'border-right 0.3s ease, box-shadow 0.3s ease'
       }}>
-        {component1}
+        {cloneWithActive(component1, active1)}
       </div>
       <div style={{
         flexBasis: `${width2}vw`,
@@ -143,9 +160,12 @@ function Layout({ component1, component2, component3, component4 }: LayoutProps)
         flexGrow: 0,
         height: '100%',
         overflow: 'auto',
-        borderRight: '1px solid #ccc'
+        borderLeft: active2 ? '3px solid rgba(147, 197, 253, 0.6)' : 'none',
+        borderRight: active2 ? '3px solid rgba(147, 197, 253, 0.6)' : '1px solid #ccc',
+        boxShadow: active2 ? '2px 0 8px rgba(0, 0, 0, 0.15), -2px 0 8px rgba(0, 0, 0, 0.15)' : 'none',
+        transition: 'border-left 0.3s ease, border-right 0.3s ease, box-shadow 0.3s ease'
       }}>
-        {component2}
+        {cloneWithActive(component2, active2)}
       </div>
       <div style={{
         flexBasis: `${width3}vw`,
@@ -153,18 +173,24 @@ function Layout({ component1, component2, component3, component4 }: LayoutProps)
         flexGrow: 0,
         height: '100%',
         overflow: 'auto',
-        borderRight: '1px solid #ccc'
+        borderLeft: active3 ? '3px solid rgba(147, 197, 253, 0.6)' : 'none',
+        borderRight: active3 ? '3px solid rgba(147, 197, 253, 0.6)' : '1px solid #ccc',
+        boxShadow: active3 ? '2px 0 8px rgba(0, 0, 0, 0.15), -2px 0 8px rgba(0, 0, 0, 0.15)' : 'none',
+        transition: 'border-left 0.3s ease, border-right 0.3s ease, box-shadow 0.3s ease'
       }}>
-        {component3}
+        {cloneWithActive(component3, active3)}
       </div>
       <div style={{
         flexBasis: `${width4}vw`,
         flexShrink: 0,
         flexGrow: 0,
         height: '100%',
-        overflow: 'auto'
+        overflow: 'auto',
+        borderLeft: active4 ? '3px solid rgba(147, 197, 253, 0.6)' : 'none',
+        boxShadow: active4 ? '-2px 0 8px rgba(0, 0, 0, 0.15)' : 'none',
+        transition: 'border-left 0.3s ease, box-shadow 0.3s ease'
       }}>
-        {component4}
+        {cloneWithActive(component4, active4)}
       </div>
     </div>
     </>
