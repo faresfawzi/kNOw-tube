@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 import Card from './Card'
 import CardList, { type CardItem as ListCardItem } from './CardList'
@@ -33,7 +33,7 @@ interface QuizQuestion {
   correct_answer?: string
 }
 
-interface QAFlashcard {
+export interface QAFlashcard {
   question: string
   answer: string
   explanation?: string
@@ -52,10 +52,13 @@ const MULTITYPE_CONTEXT_SECONDS = 45
 const YOUTUBE_ID_REGEX = /(?:v=|\/|embed\/|youtu\.be\/)([A-Za-z0-9_-]{6,})/i
 
 export interface FlashcardBoardProps {
-  videoUrl?: string
+  videoUrl?: string,
+  moveCardRight: boolean,
+  setMoveCardRight: React.Dispatch<React.SetStateAction<boolean>>,
+  setSendCardRight?: React.Dispatch<React.SetStateAction<QAFlashcard | null>>
 }
 
-export function FlashcardBoard({ videoUrl }: FlashcardBoardProps) {
+export function FlashcardBoard({ videoUrl, moveCardRight, setMoveCardRight, setSendCardRight }: FlashcardBoardProps) {
   const videoId = useMemo(() => extractVideoId(videoUrl), [videoUrl])
   const [multitypeFlashcards, setMultitypeFlashcards] = useState<MultiTypeFlashcard[]>([])
   const [qaFlashcards, setQaFlashcards] = useState<QAFlashcard[]>([])
@@ -186,8 +189,20 @@ export function FlashcardBoard({ videoUrl }: FlashcardBoardProps) {
     )
   }
 
+  useEffect(() => {
+    console.log("moveCardRight changed:", moveCardRight);
+    console.log("Current qaFlashcards:", qaFlashcards);
+    if (moveCardRight && qaFlashcards.length > 0) {
+      const selectedCard = qaFlashcards[0]
+      console.log('Preparing to send card right:', selectedCard)
+      // setSendCardRight && setSendCardRight(() => selectedCard)
+      // setMoveCardRight(false)
+    }
+  }, [moveCardRight, qaFlashcards, setMoveCardRight, setSendCardRight])
+
   return (
     <div style={{ padding: '24px 5%' }}>
+      {JSON.stringify(moveCardRight)}
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', alignItems: 'center', justifyContent: 'space-between' }}>
         <div>
           <h2 style={{ margin: '0 0 4px 0' }}>Flashcard Workspace</h2>
@@ -214,7 +229,7 @@ export function FlashcardBoard({ videoUrl }: FlashcardBoardProps) {
       </div>
 
       {error && !isLoading && <Card title="Unable to load flashcards" content={error} />}
-
+          
       {isLoading && (
         <Card
           title="Working on it"

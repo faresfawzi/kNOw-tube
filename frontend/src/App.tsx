@@ -1,8 +1,10 @@
-import { useMemo, useEffect, useRef, useState } from 'react'
+import { useMemo, useEffect, useRef, useState, use } from 'react'
 import Layout from './components/Layout'
 import Youtube from './components/Youtube'
 import CardList from './components/CardList'
+
 import { FlashcardBoard } from './components/FlashcardBoard'
+import type { QAFlashcard } from './components/FlashcardBoard';
 
 function App() {
   // Extract 'v' parameter from URL query string
@@ -19,6 +21,8 @@ function App() {
   const [selectedIndex2, setSelectedIndex2] = useState<number | null>(null)
   const [selectedFeatureIndex, setSelectedFeatureIndex] = useState<number | null>(null)
   const [currentSmallWheelOffset, setCurrentSmallWheelOffset] = useState(0)
+  const [moveCardRight, setMoveCardRight] = useState(false)
+  const [sendCardRight, setSendCardRight] = useState<QAFlashcard| null>(null)
 
   const SENSITIVITY = 1000
 
@@ -61,7 +65,8 @@ function App() {
         } else {
           console.log('Button actions:', dataString)
           if (dataString === 'moveRight') {
-            console.log('Moving card right')
+            console.log('Moving card right pressed')
+            setMoveCardRight(true)
           }
         }
       }
@@ -86,6 +91,12 @@ function App() {
     { title: 'Progress Tracker', content: 'Monitor your learning progress and track your achievements over time.' },
     { title: 'Community', content: 'Connect with other learners and share insights about your learning journey.' },
   ]
+
+  useEffect(() => {
+    if (sendCardRight) {
+      console.log('Sending card right:', sendCardRight)
+    }
+  }, [sendCardRight])
 
   return (
     <>
@@ -118,7 +129,7 @@ function App() {
       <Layout
         component1={<div>Concept Graph</div>}
         component2={<Youtube url={url} />}
-        component3={<FlashcardBoard videoUrl={url} />}
+        component3={<FlashcardBoard videoUrl={url} moveCardRight={moveCardRight} setMoveCardRight={setMoveCardRight} setSendCardRight={setSendCardRight} />}
         component4={<CardList cards={cards2} selectedIndex={selectedIndex2} setSelectedIndex={setSelectedIndex2} currentSmallWheelOffset={currentSmallWheelOffset} />}
         sizeControl={sizeControl}
         setSizeControl={setSizeControl}
