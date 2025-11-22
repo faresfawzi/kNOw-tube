@@ -29,6 +29,7 @@ Below is the transcript text to base the questions on:
 
 """
 
+
 PROMPT_GENERATE_QA_FLASHCARDS = """
 You are an expert at creating educational content. Your task is to generate a set of flashcards based on the quiz questions that the student has answered wrongly. Each flashcard should help the student understand and remember the correct information. Please follow these guidelines:
 
