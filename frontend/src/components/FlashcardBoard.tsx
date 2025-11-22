@@ -6,6 +6,7 @@ import CardList, { type CardItem as ListCardItem } from './CardList'
 type MultiTypeFlashcard =
   | {
       card_type: 'knowledge'
+      title: string
       knowledge_summary: string
     }
   | {
@@ -65,6 +66,7 @@ export function FlashcardBoard({ videoUrl, moveCardRight, setMoveCardRight, setS
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [refreshIndex, setRefreshIndex] = useState(0)
+  const [currentCardView, setCurrentCardView] = useState(0)
 
   useEffect(() => {
     if (!videoId) {
@@ -238,10 +240,37 @@ export function FlashcardBoard({ videoUrl, moveCardRight, setMoveCardRight, setS
         />
       )}
 
+      {!isLoading && !error && multitypeFlashcards.length > 1 && (
+          <div style={{ marginBottom: '16px', display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+            {multitypeFlashcards.map((_, index) => (
+              <button
+                key={index}
+                type="button"
+                onClick={() => setCurrentCardView(index)}
+                style={{
+                  padding: '8px 12px',
+                  borderRadius: '6px',
+                  border: '1px solid rgba(255, 255, 255, 0.2)',
+                  background: currentCardView === index ? 'rgba(99, 102, 241, 0.8)' : 'transparent',
+                  color: '#fff',
+                  cursor: 'pointer',
+                  fontSize: '0.9rem',
+                  transition: 'background 0.2s ease',
+                }}
+              >
+                Card {index + 1}
+              </button>
+            ))}
+          </div>
+      )}
+
       <section>
         <h3 style={sectionTitleStyles}>Multitype Flashcards</h3>
         <CardList
-          cards={multitypeCardItems}
+          cards={[multitypeCardItems[currentCardView] ? multitypeCardItems[currentCardView] : {
+            title: 'No flashcards available',
+            content: 'There are no multitype flashcards to display at this time.',
+          }]}
           emptyState={(
             <Card
               title="No flashcards yet"
@@ -358,7 +387,7 @@ function buildWrongAnswerPayload(question: QuizQuestion): WrongAnswerPayload | n
 function formatMultiTypeCard(card: MultiTypeFlashcard): ListCardItem {
   if (card.card_type === 'knowledge') {
     return {
-      title: 'Knowledge Summary',
+      title: card.title,
       content: card.knowledge_summary,
       forceHighlight: true,
     }

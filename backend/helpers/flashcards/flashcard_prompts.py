@@ -51,6 +51,7 @@ Each flashcard is an object with a card_type field and type-specific fields as f
   "flashcards": [
     {
       "card_type": "knowledge",
+      "title": "string – concise title of the knowledge point.",
       "knowledge_summary": "string – brief summary of the key concepts from the transcript."
     },
     {

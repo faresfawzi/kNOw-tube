@@ -133,7 +133,7 @@ function App() {
         component4={<CardList cards={cards2} selectedIndex={selectedIndex2} setSelectedIndex={setSelectedIndex2} currentSmallWheelOffset={currentSmallWheelOffset} />}
         sizeControl={sizeControl}
         setSizeControl={setSizeControl}
-        shouldSizeControlBeVisible={false}
+        shouldSizeControlBeVisible={true}
       />
     </>
   )
