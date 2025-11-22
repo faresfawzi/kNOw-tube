@@ -65,7 +65,8 @@ def get_prompt_generate_quiz_questions(transcript_text: str, difficulty_level: s
         difficulty_level_description = "hard; suitable for advanced learners with substantial knowledge of the subject"
     else:
         difficulty_level_description = "of varying difficulty levels to challenge learners at all stages"
-    return PROMPT_GENERATE_QUIZ_QUESTIONS.replace("DIFFICULTY_LEVEL_PLACEHOLDER", difficulty_level_description) + transcript_text
+    return PROMPT_GENERATE_QUIZ_QUESTIONS + transcript_text
+    # return PROMPT_GENERATE_QUIZ_QUESTIONS.replace("DIFFICULTY_LEVEL_PLACEHOLDER", difficulty_level_description) + transcript_text
 
 # Expects as input:
 # [
