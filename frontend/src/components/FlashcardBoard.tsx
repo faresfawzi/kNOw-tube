@@ -29,6 +29,7 @@ export function FlashcardBoard({ videoUrl, moveCardRight, setMoveCardRight, setS
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [refreshIndex, setRefreshIndex] = useState(0)
+  const [isDeckPopoverOpen, setIsDeckPopoverOpen] = useState(false)
 
   useEffect(() => {
     if (!videoId) {
@@ -161,30 +162,49 @@ export function FlashcardBoard({ videoUrl, moveCardRight, setMoveCardRight, setS
 
   return (
     <div style={{ padding: '24px 5%' }}>
-      {JSON.stringify(moveCardRight)}
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', alignItems: 'center', justifyContent: 'space-between' }}>
         <div>
           <h2 style={{ margin: '0 0 4px 0' }}>Flashcard Workspace</h2>
           {/* <p style={{ margin: 0, opacity: 0.7 }}>Video ID: {videoId}</p> */}
         </div>
-        <button
-          type="button"
-          onClick={refreshFlashcards}
-          disabled={isLoading}
-          style={{
-            padding: '10px 16px',
-            borderRadius: '999px',
-            border: 'none',
-            cursor: isLoading ? 'not-allowed' : 'pointer',
-            background: 'linear-gradient(90deg, #6366f1, #8b5cf6)',
-            color: '#fff',
-            fontWeight: 600,
-            opacity: isLoading ? 0.7 : 1,
-            transition: 'opacity 0.2s ease',
-          }}
-        >
-          {isLoading ? 'Generating flashcards...' : 'Regenerate flashcards'}
-        </button>
+        <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+          <button
+            type="button"
+            onClick={() => setIsDeckPopoverOpen(true)}
+            disabled={isLoading || multitypeFlashcards.length === 0}
+            style={{
+              padding: '10px 16px',
+              borderRadius: '999px',
+              border: 'none',
+              cursor: isLoading || multitypeFlashcards.length === 0 ? 'not-allowed' : 'pointer',
+              background: 'linear-gradient(90deg, #8b5cf6, #a78bfa)',
+              color: '#fff',
+              fontWeight: 600,
+              opacity: isLoading || multitypeFlashcards.length === 0 ? 0.5 : 1,
+              transition: 'opacity 0.2s ease',
+            }}
+          >
+            View Quiz
+          </button>
+          <button
+            type="button"
+            onClick={refreshFlashcards}
+            disabled={isLoading}
+            style={{
+              padding: '10px 16px',
+              borderRadius: '999px',
+              border: 'none',
+              cursor: isLoading ? 'not-allowed' : 'pointer',
+              background: 'linear-gradient(90deg, #6366f1, #8b5cf6)',
+              color: '#fff',
+              fontWeight: 600,
+              opacity: isLoading ? 0.7 : 1,
+              transition: 'opacity 0.2s ease',
+            }}
+          >
+            {isLoading ? 'Generating flashcards...' : 'Regenerate flashcards'}
+          </button>
+        </div>
       </div>
 
       {error && !isLoading && <Card title="Unable to load flashcards" content={error} />}
@@ -224,6 +244,81 @@ export function FlashcardBoard({ videoUrl, moveCardRight, setMoveCardRight, setS
           containerStyle={{ padding: 0 }}
         />
       </section> */}
+
+      {/* Deck Popover */}
+      {isDeckPopoverOpen && (
+        <div
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0, 0, 0, 0.7)',
+            backdropFilter: 'blur(4px)',
+            zIndex: 1000,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '40px',
+          }}
+          onClick={() => setIsDeckPopoverOpen(false)}
+        >
+          <div
+            style={{
+              backgroundColor: 'rgba(15, 23, 42, 0.95)',
+              backdropFilter: 'blur(20px)',
+              borderRadius: '24px',
+              border: '1px solid rgba(255, 255, 255, 0.2)',
+              width: '90%',
+              maxWidth: '1200px',
+              maxHeight: '90vh',
+              overflow: 'auto',
+              position: 'relative',
+              padding: '32px',
+              boxShadow: '0 20px 60px rgba(0, 0, 0, 0.5)',
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+              <h2 style={{ margin: 0, fontSize: '1.5em', fontWeight: 600 }}>Flashcard Quiz</h2>
+              <button
+                type="button"
+                onClick={() => setIsDeckPopoverOpen(false)}
+                style={{
+                  background: 'rgba(255, 255, 255, 0.1)',
+                  border: '1px solid rgba(255, 255, 255, 0.2)',
+                  borderRadius: '8px',
+                  padding: '8px 16px',
+                  color: '#fff',
+                  cursor: 'pointer',
+                  fontWeight: 600,
+                  transition: 'background 0.2s ease',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = 'rgba(255, 255, 255, 0.2)'
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)'
+                }}
+              >
+                Close
+              </button>
+            </div>
+            <CardList
+              cards={multiTypeCardItems}
+              displayFormat="quiz"
+              emptyState={(
+                <Card
+                  title="No flashcards in quiz"
+                  content="Generate flashcards to see them in quiz view."
+                />
+              )}
+              containerStyle={{ padding: 0 }}
+            />
+          </div>
+        </div>
+      )}
     </div>
   )
 }
