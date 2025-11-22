@@ -2,6 +2,7 @@ import { useMemo, useEffect, useRef, useState } from 'react'
 import Layout from './components/Layout'
 import Youtube from './components/Youtube'
 import CardList from './components/CardList'
+import { FlashcardBoard } from './components/Card'
 
 function App() {
   // Extract 'v' parameter from URL query string
@@ -74,25 +75,6 @@ function App() {
     connectWebSocket()
     return () => wsRef.current?.close()
   }, [])
-
-  const cards = [
-    {
-      title: 'Learning Path',
-      content: 'Explore structured learning paths tailored to your goals and interests.',
-    },
-    {
-      title: 'Quick Notes',
-      content: 'Capture key insights and important points from your video content.',
-    },
-    {
-      title: 'Study Tips',
-      content: 'Discover effective study techniques and productivity hacks.',
-    },
-    {
-      title: 'Resources',
-      content: 'Access curated resources and materials to enhance your learning experience.',
-    },
-  ]
 
   const cards2 = [
     { title: "Flashcards", content: "Create and review flashcards to reinforce your understanding of key concepts." },

@@ -6,11 +6,12 @@ from __future__ import annotations
 
 import json
 import random
-from typing import Mapping, Sequence, Union
+from typing import Mapping, Optional, Sequence, Union
 
 from together import Together
 
 from .quiz_prompts import get_prompt_generate_quiz_questions
+from helpers.transcripts import get_transcript
 
 DEFAULT_MODEL = "openai/gpt-oss-120b"
 
@@ -65,11 +66,8 @@ def _response_text(response) -> str:
 
 
 def generate_quiz_from_transcript(
-    transcript: Union[
-        str,
-        Mapping[str, str],
-        Sequence[Union[str, Mapping[str, str]]],
-    ],
+    video_id: str,
+    language_code: Optional[str] = None,
     temperature: float = 0.3,
     model: str = DEFAULT_MODEL,
     max_transcript_chars: int = 8_000,
@@ -81,7 +79,8 @@ def generate_quiz_from_transcript(
     Create a quiz from a transcript using Together's chat completion API.
 
     Args:
-        transcript: Transcript text, a mapping with a "text" key, or a sequence of either.
+        video_id: YouTube video identifier to fetch transcript for.
+        language_code: Optional language override when fetching the transcript.
         temperature: Sampling temperature for the completion.
         model: GPT model identifier (defaults to openai/gpt-oss-20b).
         max_transcript_chars: Max characters from the transcript to send to the model.
@@ -92,9 +91,9 @@ def generate_quiz_from_transcript(
     Returns:
         Parsed quiz dictionary (matching the schema defined in quiz_prompts.py).
     """
-
+    transcript_payload = get_transcript(video_id=video_id, language_code=language_code)
     transcript_text = _collapse_transcript_text(
-        transcript, max_chars=max_transcript_chars
+        transcript_payload.get("transcript", []), max_chars=max_transcript_chars
     )
     prompt = _build_prompt(transcript_text, difficulty_level)
 

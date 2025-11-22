@@ -1,9 +1,10 @@
+import { useState, type ReactNode } from 'react'
 import Card from './Card'
 import React from 'react'
 
 interface CardItem {
   title: string
-  content: string
+  content: ReactNode
 }
 
 interface CardListProps {
@@ -36,7 +37,9 @@ function CardList({ cards, selectedIndex, setSelectedIndex, currentSmallWheelOff
           key={index} 
           title={card.title} 
           content={card.content}
-          isHighlighted={selectedIndex === index}
+          isHighlighted={highlightedIndex === index}
+          onMouseEnter={() => setHighlightedIndex(index)}
+          onMouseLeave={() => setHighlightedIndex(null)}
         />
       ))}
     </div>
@@ -44,4 +47,3 @@ function CardList({ cards, selectedIndex, setSelectedIndex, currentSmallWheelOff
 }
 
 export default CardList
-
