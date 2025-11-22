@@ -10,6 +10,7 @@ You are an expert at creating educational content. Your task is to generate a se
 7. Avoid using "all of the above" or "none of the above" as answer options.
 8. The correct answer should be random every time; i.e., do not always make "A" the correct answer.
 9. Don't mention the word "transcript" and use "video" or "video content" instead.
+10. When you want to quote something from the video, do not use quotation marks. 
 
 You need to output the questions in the following JSON format:
 [

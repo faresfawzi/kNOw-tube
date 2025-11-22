@@ -1,19 +1,32 @@
+import type { ReactNode } from 'react'
+
 interface CardProps {
   title?: string
-  content?: string
+  content?: ReactNode
   isHighlighted?: boolean
   onMouseEnter?: () => void
   onMouseLeave?: () => void
 }
 
-
-function Card({ 
-  title = "Card Title", 
-  content = "This is some dummy text content for the card. It demonstrates the liquid glass effect with a beautiful glassmorphism design.",
+function Card({
+  title = 'Card Title',
+  content = 'This is placeholder content for the card.',
   isHighlighted = false,
   onMouseEnter,
-  onMouseLeave
+  onMouseLeave,
 }: CardProps) {
+  const contentStyles = {
+    margin: 0,
+    fontSize: '0.95em',
+    lineHeight: '1.6',
+    opacity: 0.9,
+    whiteSpace: 'pre-line' as const,
+  }
+
+  const body = typeof content === 'string'
+    ? <p style={contentStyles}>{content}</p>
+    : <div style={contentStyles}>{content}</div>
+
   return (
     <div
       className="card"
@@ -22,8 +35,8 @@ function Card({
         backdropFilter: 'blur(10px)',
         WebkitBackdropFilter: 'blur(10px)',
         borderRadius: '16px',
-        border: isHighlighted 
-          ? '2px solid rgba(147, 197, 253, 0.6)' 
+        border: isHighlighted
+          ? '2px solid rgba(147, 197, 253, 0.6)'
           : '1px solid rgba(255, 255, 255, 0.2)',
         padding: '20px',
         margin: '16px',
@@ -67,15 +80,10 @@ function Card({
           }}
         />
       )}
-      <h3 className="title" style={{ margin: '0 0 12px 0', fontSize: '1.2em', fontWeight: 600 }}>
-        {title}
-      </h3>
-      <p className="card-content" style={{ margin: 0, fontSize: '0.95em', lineHeight: '1.6', opacity: 0.9 }}>
-        {content}
-      </p>
+      <h3 className="title" style={{ margin: '0 0 12px 0', fontSize: '1.2em', fontWeight: 600 }}>{title}</h3>
+      {body}
     </div>
   )
 }
 
 export default Card
-

@@ -2,6 +2,7 @@ import { useMemo, useEffect, useRef, useState } from 'react'
 import Layout from './components/Layout'
 import Youtube from './components/Youtube'
 import CardList from './components/CardList'
+import { FlashcardBoard } from './components/FlashcardBoard'
 
 function App() {
   // Extract 'v' parameter from URL query string
@@ -14,9 +15,8 @@ function App() {
     return `https://www.youtube.com/watch?v=${v}`
   }, [])
 
-  const [sizeControl, setSizeControl] = useState(0.3) // 0 to 1
-  const [selectedIndex1, setSelectedIndex1] = useState<number | null>(null)
-  const [selectedIndex2, setSelectedIndex2] = useState<number | null>(null)
+  const [sizeControl, setSizeControl] = useState(0.3)
+  const [selectedFeatureIndex, setSelectedFeatureIndex] = useState<number | null>(null)
   const [currentSmallWheelOffset, setCurrentSmallWheelOffset] = useState(0)
 
   const SENSITIVITY = 1000
@@ -46,17 +46,18 @@ function App() {
         console.log('WebSocket message received:', dataString)
         // Expecting messages like "smallWheel_1" or "bigWheel_-2"
         const parts = dataString.split('_')
-        if (parts.length == 2) {
+        if (parts.length === 2) {
           const wheelType = parts[0]
           const valueString = parts[1]
           const parsed = parseInt(valueString, 10)
+          if (Number.isNaN(parsed)) return
+
           if (wheelType === 'smallWheel') {
-            
             setCurrentSmallWheelOffset(parsed)
           } else if (wheelType === 'bigWheel') {
-            setSizeControl((prev: number) => Math.min(1, Math.max(0, prev + parsed / SENSITIVITY)))
+            setSizeControl((prev) => Math.min(1, Math.max(0, prev + parsed / SENSITIVITY)))
           }
-        } else { // button
+        } else {
           console.log('Button actions:', dataString)
           if (dataString === 'moveRight') {
             console.log('Moving card right')
@@ -77,51 +78,12 @@ function App() {
     return () => wsRef.current?.close()
   }, [])
 
-  const cards = [
-    {
-      title: 'Learning Path',
-      content: 'Explore structured learning paths tailored to your goals and interests.',
-    },
-    {
-      title: 'Quick Notes',
-      content: 'Capture key insights and important points from your video content.',
-    },
-    {
-      title: 'Study Tips',
-      content: 'Discover effective study techniques and productivity hacks.',
-    },
-    {
-      title: 'Resources',
-      content: 'Access curated resources and materials to enhance your learning experience.',
-    },
-  ]
-
   const cards2 = [
-    { title: "Flashcards", content: "Create and review flashcards to reinforce your understanding of key concepts." },
-    { title: "Quizzes", content: "Test your knowledge with interactive quizzes based on the video content." },
-    { title: "Progress Tracker", content: "Monitor your learning progress and track your achievements over time." },
-    { title: "Community", content: "Connect with other learners and share insights about your learning journey." },
+    { title: 'Flashcards', content: 'Create and review flashcards to reinforce your understanding of key concepts.' },
+    { title: 'Quizzes', content: 'Test your knowledge with interactive quizzes based on the video content.' },
+    { title: 'Progress Tracker', content: 'Monitor your learning progress and track your achievements over time.' },
+    { title: 'Community', content: 'Connect with other learners and share insights about your learning journey.' },
   ]
-
-  const handleIndexChange = (index: number | null, setIndex: (val: number | null) => void, maxIndex: number, direction: 'up' | 'down') => {
-    if (direction === 'down') {
-      if (index === null) {
-        setIndex(0)
-      } else if (index < maxIndex) {
-        setIndex(index + 1)
-      } else {
-        setIndex(0) // Wrap around
-      }
-    } else {
-      if (index === null) {
-        setIndex(maxIndex)
-      } else if (index > 0) {
-        setIndex(index - 1)
-      } else {
-        setIndex(maxIndex) // Wrap around
-      }
-    }
-  }
 
   return (
     <>
@@ -154,7 +116,7 @@ function App() {
       <Layout
         component1={<div>Concept Graph</div>}
         component2={<Youtube url={url} />}
-        component3={<CardList cards={cards} selectedIndex={selectedIndex1} setSelectedIndex={setSelectedIndex1} currentSmallWheelOffset={currentSmallWheelOffset} />}
+        component3={<FlashcardBoard videoUrl={url} />}
         component4={<CardList cards={cards2} selectedIndex={selectedIndex2} setSelectedIndex={setSelectedIndex2} currentSmallWheelOffset={currentSmallWheelOffset} />}
         sizeControl={sizeControl}
         setSizeControl={setSizeControl}

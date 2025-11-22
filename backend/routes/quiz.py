@@ -4,7 +4,7 @@ from fastapi import APIRouter, HTTPException, Query, Request
 
 from helpers.helpers import fetch_transcript
 from helpers.quiz.create_quiz import generate_quiz_from_transcript
-
+import json
 
 
 router = APIRouter()
@@ -33,14 +33,15 @@ def get_quiz(
     
     client = request.app.state.together_client
     
-    fetched_transcript = fetch_transcript(video_id)
-    transcript_payload = fetched_transcript.to_raw_data()
-
+    # fetched_transcript = fetch_transcript(video_id)
+    # transcript_payload = fetched_transcript.to_raw_data()
+        
     quiz = generate_quiz_from_transcript(
-        transcript_payload,
+        video_id=video_id,
         temperature=temperature,
         difficulty_level=difficulty_level,
         client=client,
     )
+
 
     return {"quiz": quiz}

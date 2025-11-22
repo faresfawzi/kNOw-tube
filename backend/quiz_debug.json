@@ -1,0 +1,152 @@
+[
+    {
+        "question": "Which product did Apple introduce in 1984?",
+        "options": {
+            "A": "iPod",
+            "B": "Macintosh",
+            "C": "iPhone",
+            "D": "Apple Watch"
+        },
+        "correct_answer": "B"
+    },
+    {
+        "question": "In what year did Apple release the first iPod?",
+        "options": {
+            "A": "1999",
+            "B": "2000",
+            "C": "2001",
+            "D": "2003"
+        },
+        "correct_answer": "C"
+    },
+    {
+        "question": "The iPhone combines an iPod, a phone, and an internet communicator. Which of the following is NOT one of those three components?",
+        "options": {
+            "A": "iPod",
+            "B": "Phone",
+            "C": "Internet communicator",
+            "D": "Tablet"
+        },
+        "correct_answer": "D"
+    },
+    {
+        "question": "What input method does the iPhone use instead of a stylus?",
+        "options": {
+            "A": "Voice commands",
+            "B": "Finger touch",
+            "C": "Keyboard",
+            "D": "Mouse"
+        },
+        "correct_answer": "B"
+    },
+    {
+        "question": "Which operating system does the iPhone run, as mentioned in the video?",
+        "options": {
+            "A": "Android",
+            "B": "iOS",
+            "C": "OS X (OS 10)",
+            "D": "Windows Mobile"
+        },
+        "correct_answer": "C"
+    },
+    {
+        "question": "What problem with existing smartphones does the video highlight regarding their keyboards?",
+        "options": {
+            "A": "They are fixed plastic and cannot change per application",
+            "B": "They are too small",
+            "C": "They are too expensive",
+            "D": "They lack backlighting"
+        },
+        "correct_answer": "A"
+    },
+    {
+        "question": "Which of the following was the first revolutionary user interface introduced by Apple?",
+        "options": {
+            "A": "Click wheel",
+            "B": "Multi‑touch",
+            "C": "Touch ID",
+            "D": "Mouse"
+        },
+        "correct_answer": "D"
+    },
+    {
+        "question": "Why does the iPhone run OS 10 instead of a simpler mobile OS, according to the speaker?",
+        "options": {
+            "A": "Because it is free",
+            "B": "Because OS 10 provides multitasking, networking, power management, and security features",
+            "C": "Because it is required by Apple policy",
+            "D": "Because it looks better"
+        },
+        "correct_answer": "B"
+    },
+    {
+        "question": "How does the iPhone synchronize data with a computer?",
+        "options": {
+            "A": "Via iTunes",
+            "B": "Via Bluetooth",
+            "C": "Via iCloud",
+            "D": "Via USB only"
+        },
+        "correct_answer": "A"
+    },
+    {
+        "question": "Which quote is attributed to Alan Kay in the video?",
+        "options": {
+            "A": \"Design is not just what it looks like and feels like.\",
+            "B": \"The best way to predict the future is to invent it.\",
+            "C": \"People who are really serious about software should make their own hardware.\",
+            "D": \"Software is eating the world.\"
+        },
+        "correct_answer": "C"
+    },
+    {
+        "question": "What specific size is the iPhone's screen as mentioned in the video?",
+        "options": {
+            "A": "3 inches",
+            "B": "3.5 inches",
+            "C": "4 inches",
+            "D": "4.5 inches"
+        },
+        "correct_answer": "B"
+    },
+    {
+        "question": "Which graphics framework is mentioned as being built into OS 10 for the iPhone?",
+        "options": {
+            "A": "Core Animation",
+            "B": "OpenGL ES",
+            "C": "Metal",
+            "D": "DirectX"
+        },
+        "correct_answer": "A"
+    },
+    {
+        "question": "According to the video, what is the main advantage of multi‑touch over a stylus?",
+        "options": {
+            "A": "It is more accurate and ignores unintended touches",
+            "B": "It is cheaper to produce",
+            "C": "It allows handwriting recognition",
+            "D": "It works underwater"
+        },
+        "correct_answer": "A"
+    },
+    {
+        "question": "The speaker compares smartphones on two axes. What are those axes?",
+        "options": {
+            "A": "Smartness and battery life",
+            "B": "Smartness and ease of use",
+            "C": "Size and price",
+            "D": "Speed and storage"
+        },
+        "correct_answer": "B"
+    },
+    {
+        "question": "How many iPods does the speaker say Apple will ship that year?",
+        "options": {
+            "A": "10 million",
+            "B": "100 million",
+            "C": "1 billion",
+            "D": "50 million"
+        },
+        "correct_answer": "B"
+    }
+]

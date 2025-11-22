@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Query
 from typing import Optional
-from helpers import fetch_transcript
+from helpers.helpers import fetch_transcript
+import json
 def get_transcript(
     video_id: str = Query(..., description="YouTube video ID (e.g., 'dQw4w9WgXcQ')"),
     language_code: Optional[str] = Query(None, description="Language code (e.g., 'en', 'es'). Defaults to English if not provided.")
@@ -17,16 +18,23 @@ def get_transcript(
         Object containing the transcript data with text, start time, and duration for each segment,
         along with video metadata (language, language_code, is_generated).
     """
-    fetched_transcript = fetch_transcript(video_id, language_code)
+    # fetched_transcript = fetch_transcript(video_id, language_code)
     
-    # Convert to raw data format (list of dictionaries)
-    transcript_data = fetched_transcript.to_raw_data()
+    # # Convert to raw data format (list of dictionaries)
+    # transcript_data = fetched_transcript.to_raw_data()
     
-    return {
-        "video_id": fetched_transcript.video_id,
-        "language": fetched_transcript.language,
-        "language_code": fetched_transcript.language_code,
-        "is_generated": fetched_transcript.is_generated,
-        "transcript": transcript_data,
-        "total_segments": len(fetched_transcript)
-    }
+    # transcript_dict = {
+    #     "video_id": fetched_transcript.video_id,
+    #     "language": fetched_transcript.language,
+    #     "language_code": fetched_transcript.language_code,
+    #     "is_generated": fetched_transcript.is_generated,
+    #     "transcript": transcript_data,
+    #     "total_segments": len(fetched_transcript)
+    # }
+
+
+    # load transcript from json file
+    with open(f"transcript_{video_id}.json", "r", encoding="utf-8") as f:
+        transcript_dict = json.load(f)
+
+    return transcript_dict
