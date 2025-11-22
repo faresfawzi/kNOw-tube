@@ -15,6 +15,8 @@ function App() {
   }, [])
 
   const [sizeControl, setSizeControl] = useState(0.3) // 0 to 1
+  const [selectedIndex1, setSelectedIndex1] = useState<number | null>(null)
+  const [selectedIndex2, setSelectedIndex2] = useState<number | null>(null)
 
   const SENSITIVITY = 1000
 
@@ -86,14 +88,62 @@ function App() {
     { title: "Community", content: "Connect with other learners and share insights about your learning journey." },
   ]
 
+  const handleIndexChange = (index: number | null, setIndex: (val: number | null) => void, maxIndex: number, direction: 'up' | 'down') => {
+    if (direction === 'down') {
+      if (index === null) {
+        setIndex(0)
+      } else if (index < maxIndex) {
+        setIndex(index + 1)
+      } else {
+        setIndex(0) // Wrap around
+      }
+    } else {
+      if (index === null) {
+        setIndex(maxIndex)
+      } else if (index > 0) {
+        setIndex(index - 1)
+      } else {
+        setIndex(maxIndex) // Wrap around
+      }
+    }
+  }
+
   return (
-    <Layout
-      component1={<div>Component 1 - WS Status: {wsStatus}</div>}
-      component2={<Youtube url={url} />}
-      component3={<CardList cards={cards} />}
-      component4={<CardList cards={cards2} />}
-      sizeControl={sizeControl}
-    />
+    <>
+      <div>
+        <div>
+          <label>Card List 1</label>
+          <div>
+            <button onClick={() => handleIndexChange(selectedIndex1, setSelectedIndex1, cards.length - 1, 'up')}>
+              ↑
+            </button>
+            <button onClick={() => handleIndexChange(selectedIndex1, setSelectedIndex1, cards.length - 1, 'down')}>
+              ↓
+            </button>
+          </div>
+          <span>{selectedIndex1 !== null ? selectedIndex1 : 'None'}</span>
+        </div>
+        <div>
+          <label>Card List 2</label>
+          <div>
+            <button onClick={() => handleIndexChange(selectedIndex2, setSelectedIndex2, cards2.length - 1, 'up')}>
+              ↑
+            </button>
+            <button onClick={() => handleIndexChange(selectedIndex2, setSelectedIndex2, cards2.length - 1, 'down')}>
+              ↓
+            </button>
+          </div>
+          <span>{selectedIndex2 !== null ? selectedIndex2 : 'None'}</span>
+        </div>
+      </div>
+      <Layout
+        component1={<div>Component 1 - WS Status: {wsStatus}</div>}
+        component2={<Youtube url={url} />}
+        component3={<CardList cards={cards} selectedIndex={selectedIndex1} />}
+        component4={<CardList cards={cards2} selectedIndex={selectedIndex2} />}
+        sizeControl={sizeControl}
+      />
+    </>
   )
 }
 

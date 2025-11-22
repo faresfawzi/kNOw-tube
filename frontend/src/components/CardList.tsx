@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import Card from './Card'
 
 interface CardItem {
@@ -8,11 +7,10 @@ interface CardItem {
 
 interface CardListProps {
   cards: CardItem[]
+  selectedIndex: number | null
 }
 
-function CardList({ cards }: CardListProps) {
-  const [highlightedIndex, setHighlightedIndex] = useState<number | null>(null)
-
+function CardList({ cards, selectedIndex }: CardListProps) {
   return (
     <div style={{ padding: '8px 5%' }}>
       {cards.map((card, index) => (
@@ -20,7 +18,7 @@ function CardList({ cards }: CardListProps) {
           key={index} 
           title={card.title} 
           content={card.content}
-          isHighlighted={highlightedIndex === index}
+          isHighlighted={selectedIndex === index}
         />
       ))}
     </div>
