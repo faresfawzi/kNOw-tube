@@ -18,9 +18,13 @@ public static class WebSocketServerHost
 
         server.MessageReceived += (s, e) =>
         {
-            string msg = System.Text.Encoding.UTF8.GetString(e.Data.Array, e.Data.Offset, e.Data.Count);
+            var msg = System.Text.Encoding.UTF8.GetString(e.Data.Array, e.Data.Offset, e.Data.Count);
             PluginLog.Info("Received: " + msg);
 
+            // // get Actions objects from ExamplePluginObject
+            // var MoveCardRight = ExamplePlugin.Instance.Actions.GetCommand<MoveCardRight>("Loupedeck.ExamplePlugin.MoveCardRight");
+            // // Print message on button for movecardright
+            // MoveCardRight.SetDisplay(msg);
             // Echo back (equivalent to LogiService behavior)
             server.SendAsync(e.Client.Guid, "Echo: " + msg);
         };

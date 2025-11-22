@@ -16,5 +16,21 @@ namespace Loupedeck.ExamplePlugin
 
             WebSocketServerHost.Broadcast("moveRight");
         }
+
+        // add a function that can be called from another class and sets the display name
+        private String _display = "Move it";
+        public void SetDisplay(String display)
+        {
+            this._display = display;
+            this.ActionImageChanged();
+        }
+
+        // This method is called when Loupedeck needs to show the command on the console or the UI.
+        protected override String GetCommandDisplayName(String actionParameter, PluginImageSize imageSize)
+        {
+            WebSocketServerHost.Broadcast("getKeyText");
+
+            return $"Hi Nandu{Environment.NewLine}{this._display}";
+        }   
     }
 }

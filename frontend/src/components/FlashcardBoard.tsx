@@ -56,10 +56,11 @@ export interface FlashcardBoardProps {
   videoUrl?: string,
   moveCardRight: boolean,
   setMoveCardRight: React.Dispatch<React.SetStateAction<boolean>>,
-  setSendCardRight?: React.Dispatch<React.SetStateAction<QAFlashcard | null>>
+  setSendCardRight?: React.Dispatch<React.SetStateAction<QAFlashcard | null>>,
+  setKeyText?: React.Dispatch<React.SetStateAction<string>>,
 }
 
-export function FlashcardBoard({ videoUrl, moveCardRight, setMoveCardRight, setSendCardRight }: FlashcardBoardProps) {
+export function FlashcardBoard({ videoUrl, moveCardRight, setMoveCardRight, setSendCardRight, setKeyText }: FlashcardBoardProps) {
   const videoId = useMemo(() => extractVideoId(videoUrl), [videoUrl])
   const [multitypeFlashcards, setMultitypeFlashcards] = useState<MultiTypeFlashcard[]>([])
   const [qaFlashcards, setQaFlashcards] = useState<QAFlashcard[]>([])
@@ -134,6 +135,7 @@ export function FlashcardBoard({ videoUrl, moveCardRight, setMoveCardRight, setS
           qaCards = extractQaFlashcards(qaJson?.flashcards ?? qaJson)
         }
 
+        setKeyText && setKeyText(qaCards[0] ? qaCards[0].answer : '')
         if (!cancelled) {
           setMultitypeFlashcards(multiCards)
           setQaFlashcards(qaCards)
@@ -195,16 +197,15 @@ export function FlashcardBoard({ videoUrl, moveCardRight, setMoveCardRight, setS
     console.log("moveCardRight changed:", moveCardRight);
     console.log("Current qaFlashcards:", qaFlashcards);
     if (moveCardRight && qaFlashcards.length > 0) {
-      const selectedCard = qaFlashcards[0]
+      const selectedCard = qaFlashcards[currentCardView];
       console.log('Preparing to send card right:', selectedCard)
-      // setSendCardRight && setSendCardRight(() => selectedCard)
-      // setMoveCardRight(false)
+      setSendCardRight && setSendCardRight(() => selectedCard)
+      setMoveCardRight(false)
     }
   }, [moveCardRight, qaFlashcards, setMoveCardRight, setSendCardRight])
 
   return (
     <div style={{ padding: '24px 5%' }}>
-      {JSON.stringify(moveCardRight)}
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', alignItems: 'center', justifyContent: 'space-between' }}>
         <div>
           <h2 style={{ margin: '0 0 4px 0' }}>Flashcard Workspace</h2>

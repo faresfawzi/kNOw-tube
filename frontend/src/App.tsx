@@ -17,12 +17,20 @@ function App() {
     return `https://www.youtube.com/watch?v=${v}`
   }, [])
 
-  const [sizeControl, setSizeControl] = useState(0.3)
+  const [sizeControl, setSizeControl] = useState(0.6)
   const [selectedIndex2, setSelectedIndex2] = useState<number | null>(null)
   const [selectedFeatureIndex, setSelectedFeatureIndex] = useState<number | null>(null)
   const [currentSmallWheelOffset, setCurrentSmallWheelOffset] = useState(0)
   const [moveCardRight, setMoveCardRight] = useState(false)
   const [sendCardRight, setSendCardRight] = useState<QAFlashcard| null>(null)
+  const [cards2, setCards2] = useState<Array<{ title: string; content: string }>>([
+    { title: 'Flashcards', content: 'Create and review flashcards to reinforce your understanding of key concepts.' },
+    { title: 'Quizzes', content: 'Test your knowledge with interactive quizzes based on the video content.' },
+    { title: 'Progress Tracker', content: 'Monitor your learning progress and track your achievements over time.' },
+    { title: 'Community', content: 'Connect with other learners and share insights about your learning journey.' },
+  ])
+  const [ keyText, setKeyText ] = useState<string>('')
+   const [playbackRate, setPlaybackRate] = useState(1.0)
 
   const SENSITIVITY = 1000
 
@@ -48,7 +56,7 @@ function App() {
           : JSON.stringify(event.data)
 
         setWsMessages((prev: string[]) => [...prev, dataString])
-        console.log('WebSocket message received:', dataString)
+        // console.log('WebSocket message received:', dataString)
         // Expecting messages like "smallWheel_1" or "bigWheel_-2"
         const parts = dataString.split('_')
         if (parts.length === 2) {
@@ -67,6 +75,10 @@ function App() {
           if (dataString === 'moveRight') {
             console.log('Moving card right pressed')
             setMoveCardRight(true)
+          } else if (dataString === 'getKeyText') {
+            if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
+              wsRef.current.send("test")
+            }
           }
         }
       }
@@ -85,22 +97,38 @@ function App() {
     return () => wsRef.current?.close()
   }, [])
 
-  const cards2 = [
-    { title: 'Flashcards', content: 'Create and review flashcards to reinforce your understanding of key concepts.' },
-    { title: 'Quizzes', content: 'Test your knowledge with interactive quizzes based on the video content.' },
-    { title: 'Progress Tracker', content: 'Monitor your learning progress and track your achievements over time.' },
-    { title: 'Community', content: 'Connect with other learners and share insights about your learning journey.' },
-  ]
-
+  
   useEffect(() => {
+    console.log('sendCardRight changed:', sendCardRight)
     if (sendCardRight) {
       console.log('Sending card right:', sendCardRight)
+      setCards2((prevCards2) => [...prevCards2, { title: sendCardRight.question, content: sendCardRight.answer }])
+      //
+      
+      setSendCardRight(null)
     }
   }, [sendCardRight])
+
+  useEffect(() => {
+    // send message to websocket
+    if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
+      wsRef.current.send(keyText)
+    }
+  }, [keyText])
 
   return (
     <>
       <div>
+        
+        <div>
+          <input
+            type="text"
+            value={keyText}
+            onChange={(e) => setKeyText(e.target.value)}
+            placeholder="Enter key text"
+            style={{ width: '100%', padding: '8px', fontSize: '1rem' }}
+          />
+        </div>
         {/* <div>
           <label>Card List 1</label>
           <div>
@@ -128,8 +156,9 @@ function App() {
       </div>
       <Layout
         component1={<div>Concept Graph</div>}
-        component2={<Youtube url={url} />}
-        component3={<FlashcardBoard videoUrl={url} moveCardRight={moveCardRight} setMoveCardRight={setMoveCardRight} setSendCardRight={setSendCardRight} />}
+        component2={<Youtube url={url} currentSmallWheelOffset={currentSmallWheelOffset} />}
+        component3={<FlashcardBoard videoUrl={url} moveCardRight={moveCardRight} setMoveCardRight={setMoveCardRight} setSendCardRight={setSendCardRight}
+          setKeyText={setKeyText} />}
         component4={<CardList cards={cards2} selectedIndex={selectedIndex2} setSelectedIndex={setSelectedIndex2} currentSmallWheelOffset={currentSmallWheelOffset} />}
         sizeControl={sizeControl}
         setSizeControl={setSizeControl}
