@@ -1,51 +1,14 @@
 import { useEffect, useMemo, useState } from 'react'
 
-import Card from './Card'
+import Card, {
+  type Flashcard,
+  type QuizQuestion,
+  type WrongAnswerPayload,
+  extractMultiTypeFlashcards,
+  extractQaFlashcards,
+  buildWrongAnswerPayload,
+} from './card'
 import CardList, { type CardItem as ListCardItem } from './CardList'
-
-type MultiTypeFlashcard =
-  | {
-      card_type: 'knowledge'
-      title: string
-      knowledge_summary: string
-    }
-  | {
-      card_type: 'multiple_choice'
-      question: string
-      choices: string[]
-      correct_choice_index: number
-      explanation?: string
-    }
-  | {
-      card_type: 'cloze'
-      cloze_text: string
-      hint?: string
-    }
-  | {
-      card_type: 'qa'
-      question: string
-      answer: string
-      explanation?: string
-    }
-
-interface QuizQuestion {
-  question: string
-  options?: Record<string, string>
-  correct_answer?: string
-}
-
-export interface QAFlashcard {
-  question: string
-  answer: string
-  explanation?: string
-}
-
-interface WrongAnswerPayload {
-  question: string
-  options: Record<string, string>
-  correct_answer?: string
-  student_wrong_answer: string
-}
 
 const API_BASE_PATH = '/api'
 const MAX_WRONG_ANSWERS = 4
@@ -56,17 +19,16 @@ export interface FlashcardBoardProps {
   videoUrl?: string,
   moveCardRight: boolean,
   setMoveCardRight: React.Dispatch<React.SetStateAction<boolean>>,
-  setSendCardRight?: React.Dispatch<React.SetStateAction<QAFlashcard | null>>
+  setSendCardRight?: React.Dispatch<React.SetStateAction<Flashcard | null>>
 }
 
 export function FlashcardBoard({ videoUrl, moveCardRight, setMoveCardRight, setSendCardRight }: FlashcardBoardProps) {
   const videoId = useMemo(() => extractVideoId(videoUrl), [videoUrl])
-  const [multitypeFlashcards, setMultitypeFlashcards] = useState<MultiTypeFlashcard[]>([])
-  const [qaFlashcards, setQaFlashcards] = useState<QAFlashcard[]>([])
+  const [multitypeFlashcards, setMultitypeFlashcards] = useState<Flashcard[]>([])
+  const [qaFlashcards, setQaFlashcards] = useState<Flashcard[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [refreshIndex, setRefreshIndex] = useState(0)
-  const [cardViewSelections, setCardViewSelections] = useState<Record<number, number>>({})
 
   useEffect(() => {
     if (!videoId) {
@@ -115,7 +77,7 @@ export function FlashcardBoard({ videoUrl, moveCardRight, setMoveCardRight, setS
           .map(buildWrongAnswerPayload)
           .filter((entry): entry is WrongAnswerPayload => entry !== null)
 
-        let qaCards: QAFlashcard[] = []
+        let qaCards: Flashcard[] = []
         if (wrongAnswersPayload.length) {
           const qaResponse = await fetch(`${API_BASE_PATH}/generate_qa_flashcards`, {
             method: 'POST',
@@ -157,46 +119,15 @@ export function FlashcardBoard({ videoUrl, moveCardRight, setMoveCardRight, setS
 
   const refreshFlashcards = () => setRefreshIndex((idx) => idx + 1)
 
-  const sectionTitleStyles = {
-    margin: '24px 16px 8px',
-    fontSize: '0.9rem',
-    letterSpacing: '0.08em',
-    textTransform: 'uppercase' as const,
-    color: 'rgba(255, 255, 255, 0.75)',
-  }
+  // const sectionTitleStyles = {
+  //   margin: '24px 16px 8px',
+  //   fontSize: '0.9rem',
+  //   letterSpacing: '0.08em',
+  //   textTransform: 'uppercase' as const,
+  //   color: 'rgba(255, 255, 255, 0.75)',
+  // }
 
-  useEffect(() => {
-    if (!multitypeFlashcards.length) {
-      setCardViewSelections({})
-      return
-    }
-    setCardViewSelections((prev) => {
-      let changed = false
-      const maxIndex = multitypeFlashcards.length - 1
-      const next: Record<number, number> = {}
-      Object.entries(prev).forEach(([slotIndex, value]) => {
-        const numSlot = Number(slotIndex)
-        const clamped = Math.min(Math.max(0, value), maxIndex)
-        next[numSlot] = clamped
-        if (clamped !== value) changed = true
-      })
-      return changed ? next : prev
-    })
-  }, [multitypeFlashcards.length])
-
-  const multitypeCardItems: ListCardItem[] = multitypeFlashcards.map(formatMultiTypeCard)
-  const qaCardItems: ListCardItem[] = qaFlashcards.map((card, index) => ({
-    title: `Reinforcement Card ${index + 1}`,
-    content: (
-      <div>
-        <p style={{ margin: '0 0 6px 0' }}><strong>Question:</strong> {card.question}</p>
-        <p style={{ margin: 0 }}><strong>Answer:</strong> {card.answer}</p>
-        {card.explanation && (
-          <p style={{ marginTop: '6px', opacity: 0.8 }}>{card.explanation}</p>
-        )}
-      </div>
-    ),
-  }))
+  // const qaCardItems: ListCardItem[] = formatQAFlashcards(qaFlashcards)
 
   if (!videoId) {
     return (
@@ -210,7 +141,6 @@ export function FlashcardBoard({ videoUrl, moveCardRight, setMoveCardRight, setS
     )
   }
 
-<<<<<<< HEAD
   useEffect(() => {
     console.log("moveCardRight changed:", moveCardRight);
     console.log("Current qaFlashcards:", qaFlashcards);
@@ -221,110 +151,13 @@ export function FlashcardBoard({ videoUrl, moveCardRight, setMoveCardRight, setS
       // setMoveCardRight(false)
     }
   }, [moveCardRight, qaFlashcards, setMoveCardRight, setSendCardRight])
-=======
-  const mappingIndexToType: Record<number, string> = {
-    0: 'Knowledge Summary',
-    1: 'Multiple Choice Challenge',
-    2: 'Cloze Recall Card',
-    3: 'Q&A Flashcard',
-  }
 
-  const multitypeOptions = multitypeFlashcards.map((_, index) => ({
-    label: mappingIndexToType[index] || `Card ${index + 1}`,
-    value: index,
-  }))
-
-  const fallbackMultitypeCard: ListCardItem = {
-    title: 'No flashcards available',
-    content: 'There are no multitype flashcards to display at this time.',
-  }
-
-  const multiTypeCardsWithPicker: ListCardItem[] = (multitypeFlashcards.length ? multitypeCardItems : [null]).map(
-    (_card, slotIndex) => {
-      const hasOptions = multitypeCardItems.length > 0
-      const defaultIndex = slotIndex < multitypeCardItems.length ? slotIndex : 0
-      const maxIndex = Math.max(0, multitypeCardItems.length - 1)
-      const selectedIndex = hasOptions
-        ? Math.min(Math.max(0, cardViewSelections[slotIndex] ?? defaultIndex), maxIndex)
-        : 0
-      const selectedMultitypeCard = hasOptions
-        ? multitypeCardItems[selectedIndex] ?? fallbackMultitypeCard
-        : fallbackMultitypeCard
-
-      return {
-        ...selectedMultitypeCard,
-        hideTitle: selectedMultitypeCard.hideTitle,
-        content: (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-            {multitypeFlashcards.length > 1 && (
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  gap: '12px',
-                  padding: '10px 12px',
-                  borderRadius: '12px',
-                  background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(59, 130, 246, 0.12))',
-                  border: '1px solid rgba(255, 255, 255, 0.12)',
-                  boxShadow: '0 10px 30px rgba(0, 0, 0, 0.25)',
-                }}
-              >
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
-                  <span style={{ fontWeight: 600, fontSize: '0.95rem', letterSpacing: '0.02em' }}>Card view</span>
-                  <span style={{ opacity: 0.8, fontSize: '0.85rem' }}>Choose the flashcard style for this card</span>
-                </div>
-                <div style={{ position: 'relative', minWidth: '220px' }}>
-                  <select
-                    value={selectedIndex}
-                    onChange={(e) => setCardViewSelections((prev) => ({
-                      ...prev,
-                      [slotIndex]: Number(e.target.value),
-                    }))}
-                    style={{
-                      width: '100%',
-                      padding: '10px 14px',
-                      borderRadius: '10px',
-                      border: '1px solid rgba(255, 255, 255, 0.25)',
-                      background: 'rgba(15, 23, 42, 0.6)',
-                      color: '#fff',
-                      appearance: 'none' as const,
-                      WebkitAppearance: 'none',
-                      fontWeight: 600,
-                      boxShadow: '0 8px 25px rgba(99, 102, 241, 0.25)',
-                      backdropFilter: 'blur(8px)',
-                      cursor: 'pointer',
-                    }}
-                  >
-                    {multitypeOptions.map((option) => (
-                      <option key={option.value} value={option.value} style={{ color: '#000' }}>
-                        {option.label}
-                      </option>
-                    ))}
-                  </select>
-                  <span
-                    aria-hidden
-                    style={{
-                      position: 'absolute',
-                      right: '14px',
-                      top: '50%',
-                      transform: 'translateY(-50%)',
-                      pointerEvents: 'none',
-                      color: 'rgba(255, 255, 255, 0.8)',
-                      fontSize: '0.8rem',
-                    }}
-                  >
-                    ▼
-                  </span>
-                </div>
-              </div>
-            )}
-            {selectedMultitypeCard.content}
-          </div>
-        ),
-      }
-    },
-  )
+  // Create a single card item for the multitype flashcards
+  const multiTypeCardItems: ListCardItem[] = multitypeFlashcards.length > 0 ? [{
+    title: 'Contextual Flashcard',
+    representations: multitypeFlashcards,
+    forceHighlight: true,
+  }] : []
 
   return (
     <div style={{ padding: '24px 5%' }}>
@@ -355,7 +188,7 @@ export function FlashcardBoard({ videoUrl, moveCardRight, setMoveCardRight, setS
       </div>
 
       {error && !isLoading && <Card title="Unable to load flashcards" content={error} />}
-          
+
       {isLoading && (
         <Card
           title="Working on it"
@@ -367,7 +200,7 @@ export function FlashcardBoard({ videoUrl, moveCardRight, setMoveCardRight, setS
       <section>
         {/* <h3 style={sectionTitleStyles}>Multitype Flashcards</h3> */}
         <CardList
-          cards={multiTypeCardsWithPicker}
+          cards={multiTypeCardItems}
           emptyState={(
             <Card
               title="No flashcards yet"
@@ -414,146 +247,5 @@ function extractVideoId(videoUrl?: string): string | undefined {
   return undefined
 }
 
-function extractMultiTypeFlashcards(payload: unknown): MultiTypeFlashcard[] {
-  if (!payload) return []
-  if (Array.isArray(payload)) return payload.filter(isMultiTypeFlashcard)
-  if (typeof payload === 'object') {
-    const maybeNested = (payload as Record<string, unknown>).flashcards
-    if (Array.isArray(maybeNested)) {
-      return maybeNested.filter(isMultiTypeFlashcard)
-    }
-  }
-  return []
-}
-
-function extractQaFlashcards(payload: unknown): QAFlashcard[] {
-  if (!payload) return []
-  if (Array.isArray(payload)) {
-    return payload.filter((item): item is QAFlashcard => {
-      if (!item || typeof item !== 'object') return false
-      const typed = item as Record<string, unknown>
-      return typeof typed.question === 'string' && typeof typed.answer === 'string'
-    })
-  }
-  if (typeof payload === 'object') {
-    const maybeNested = (payload as Record<string, unknown>).flashcards
-    if (Array.isArray(maybeNested)) {
-      return extractQaFlashcards(maybeNested)
-    }
-  }
-  return []
-}
-
-function isMultiTypeFlashcard(card: unknown): card is MultiTypeFlashcard {
-  if (!card || typeof card !== 'object') {
-    return false
-  }
-  return typeof (card as Record<string, unknown>).card_type === 'string'
-}
-
-function pickWrongAnswerKey(question: QuizQuestion): string | null {
-  const options = question.options ?? {}
-  const optionKeys = Object.keys(options)
-  if (!optionKeys.length) {
-    return null
-  }
-  const wrongOptions = question.correct_answer
-    ? optionKeys.filter((key) => key !== question.correct_answer)
-    : optionKeys
-  const pool = wrongOptions.length ? wrongOptions : optionKeys
-  const randomIndex = Math.floor(Math.random() * pool.length)
-  return pool[randomIndex] ?? null
-}
-
-function buildWrongAnswerPayload(question: QuizQuestion): WrongAnswerPayload | null {
-  if (typeof question.question !== 'string' || !question.options) {
-    return null
-  }
-  const wrongAnswerKey = pickWrongAnswerKey(question)
-  if (!wrongAnswerKey) {
-    return null
-  }
-  return {
-    question: question.question,
-    options: question.options,
-    correct_answer: question.correct_answer,
-    student_wrong_answer: wrongAnswerKey,
-  }
-}
-
-function formatMultiTypeCard(card: MultiTypeFlashcard): ListCardItem {
-  if (card.card_type === 'knowledge') {
-    return {
-      title: card.title,
-      content: card.knowledge_summary,
-      forceHighlight: true,
-    }
-  }
-
-  if (card.card_type === 'multiple_choice') {
-    const content = (
-      <div>
-        <p style={{ margin: '0 0 8px 0' }}>{card.question}</p>
-        <ul style={{ listStyle: 'none', paddingLeft: 0, margin: '0 0 8px 0' }}>
-          {card.choices.map((choice, idx) => {
-            const label = String.fromCharCode(65 + idx)
-            const isCorrect = card.correct_choice_index === idx
-            return (
-              <li
-                key={`${label}-${choice}`}
-                style={{ marginBottom: '6px', display: 'flex', gap: '8px', alignItems: 'baseline' }}
-              >
-                <span style={{ fontWeight: 600 }}>{label}.</span>
-                <span>
-                  {choice}
-                  {isCorrect && (
-                    <span style={{ color: '#93c5fd', marginLeft: '6px' }}>✓ correct</span>
-                  )}
-                </span>
-              </li>
-            )
-          })}
-        </ul>
-        {card.explanation && (
-          <p style={{ margin: 0, opacity: 0.8 }}>{card.explanation}</p>
-        )}
-      </div>
-    )
-    return {
-      title: 'Multiple Choice Challenge',
-      content,
-      hideTitle: true,
-    }
-  }
-
-  if (card.card_type === 'cloze') {
-    return {
-      title: 'Cloze Recall Card',
-      content: (
-        <div>
-          <p style={{ margin: 0 }}>{card.cloze_text}</p>
-          {card.hint && (
-            <p style={{ marginTop: '8px', opacity: 0.8 }}>Hint: {card.hint}</p>
-          )}
-        </div>
-      ),
-      hideTitle: true,
-    }
-  }
-
-  return {
-    title: 'Q&A Flashcard',
-    content: (
-      <div>
-        <p style={{ margin: '0 0 6px 0' }}><strong>Question:</strong> {card.question}</p>
-        <p style={{ margin: 0 }}><strong>Answer:</strong> {card.answer}</p>
-        {card.explanation && (
-          <p style={{ marginTop: '6px', opacity: 0.8 }}>{card.explanation}</p>
-        )}
-      </div>
-    ),
-    hideTitle: true,
-  }
-}
 
 export default FlashcardBoard

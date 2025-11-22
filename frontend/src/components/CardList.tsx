@@ -1,9 +1,10 @@
 import { useEffect, useState, type ReactNode } from 'react'
-import Card from './Card'
+import Card, { type Flashcard } from './card'
 
 export interface CardItem {
   title: string
-  content: ReactNode
+  content?: ReactNode
+  representations?: Flashcard[]
   forceHighlight?: boolean
   hideTitle?: boolean
 }
@@ -71,6 +72,7 @@ function CardList({
             key={`${card.title}-${index}`}
             title={card.title}
             content={card.content}
+            representations={card.representations}
             isHighlighted={Boolean(shouldHighlight)}
             hideTitle={card.hideTitle}
             onMouseEnter={() => handleEnter(index)}

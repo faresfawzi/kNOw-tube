@@ -2,9 +2,103 @@ import { useMemo, useEffect, useRef, useState, use } from 'react'
 import Layout from './components/Layout'
 import Youtube from './components/Youtube'
 import CardList from './components/CardList'
+import { Graph } from './components/Graph'
+import type { ConceptTree } from './components/Graph'
 
 import { FlashcardBoard } from './components/FlashcardBoard'
 import type { QAFlashcard } from './components/FlashcardBoard';
+
+// Mock concept tree data
+const mockConceptTree: ConceptTree = {
+  id: 'root',
+  name: 'Learning Topics',
+  type: 'concept',
+  data: {
+    concepts: 'Educational Content',
+    description: 'Root node containing various learning topics and related videos',
+    context: 'This is the main concept tree for organizing educational content'
+  },
+  children: [
+    {
+      id: 'ml-basics',
+      name: 'Machine Learning Basics',
+      type: 'concept',
+      data: {
+        concepts: 'Machine Learning',
+        description: 'Fundamental concepts and techniques in machine learning including supervised and unsupervised learning',
+        context: 'Covers neural networks, decision trees, and regression models'
+      },
+      children: [
+        {
+          id: 'neural-networks',
+          name: 'Neural Networks',
+          type: 'concept',
+          data: {
+            concepts: 'Neural Networks',
+            description: 'Deep dive into artificial neural networks, backpropagation, and activation functions',
+            context: 'Includes feedforward and convolutional neural network architectures'
+          },
+          children: [
+            {
+              id: 'video-nn-intro',
+              name: 'Introduction to Neural Networks',
+              type: 'video',
+              data: {
+                video_id: 'dQw4w9WgXcQ'
+              }
+            }
+          ]
+        },
+        {
+          id: 'video-ml-overview',
+          name: 'ML Overview Video',
+          type: 'video',
+          data: {
+            video_id: 'aircAruvnKk'
+          }
+        }
+      ]
+    },
+    {
+      id: 'data-science',
+      name: 'Data Science',
+      type: 'concept',
+      data: {
+        concepts: 'Data Science',
+        description: 'Comprehensive guide to data science workflows, data preprocessing, and analysis techniques',
+        context: 'Covers data collection, cleaning, visualization, and statistical analysis'
+      },
+      children: [
+        {
+          id: 'data-visualization',
+          name: 'Data Visualization',
+          type: 'concept',
+          data: {
+            concepts: 'Data Visualization',
+            description: 'Techniques for creating effective visualizations and dashboards',
+            context: 'Includes matplotlib, seaborn, and plotly examples'
+          }
+        },
+        {
+          id: 'video-ds-tutorial',
+          name: 'Data Science Tutorial',
+          type: 'video',
+          data: {
+            video_id: 'ua-CiDNNj30'
+          }
+        }
+      ]
+    },
+    {
+      id: 'video-main',
+      name: 'Main Learning Video',
+      type: 'video',
+      data: {
+        video_id: 'RBmOgQi4Fr0'
+      }
+    }
+  ]
+}
 
 function App() {
   // Extract 'v' parameter from URL query string
@@ -127,7 +221,7 @@ function App() {
         </div> */}
       </div>
       <Layout
-        component1={<div>Concept Graph</div>}
+        component1={<Graph conceptTree={mockConceptTree} />}
         component2={<Youtube url={url} />}
         component3={<FlashcardBoard videoUrl={url} moveCardRight={moveCardRight} setMoveCardRight={setMoveCardRight} setSendCardRight={setSendCardRight} />}
         component4={<CardList cards={cards2} selectedIndex={selectedIndex2} setSelectedIndex={setSelectedIndex2} currentSmallWheelOffset={currentSmallWheelOffset} />}
