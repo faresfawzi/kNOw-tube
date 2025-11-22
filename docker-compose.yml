@@ -25,6 +25,7 @@ services:
     container_name: know-tube-frontend
     ports:
       - "5173:5173"
+      - "41733:41733"  # Port for Vite's WebSocket HMR
     volumes:
       - ./frontend:/app
       - /app/node_modules

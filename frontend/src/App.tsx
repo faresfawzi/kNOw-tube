@@ -1,30 +1,82 @@
-import { useMemo } from 'react'
+import { useMemo, useEffect, useRef, useState } from 'react'
 import Layout from './components/Layout'
 import Youtube from './components/Youtube'
 import CardList from './components/CardList'
 
 function App() {
   // Extract 'v' parameter from URL query string
-  const url = useMemo(() => {
+  const url = useMemo<string | undefined>(() => {
     const params = new URLSearchParams(window.location.search)
     const v = params.get('v')
-    
+
     if (!v) return undefined
-    
-    // If it's already a full URL, use it directly
-    if (v.startsWith('http://') || v.startsWith('https://')) {
-      return v
-    }
-    
-    // Otherwise, construct YouTube URL from video ID
+    if (v.startsWith('http://') || v.startsWith('https://')) return v
     return `https://www.youtube.com/watch?v=${v}`
   }, [])
 
+  const [sizeControl, setSizeControl] = useState(0.3) // 0 to 1
+
+  const SENSITIVITY = 1000
+
+  // WebSocket integration
+  const [wsStatus, setWsStatus] = useState<string>('Disconnected')
+  const [wsMessages, setWsMessages] = useState<string[]>([])
+  const wsRef = useRef<WebSocket | null>(null)
+
+  useEffect(() => {
+    const connectWebSocket = () => {
+      const ws: WebSocket = new WebSocket('ws://localhost:5005')
+      wsRef.current = ws
+      setWsStatus('Connecting')
+
+      ws.onopen = () => {
+        setWsStatus('Connected')
+      }
+
+      ws.onmessage = (event: MessageEvent) => {
+        // event.data is string | Blob | ArrayBuffer, so cast
+        const dataString = typeof event.data === 'string'
+          ? event.data
+          : JSON.stringify(event.data)
+
+        setWsMessages((prev: string[]) => [...prev, dataString])
+        console.log('WebSocket message received:', dataString)
+        const parsed = parseInt(dataString, 10)
+
+        setSizeControl((prev: number) => Math.min(1, Math.max(0, prev + parsed / SENSITIVITY)))
+      }
+
+      ws.onclose = () => {
+        setWsStatus('Disconnected')
+        setTimeout(connectWebSocket, 2000)
+      }
+
+      ws.onerror = () => {
+        setWsStatus('Error')
+      }
+    }
+
+    connectWebSocket()
+    return () => wsRef.current?.close()
+  }, [])
+
   const cards = [
-    { title: "Learning Path", content: "Explore structured learning paths tailored to your goals and interests." },
-    { title: "Quick Notes", content: "Capture key insights and important points from your video content." },
-    { title: "Study Tips", content: "Discover effective study techniques and productivity hacks." },
-    { title: "Resources", content: "Access curated resources and materials to enhance your learning experience." },
+    {
+      title: 'Learning Path',
+      content: 'Explore structured learning paths tailored to your goals and interests.',
+    },
+    {
+      title: 'Quick Notes',
+      content: 'Capture key insights and important points from your video content.',
+    },
+    {
+      title: 'Study Tips',
+      content: 'Discover effective study techniques and productivity hacks.',
+    },
+    {
+      title: 'Resources',
+      content: 'Access curated resources and materials to enhance your learning experience.',
+    },
   ]
 
   const cards2 = [
@@ -36,10 +88,11 @@ function App() {
 
   return (
     <Layout
-      component1={<div>Component 1</div>}
+      component1={<div>Component 1 - WS Status: {wsStatus}</div>}
       component2={<Youtube url={url} />}
       component3={<CardList cards={cards} />}
       component4={<CardList cards={cards2} />}
+      sizeControl={sizeControl}
     />
   )
 }

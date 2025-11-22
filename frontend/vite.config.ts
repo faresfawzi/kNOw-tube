@@ -10,6 +10,7 @@ export default defineConfig({
         target: process.env.VITE_API_URL || 'http://backend:8000',
         changeOrigin: true,
         secure: false,
+        ws: true, // Enable WebSocket proxying
         rewrite: (path) => path.replace(/^\/api/, ''), // Strip /api prefix
       },
     },

@@ -2,7 +2,7 @@ import os
 from pathlib import Path
 
 from dotenv import load_dotenv
-from fastapi import FastAPI
+from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 from together import Together
 from routes import transcript, quiz, flashcard, graph
@@ -46,6 +46,20 @@ def get_data():
             {"id": 2, "name": "Bob", "role": "User"},
         ]
     }
+
+# --- WEBSOCKETS ---
+@app.websocket("/ws")
+async def websocket_endpoint(ws: WebSocket):
+    await ws.accept()
+    try:
+        while True:
+            # Receive any incoming text message
+            _ = await ws.receive_text()
+            # Respond with a confirmation
+            await ws.send_text("received")
+    except WebSocketDisconnect:
+        # Client disconnected
+        pass
 
 # Include routers
 app.include_router(transcript.router)
