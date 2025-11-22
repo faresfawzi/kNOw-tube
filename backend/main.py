@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from together import Together
-from routes import transcript, quiz, graph
+from routes import transcript, quiz, flashcard, graph
 
 app = FastAPI()
 
@@ -50,4 +50,5 @@ def get_data():
 # Include routers
 app.include_router(transcript.router)
 app.include_router(quiz.router)
+app.include_router(flashcard.router)
 app.include_router(graph.router)
