@@ -5,6 +5,7 @@ from fastapi import APIRouter, HTTPException, Query, Request
 from helpers.helpers import fetch_transcript
 from helpers.quiz.create_quiz import generate_quiz_from_transcript
 
+
 router = APIRouter()
 
 
@@ -33,13 +34,7 @@ def get_quiz(
     """
     Generate a quiz for a given YouTube video transcript using Together's chat completions.
     """
-    client = getattr(request.app.state, "together_client", None)
-    if client is None:
-        raise HTTPException(
-            status_code=500,
-            detail="Together client is not configured on the FastAPI application.",
-        )
-
+    
     fetched_transcript = fetch_transcript(video_id, language_code)
     transcript_payload = fetched_transcript.to_raw_data()
 
