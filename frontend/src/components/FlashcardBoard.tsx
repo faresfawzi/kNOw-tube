@@ -1,51 +1,14 @@
 import { useEffect, useMemo, useState } from 'react'
 
-import Card from './Card'
+import Card, {
+  type Flashcard,
+  type QuizQuestion,
+  type WrongAnswerPayload,
+  extractMultiTypeFlashcards,
+  extractQaFlashcards,
+  buildWrongAnswerPayload,
+} from './card'
 import CardList, { type CardItem as ListCardItem } from './CardList'
-
-type MultiTypeFlashcard =
-  | {
-      card_type: 'knowledge'
-      title: string
-      knowledge_summary: string
-    }
-  | {
-      card_type: 'multiple_choice'
-      question: string
-      choices: string[]
-      correct_choice_index: number
-      explanation?: string
-    }
-  | {
-      card_type: 'cloze'
-      cloze_text: string
-      hint?: string
-    }
-  | {
-      card_type: 'qa'
-      question: string
-      answer: string
-      explanation?: string
-    }
-
-interface QuizQuestion {
-  question: string
-  options?: Record<string, string>
-  correct_answer?: string
-}
-
-export interface QAFlashcard {
-  question: string
-  answer: string
-  explanation?: string
-}
-
-interface WrongAnswerPayload {
-  question: string
-  options: Record<string, string>
-  correct_answer?: string
-  student_wrong_answer: string
-}
 
 const API_BASE_PATH = '/api'
 const MAX_WRONG_ANSWERS = 4
@@ -56,18 +19,18 @@ export interface FlashcardBoardProps {
   videoUrl?: string,
   moveCardRight: boolean,
   setMoveCardRight: React.Dispatch<React.SetStateAction<boolean>>,
-  setSendCardRight?: React.Dispatch<React.SetStateAction<QAFlashcard | null>>,
+  setSendCardRight?: React.Dispatch<React.SetStateAction<Flashcard | null>>,
   setKeyText?: React.Dispatch<React.SetStateAction<string>>,
 }
 
 export function FlashcardBoard({ videoUrl, moveCardRight, setMoveCardRight, setSendCardRight, setKeyText }: FlashcardBoardProps) {
   const videoId = useMemo(() => extractVideoId(videoUrl), [videoUrl])
-  const [multitypeFlashcards, setMultitypeFlashcards] = useState<MultiTypeFlashcard[]>([])
-  const [qaFlashcards, setQaFlashcards] = useState<QAFlashcard[]>([])
+  const [multitypeFlashcards, setMultitypeFlashcards] = useState<Flashcard[]>([])
+  const [qaFlashcards, setQaFlashcards] = useState<Flashcard[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [refreshIndex, setRefreshIndex] = useState(0)
-  const [currentCardView, setCurrentCardView] = useState(0)
+  const [isDeckPopoverOpen, setIsDeckPopoverOpen] = useState(false)
 
   useEffect(() => {
     if (!videoId) {
@@ -116,7 +79,7 @@ export function FlashcardBoard({ videoUrl, moveCardRight, setMoveCardRight, setS
           .map(buildWrongAnswerPayload)
           .filter((entry): entry is WrongAnswerPayload => entry !== null)
 
-        let qaCards: QAFlashcard[] = []
+        let qaCards: Flashcard[] = []
         if (wrongAnswersPayload.length) {
           const qaResponse = await fetch(`${API_BASE_PATH}/generate_qa_flashcards`, {
             method: 'POST',
@@ -135,7 +98,7 @@ export function FlashcardBoard({ videoUrl, moveCardRight, setMoveCardRight, setS
           qaCards = extractQaFlashcards(qaJson?.flashcards ?? qaJson)
         }
 
-        setKeyText && setKeyText(qaCards[0] ? qaCards[0].answer : '')
+        // setKeyText && setKeyText(qaCards[0] ? qaCards[0].answer : '')
         if (!cancelled) {
           setMultitypeFlashcards(multiCards)
           setQaFlashcards(qaCards)
@@ -159,27 +122,15 @@ export function FlashcardBoard({ videoUrl, moveCardRight, setMoveCardRight, setS
 
   const refreshFlashcards = () => setRefreshIndex((idx) => idx + 1)
 
-  const sectionTitleStyles = {
-    margin: '24px 16px 8px',
-    fontSize: '0.9rem',
-    letterSpacing: '0.08em',
-    textTransform: 'uppercase' as const,
-    color: 'rgba(255, 255, 255, 0.75)',
-  }
+  // const sectionTitleStyles = {
+  //   margin: '24px 16px 8px',
+  //   fontSize: '0.9rem',
+  //   letterSpacing: '0.08em',
+  //   textTransform: 'uppercase' as const,
+  //   color: 'rgba(255, 255, 255, 0.75)',
+  // }
 
-  const multitypeCardItems: ListCardItem[] = multitypeFlashcards.map(formatMultiTypeCard)
-  const qaCardItems: ListCardItem[] = qaFlashcards.map((card, index) => ({
-    title: `Reinforcement Card ${index + 1}`,
-    content: (
-      <div>
-        <p style={{ margin: '0 0 6px 0' }}><strong>Question:</strong> {card.question}</p>
-        <p style={{ margin: 0 }}><strong>Answer:</strong> {card.answer}</p>
-        {card.explanation && (
-          <p style={{ marginTop: '6px', opacity: 0.8 }}>{card.explanation}</p>
-        )}
-      </div>
-    ),
-  }))
+  // const qaCardItems: ListCardItem[] = formatQAFlashcards(qaFlashcards)
 
   if (!videoId) {
     return (
@@ -197,42 +148,69 @@ export function FlashcardBoard({ videoUrl, moveCardRight, setMoveCardRight, setS
     console.log("moveCardRight changed:", moveCardRight);
     console.log("Current qaFlashcards:", qaFlashcards);
     if (moveCardRight && qaFlashcards.length > 0) {
-      const selectedCard = qaFlashcards[currentCardView];
-      console.log('Preparing to send card right:', selectedCard)
-      setSendCardRight && setSendCardRight(() => selectedCard)
-      setMoveCardRight(false)
+      // const selectedCard = qaFlashcards[currentCardView];
+      // console.log('Preparing to send card right:', selectedCard)
+      // setSendCardRight && setSendCardRight(() => selectedCard)
+      // setMoveCardRight(false)
     }
   }, [moveCardRight, qaFlashcards, setMoveCardRight, setSendCardRight])
+
+  // Create a single card item for the multitype flashcards
+  const multiTypeCardItems: ListCardItem[] = multitypeFlashcards.length > 0 ? [{
+    title: 'Contextual Flashcard',
+    representations: multitypeFlashcards,
+    forceHighlight: true,
+  }] : []
 
   return (
     <div style={{ padding: '24px 5%' }}>
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', alignItems: 'center', justifyContent: 'space-between' }}>
         <div>
           <h2 style={{ margin: '0 0 4px 0' }}>Flashcard Workspace</h2>
-          <p style={{ margin: 0, opacity: 0.7 }}>Video ID: {videoId}</p>
+          {/* <p style={{ margin: 0, opacity: 0.7 }}>Video ID: {videoId}</p> */}
         </div>
-        <button
-          type="button"
-          onClick={refreshFlashcards}
-          disabled={isLoading}
-          style={{
-            padding: '10px 16px',
-            borderRadius: '999px',
-            border: 'none',
-            cursor: isLoading ? 'not-allowed' : 'pointer',
-            background: 'linear-gradient(90deg, #6366f1, #8b5cf6)',
-            color: '#fff',
-            fontWeight: 600,
-            opacity: isLoading ? 0.7 : 1,
-            transition: 'opacity 0.2s ease',
-          }}
-        >
-          {isLoading ? 'Generating flashcards...' : 'Regenerate flashcards'}
-        </button>
+        <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+          <button
+            type="button"
+            onClick={() => setIsDeckPopoverOpen(true)}
+            disabled={isLoading || multitypeFlashcards.length === 0}
+            style={{
+              padding: '10px 16px',
+              borderRadius: '999px',
+              border: 'none',
+              cursor: isLoading || multitypeFlashcards.length === 0 ? 'not-allowed' : 'pointer',
+              background: 'linear-gradient(90deg, #8b5cf6, #a78bfa)',
+              color: '#fff',
+              fontWeight: 600,
+              opacity: isLoading || multitypeFlashcards.length === 0 ? 0.5 : 1,
+              transition: 'opacity 0.2s ease',
+            }}
+          >
+            View Quiz
+          </button>
+          <button
+            type="button"
+            onClick={refreshFlashcards}
+            disabled={isLoading}
+            style={{
+              padding: '10px 16px',
+              borderRadius: '999px',
+              border: 'none',
+              cursor: isLoading ? 'not-allowed' : 'pointer',
+              background: 'linear-gradient(90deg, #6366f1, #8b5cf6)',
+              color: '#fff',
+              fontWeight: 600,
+              opacity: isLoading ? 0.7 : 1,
+              transition: 'opacity 0.2s ease',
+            }}
+          >
+            {isLoading ? 'Generating flashcards...' : 'Regenerate flashcards'}
+          </button>
+        </div>
       </div>
 
       {error && !isLoading && <Card title="Unable to load flashcards" content={error} />}
-          
+
       {isLoading && (
         <Card
           title="Working on it"
@@ -241,37 +219,10 @@ export function FlashcardBoard({ videoUrl, moveCardRight, setMoveCardRight, setS
         />
       )}
 
-      {!isLoading && !error && multitypeFlashcards.length > 1 && (
-          <div style={{ marginBottom: '16px', display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-            {multitypeFlashcards.map((_, index) => (
-              <button
-                key={index}
-                type="button"
-                onClick={() => setCurrentCardView(index)}
-                style={{
-                  padding: '8px 12px',
-                  borderRadius: '6px',
-                  border: '1px solid rgba(255, 255, 255, 0.2)',
-                  background: currentCardView === index ? 'rgba(99, 102, 241, 0.8)' : 'transparent',
-                  color: '#fff',
-                  cursor: 'pointer',
-                  fontSize: '0.9rem',
-                  transition: 'background 0.2s ease',
-                }}
-              >
-                Card {index + 1}
-              </button>
-            ))}
-          </div>
-      )}
-
       <section>
-        <h3 style={sectionTitleStyles}>Multitype Flashcards</h3>
+        {/* <h3 style={sectionTitleStyles}>Multitype Flashcards</h3> */}
         <CardList
-          cards={[multitypeCardItems[currentCardView] ? multitypeCardItems[currentCardView] : {
-            title: 'No flashcards available',
-            content: 'There are no multitype flashcards to display at this time.',
-          }]}
+          cards={multiTypeCardItems}
           emptyState={(
             <Card
               title="No flashcards yet"
@@ -282,7 +233,7 @@ export function FlashcardBoard({ videoUrl, moveCardRight, setMoveCardRight, setS
         />
       </section>
 
-      <section>
+      {/* <section>
         <h3 style={sectionTitleStyles}>Q&A Flashcards</h3>
         <CardList
           cards={qaCardItems}
@@ -294,7 +245,82 @@ export function FlashcardBoard({ videoUrl, moveCardRight, setMoveCardRight, setS
           )}
           containerStyle={{ padding: 0 }}
         />
-      </section>
+      </section> */}
+
+      {/* Deck Popover */}
+      {isDeckPopoverOpen && (
+        <div
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0, 0, 0, 0.7)',
+            backdropFilter: 'blur(4px)',
+            zIndex: 1000,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '40px',
+          }}
+          onClick={() => setIsDeckPopoverOpen(false)}
+        >
+          <div
+            style={{
+              backgroundColor: 'rgba(15, 23, 42, 0.95)',
+              backdropFilter: 'blur(20px)',
+              borderRadius: '24px',
+              border: '1px solid rgba(255, 255, 255, 0.2)',
+              width: '90%',
+              maxWidth: '1200px',
+              maxHeight: '90vh',
+              overflow: 'auto',
+              position: 'relative',
+              padding: '32px',
+              boxShadow: '0 20px 60px rgba(0, 0, 0, 0.5)',
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+              <h2 style={{ margin: 0, fontSize: '1.5em', fontWeight: 600 }}>Flashcard Quiz</h2>
+              <button
+                type="button"
+                onClick={() => setIsDeckPopoverOpen(false)}
+                style={{
+                  background: 'rgba(255, 255, 255, 0.1)',
+                  border: '1px solid rgba(255, 255, 255, 0.2)',
+                  borderRadius: '8px',
+                  padding: '8px 16px',
+                  color: '#fff',
+                  cursor: 'pointer',
+                  fontWeight: 600,
+                  transition: 'background 0.2s ease',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = 'rgba(255, 255, 255, 0.2)'
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)'
+                }}
+              >
+                Close
+              </button>
+            </div>
+            <CardList
+              cards={multiTypeCardItems}
+              displayFormat="quiz"
+              emptyState={(
+                <Card
+                  title="No flashcards in quiz"
+                  content="Generate flashcards to see them in quiz view."
+                />
+              )}
+              containerStyle={{ padding: 0 }}
+            />
+          </div>
+        </div>
+      )}
     </div>
   )
 }
@@ -318,143 +344,5 @@ function extractVideoId(videoUrl?: string): string | undefined {
   return undefined
 }
 
-function extractMultiTypeFlashcards(payload: unknown): MultiTypeFlashcard[] {
-  if (!payload) return []
-  if (Array.isArray(payload)) return payload.filter(isMultiTypeFlashcard)
-  if (typeof payload === 'object') {
-    const maybeNested = (payload as Record<string, unknown>).flashcards
-    if (Array.isArray(maybeNested)) {
-      return maybeNested.filter(isMultiTypeFlashcard)
-    }
-  }
-  return []
-}
-
-function extractQaFlashcards(payload: unknown): QAFlashcard[] {
-  if (!payload) return []
-  if (Array.isArray(payload)) {
-    return payload.filter((item): item is QAFlashcard => {
-      if (!item || typeof item !== 'object') return false
-      const typed = item as Record<string, unknown>
-      return typeof typed.question === 'string' && typeof typed.answer === 'string'
-    })
-  }
-  if (typeof payload === 'object') {
-    const maybeNested = (payload as Record<string, unknown>).flashcards
-    if (Array.isArray(maybeNested)) {
-      return extractQaFlashcards(maybeNested)
-    }
-  }
-  return []
-}
-
-function isMultiTypeFlashcard(card: unknown): card is MultiTypeFlashcard {
-  if (!card || typeof card !== 'object') {
-    return false
-  }
-  return typeof (card as Record<string, unknown>).card_type === 'string'
-}
-
-function pickWrongAnswerKey(question: QuizQuestion): string | null {
-  const options = question.options ?? {}
-  const optionKeys = Object.keys(options)
-  if (!optionKeys.length) {
-    return null
-  }
-  const wrongOptions = question.correct_answer
-    ? optionKeys.filter((key) => key !== question.correct_answer)
-    : optionKeys
-  const pool = wrongOptions.length ? wrongOptions : optionKeys
-  const randomIndex = Math.floor(Math.random() * pool.length)
-  return pool[randomIndex] ?? null
-}
-
-function buildWrongAnswerPayload(question: QuizQuestion): WrongAnswerPayload | null {
-  if (typeof question.question !== 'string' || !question.options) {
-    return null
-  }
-  const wrongAnswerKey = pickWrongAnswerKey(question)
-  if (!wrongAnswerKey) {
-    return null
-  }
-  return {
-    question: question.question,
-    options: question.options,
-    correct_answer: question.correct_answer,
-    student_wrong_answer: wrongAnswerKey,
-  }
-}
-
-function formatMultiTypeCard(card: MultiTypeFlashcard): ListCardItem {
-  if (card.card_type === 'knowledge') {
-    return {
-      title: card.title,
-      content: card.knowledge_summary,
-      forceHighlight: true,
-    }
-  }
-
-  if (card.card_type === 'multiple_choice') {
-    const content = (
-      <div>
-        <p style={{ margin: '0 0 8px 0' }}>{card.question}</p>
-        <ul style={{ listStyle: 'none', paddingLeft: 0, margin: '0 0 8px 0' }}>
-          {card.choices.map((choice, idx) => {
-            const label = String.fromCharCode(65 + idx)
-            const isCorrect = card.correct_choice_index === idx
-            return (
-              <li
-                key={`${label}-${choice}`}
-                style={{ marginBottom: '6px', display: 'flex', gap: '8px', alignItems: 'baseline' }}
-              >
-                <span style={{ fontWeight: 600 }}>{label}.</span>
-                <span>
-                  {choice}
-                  {isCorrect && (
-                    <span style={{ color: '#93c5fd', marginLeft: '6px' }}>✓ correct</span>
-                  )}
-                </span>
-              </li>
-            )
-          })}
-        </ul>
-        {card.explanation && (
-          <p style={{ margin: 0, opacity: 0.8 }}>{card.explanation}</p>
-        )}
-      </div>
-    )
-    return {
-      title: 'Multiple Choice Challenge',
-      content,
-    }
-  }
-
-  if (card.card_type === 'cloze') {
-    return {
-      title: 'Cloze Recall Card',
-      content: (
-        <div>
-          <p style={{ margin: 0 }}>{card.cloze_text}</p>
-          {card.hint && (
-            <p style={{ marginTop: '8px', opacity: 0.8 }}>Hint: {card.hint}</p>
-          )}
-        </div>
-      ),
-    }
-  }
-
-  return {
-    title: 'Q&A Flashcard',
-    content: (
-      <div>
-        <p style={{ margin: '0 0 6px 0' }}><strong>Question:</strong> {card.question}</p>
-        <p style={{ margin: 0 }}><strong>Answer:</strong> {card.answer}</p>
-        {card.explanation && (
-          <p style={{ marginTop: '6px', opacity: 0.8 }}>{card.explanation}</p>
-        )}
-      </div>
-    ),
-  }
-}
 
 export default FlashcardBoard

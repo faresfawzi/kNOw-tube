@@ -10,143 +10,144 @@
         "correct_answer": "B"
     },
     {
-        "question": "What three revolutionary products did Jobs initially claim were being introduced before revealing they were one device?",
+        "question": "Which three products did Steve Jobs initially claim were being introduced before revealing they were one device?",
         "options": {
-            "A": "iPod, camera, tablet",
+            "A": "iPod, camera, internet communicator",
             "B": "iPod, phone, internet communicator",
-            "C": "phone, laptop, camera",
-            "D": "iPod, tablet, phone"
+            "C": "iPod, tablet, phone",
+            "D": "phone, camera, music player"
         },
         "correct_answer": "B"
+    },
+    {
+        "question": "What did Apple call the new device that combined an iPod, a phone, and an internet communicator?",
+        "options": {
+            "A": "iPod Touch",
+            "B": "iTablet",
+            "C": "iPhone",
+            "D": "iCom"
+        },
+        "correct_answer": "C"
     },
     {
         "question": "What pointing device did Apple choose for the iPhone instead of a stylus?",
         "options": {
-            "A": "trackpad",
+            "A": "trackball",
             "B": "mouse",
-            "C": "fingers",
-            "D": "trackball"
+            "C": "keyboard",
+            "D": "fingers"
         },
-        "correct_answer": "C"
+        "correct_answer": "D"
     },
     {
-        "question": "What is the name of the new touch technology Apple introduced with the iPhone?",
-        "options": {
-            "A": "TouchFlow",
-            "B": "SmartTouch",
-            "C": "Multi-touch",
-            "D": "FingerSense"
-        },
-        "correct_answer": "C"
-    },
-    {
-        "question": "Which application does the iPhone use to sync media and data with a computer?",
-        "options": {
-            "A": "Finder",
-            "B": "iCloud",
-            "C": "iTunes",
-            "D": "AirDrop"
-        },
-        "correct_answer": "C"
-    },
-    {
-        "question": "According to the video, what problem do fixed plastic buttons on smartphones create?",
-        "options": {
-            "A": "They break easily",
-            "B": "They cannot change for different applications",
-            "C": "They are too small",
-            "D": "They use too much battery"
-        },
-        "correct_answer": "B"
-    },
-    {
-        "question": "Which operating system does the iPhone run, as stated in the video?",
+        "question": "Which software does the iPhone run according to the video content?",
         "options": {
             "A": "iOS",
             "B": "OS X",
-            "C": "Darwin",
-            "D": "Mac OS 9"
+            "C": "Windows Mobile",
+            "D": "Symbian"
         },
         "correct_answer": "B"
     },
     {
-        "question": "Who is quoted as saying ""people who are really serious about software should make their own hardware""?",
+        "question": "What problem with smartphones did Steve Jobs highlight regarding their keyboards?",
         "options": {
-            "A": "Steve Jobs",
-            "B": "Bill Gates",
-            "C": "Alan Kay",
-            "D": "Steve Wozniak"
-        },
-        "correct_answer": "C"
-    },
-    {
-        "question": "What screen size does the iPhone have?",
-        "options": {
-            "A": "3.0 inches",
-            "B": "3.5 inches",
-            "C": "4.0 inches",
-            "D": "2.8 inches"
+            "A": "they are too small",
+            "B": "they can't change for different applications",
+            "C": "they break easily",
+            "D": "they use too much battery"
         },
         "correct_answer": "B"
     },
     {
-        "question": "Which of these is NOT mentioned as data that iTunes can sync to the iPhone?",
-        "options": {
-            "A": "bookmarks",
-            "B": "notes",
-            "C": "voice memos",
-            "D": "email accounts"
-        },
-        "correct_answer": "C"
-    },
-    {
-        "question": "What prior Apple product’s syncing experience was leveraged for the iPhone?",
+        "question": "Which earlier Apple product's syncing method was reused for the iPhone?",
         "options": {
             "A": "iMac",
-            "B": "iPod",
-            "C": "Newton",
+            "B": "Apple TV",
+            "C": "iPod",
             "D": "PowerBook"
         },
+        "correct_answer": "C"
+    },
+    {
+        "question": "What new touch technology did Apple invent for the iPhone?",
+        "options": {
+            "A": "Force Touch",
+            "B": "Multi-Touch",
+            "C": "3D Touch",
+            "D": "Long Touch"
+        },
         "correct_answer": "B"
     },
     {
-        "question": "How many years ahead did Jobs claim iPhone’s software was compared to other phones?",
+        {
+        "question": "According to the video, how far ahead is iPhone's software compared to other phones?",
         "options": {
-            "A": "3",
-            "B": "4",
-            "C": "5",
-            "D": "6"
+            "A": "2 years",
+            "B": "3 years",
+            "C": "5 years",
+            "D": "10 years"
         },
         "correct_answer": "C"
     },
     {
-        "question": "Which smartphones were explicitly shown as examples of devices with outdated user interfaces?",
+        "question": "Which quote did Steve Jobs attribute to Alan Kay regarding serious software makers?",
         "options": {
-            "A": "Motorola Q, BlackBerry, Palm Treo, Nokia E62",
-            "B": "HTC Typhoon, Samsung BlackJack, Sony Ericsson P910, LG Chocolate",
-            "C": "Sidekick 3, Nokia N95, Motorola RAZR, Samsung D900",
-            "D": "Palm Pre, BlackBerry Storm, HTC Dream, Sony Xperia"
+            "A": "Software is eating the world",
+            "B": "People who are really serious about software should make their own hardware",
+            "C": "The best way to predict the future is to invent it",
+            "D": "Hardware is the soul of software"
         },
-        "correct_answer": "A"
+        "correct_answer": "B"
     },
     {
-        "question": "What foundational graphics technology built into OS X is mentioned as being included in the iPhone?",
+        "question": "What screen size does the iPhone have as mentioned in the video?",
         "options": {
-            "A": "Metal",
-            "B": "OpenGL",
-            "C": "Core Animation",
-            "D": "Quartz Extreme"
+            "A": "3 inches",
+            "B": "3.5 inches",
+            "C": "4 inches",
+            "D": "4.5 inches"
+        },
+        "correct_answer": "B"
+    },
+    {
+        "question": "Which of these is NOT listed as something iTunes syncs to the iPhone?",
+        "options": {
+            "A": "music",
+            "B": "bookmarks",
+            "C": "apps",
+            "D": "calendars"
         },
         "correct_answer": "C"
     },
     {
-        "question": "Which Apple user interface innovation immediately preceded multi-touch, according to the sequence given?",
+        "question": "What prior Apple user interface breakthrough was mentioned right before Multi-Touch?",
         "options": {
-            "A": "mouse",
+            "A": "trackpad",
             "B": "click wheel",
-            "C": "trackpad",
-            "D": "graphical user interface"
+            "C": "touch bar",
+            "D": "force click"
         },
         "correct_answer": "B"
+    },
+    {
+        "question": "Which smartphone was specifically named as one of the usual suspects with a fixed keyboard?",
+        "options": {
+            "A": "HTC Dream",
+            "B": "Motorola Q",
+            "C": "Samsung Galaxy",
+            "D": "LG Voyager"
+        },
+        "correct_answer": "B"
+    },
+    {
+        "question": "What foundational OS feature was highlighted for already knowing how to power-manage mobile devices?",
+        "options": {
+            "A": "OS 9",
+            "B": "Darwin",
+            "C": "OS X",
+            "D": "iOS kernel"
+        },
+        "correct_answer": "C"
     }
 ]
