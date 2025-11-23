@@ -1,4 +1,4 @@
-import { type ReactNode, useState } from 'react'
+import { type ReactNode, useEffect, useState } from 'react'
 import {
   KnowledgeCardContent,
   MultipleChoiceCardContent,
@@ -15,6 +15,7 @@ interface CardProps {
   onMouseEnter?: () => void
   onMouseLeave?: () => void
   hideTitle?: boolean
+  isDeckPopoverOpen?: boolean
 }
 
 function Card({
@@ -25,6 +26,7 @@ function Card({
   onMouseEnter,
   onMouseLeave,
   hideTitle = false,
+  isDeckPopoverOpen
 }: CardProps) {
   const [selectedRepresentationIndex, setSelectedRepresentationIndex] = useState(0)
 
@@ -44,25 +46,33 @@ function Card({
   let displayContent = content
   let shouldHideTitle = hideTitle
 
-  if (currentRepresentation) {
-    if (currentRepresentation.card_type === 'knowledge') {
-      displayTitle = currentRepresentation.title || title
-      displayContent = <KnowledgeCardContent card={currentRepresentation} />
-      // Knowledge cards usually show the title
-    } else if (currentRepresentation.card_type === 'multiple_choice') {
-      displayTitle = 'Multiple Choice Challenge'
-      displayContent = <MultipleChoiceCardContent card={currentRepresentation} />
-      shouldHideTitle = true
-    } else if (currentRepresentation.card_type === 'cloze') {
-      displayTitle = 'Cloze Recall Card'
-      displayContent = <ClozeCardContent card={currentRepresentation} />
-      shouldHideTitle = true
-    } else if (currentRepresentation.card_type === 'qa') {
-      displayTitle = 'Q&A Flashcard'
-      displayContent = <QACardContent card={currentRepresentation} />
-      shouldHideTitle = true
+ 
+     if (currentRepresentation) {
+       if (isDeckPopoverOpen) {
+          displayTitle = 'Multiple Choice Challenge'
+          displayContent = <MultipleChoiceCardContent card={currentRepresentation} />
+          shouldHideTitle = true
+      } else {
+        if (currentRepresentation.card_type === 'knowledge') {
+          displayTitle = currentRepresentation.title || title
+          displayContent = <KnowledgeCardContent card={currentRepresentation} />
+          // Knowledge cards usually show the title
+        } else if (currentRepresentation.card_type === 'multiple_choice') {
+          displayTitle = 'Multiple Choice Challenge'
+          displayContent = <MultipleChoiceCardContent card={currentRepresentation} />
+          shouldHideTitle = true
+        } else if (currentRepresentation.card_type === 'cloze') {
+          displayTitle = 'Cloze Recall Card'
+          displayContent = <ClozeCardContent card={currentRepresentation} />
+          shouldHideTitle = true
+        } else if (currentRepresentation.card_type === 'qa') {
+          displayTitle = 'Q&A Flashcard'
+          displayContent = <QACardContent card={currentRepresentation} />
+          shouldHideTitle = true
+        }
     }
   }
+ 
 
   const body = typeof displayContent === 'string'
     ? <p style={contentStyles}>{displayContent}</p>
@@ -74,6 +84,8 @@ function Card({
     2: 'Cloze Recall Card',
     3: 'Q&A Flashcard',
   }
+
+
 
   return (
     <div
@@ -130,7 +142,7 @@ function Card({
       )}
 
       {/* Representation Picker */}
-      {hasRepresentations && representations.length > 1 && (
+      { !isDeckPopoverOpen && hasRepresentations && representations.length > 1 && (
         <div className="card" style={{ position: 'absolute', bottom: '10px', right: '20px', zIndex: 10 }}>
           <div style={{ position: 'relative', minWidth: '180px' }}>
             <select

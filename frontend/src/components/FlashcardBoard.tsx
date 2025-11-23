@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { use, useEffect, useMemo, useState } from 'react'
 
 import Card, {
   type Flashcard,
@@ -141,6 +141,7 @@ export function FlashcardBoard({ videoUrl, moveCardRight, setMoveCardRight, setS
           title="Flashcards"
           content="Add ?v=YOUTUBE_VIDEO_ID to the URL or interact with the player to generate AI flashcards for that video."
           isHighlighted
+          isDeckPopoverOpen={isDeckPopoverOpen}
         />
       </div>
     )
@@ -158,11 +159,50 @@ export function FlashcardBoard({ videoUrl, moveCardRight, setMoveCardRight, setS
   }, [moveCardRight, qaFlashcards, setMoveCardRight, setSendCardRight])
 
   // Create a single card item for the multitype flashcards
-  const multiTypeCardItems: ListCardItem[] = multitypeFlashcards.length > 0 ? [{
-    title: 'Contextual Flashcard',
-    representations: multitypeFlashcards,
-    forceHighlight: true,
-  }] : []
+  // use very group of 4 multitype flashcards as one card with representations
+  let multiTypeCardItems: ListCardItem[] = []
+  for (let i=0; i < multitypeFlashcards.length; i += 4) {
+    multiTypeCardItems.push({
+        title: 'Contextual Flashcard',
+        representations: multitypeFlashcards.slice(i, i + 4),
+        forceHighlight: i === 0,
+      })
+  }
+
+  function discoFunction(overrideColor?: string) {
+      const COLORS = ['blue', 'green', 'red'];
+
+      function randomColor() {
+        return COLORS[Math.floor(Math.random() * COLORS.length)];
+      }
+
+      function sendRandomColors() {
+        for (let id = 1; id <= 9; id++) {
+          fetch('/api/color', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id, text: overrideColor ?? randomColor() })
+          });
+        }
+      }
+
+      // 5 waves within 500 ms
+      for (let i = 0; i < 5; i++) {
+        setTimeout(sendRandomColors, i * 500); // 0, 100, 200, 300, 400 ms
+      }
+
+
+    }
+
+  useEffect(() => {
+    if (isDeckPopoverOpen) {
+      discoFunction();
+    } else {
+      // Reset colors to off when popover is closed
+      discoFunction("hi");
+    }
+  }, [isDeckPopoverOpen])
+
 
   return (
     <div style={{ padding: '24px 5%' }}>

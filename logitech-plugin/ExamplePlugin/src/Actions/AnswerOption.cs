@@ -17,7 +17,7 @@ namespace Loupedeck.ExamplePlugin
         {
             // set a timer that runs a function every second
             // Create a timer with a two second interval.
-            aTimer = new Timer(10000);
+            aTimer = new Timer(250);
             // Hook up the Elapsed event for the timer. 
             aTimer.Elapsed += this.OnTimedEvent;
             aTimer.AutoReset = true;
