@@ -12,35 +12,55 @@
     {
         "question": "Which three products did Steve Jobs initially claim were being introduced before revealing they were one device?",
         "options": {
-            "A": "iPod, camera, internet communicator",
+            "A": "iPod, camera, phone",
             "B": "iPod, phone, internet communicator",
-            "C": "iPod, tablet, phone",
-            "D": "phone, camera, music player"
+            "C": "iPod, tablet, email device",
+            "D": "Phone, camera, PDA"
         },
         "correct_answer": "B"
     },
     {
         "question": "What did Apple call the new device that combined an iPod, a phone, and an internet communicator?",
         "options": {
-            "A": "iPod Touch",
-            "B": "iTablet",
+            "A": "iPod Phone",
+            "B": "Apple Phone",
             "C": "iPhone",
-            "D": "iCom"
+            "D": "iCommunicator"
         },
         "correct_answer": "C"
     },
     {
         "question": "What pointing device did Apple choose for the iPhone instead of a stylus?",
         "options": {
-            "A": "trackball",
-            "B": "mouse",
-            "C": "keyboard",
-            "D": "fingers"
+            "A": "Trackball",
+            "B": "Mouse",
+            "C": "Click wheel",
+            "D": "Fingers"
         },
         "correct_answer": "D"
     },
     {
-        "question": "Which software does the iPhone run according to the video content?",
+        "question": "What is the name of the new touch technology Apple introduced with the iPhone?",
+        "options": {
+            "A": "TouchFlow",
+            "B": "Multi-touch",
+            "C": "FingerSense",
+            "D": "SmartTouch"
+        },
+        "correct_answer": "B"
+    },
+    {
+        "question": "According to the video, what problem do traditional smartphones have with their physical keyboards?",
+        "options": {
+            "A": "They are too small",
+            "B": "They can't change for different applications",
+            "C": "They break easily",
+            "D": "They use too much battery"
+        },
+        "correct_answer": "B"
+    },
+    {
+        "question": "Which operating system does the iPhone run?",
         "options": {
             "A": "iOS",
             "B": "OS X",
@@ -50,48 +70,18 @@
         "correct_answer": "B"
     },
     {
-        "question": "What problem with smartphones did Steve Jobs highlight regarding their keyboards?",
+        "question": "How does the iPhone sync data with a computer?",
         "options": {
-            "A": "they are too small",
-            "B": "they can't change for different applications",
-            "C": "they break easily",
-            "D": "they use too much battery"
-        },
-        "correct_answer": "B"
-    },
-    {
-        "question": "Which earlier Apple product's syncing method was reused for the iPhone?",
-        "options": {
-            "A": "iMac",
-            "B": "Apple TV",
-            "C": "iPod",
-            "D": "PowerBook"
+            "A": "Through iCloud",
+            "B": "Through Bluetooth",
+            "C": "Through iTunes",
+            "D": "Through AirDrop"
         },
         "correct_answer": "C"
-    },
-    {
-        "question": "What new touch technology did Apple invent for the iPhone?",
-        "options": {
-            "A": "Force Touch",
-            "B": "Multi-Touch",
-            "C": "3D Touch",
-            "D": "Long Touch"
-        },
-        "correct_answer": "B"
     },
     {
         {
-        "question": "According to the video, how far ahead is iPhone's software compared to other phones?",
-        "options": {
-            "A": "2 years",
-            "B": "3 years",
-            "C": "5 years",
-            "D": "10 years"
-        },
-        "correct_answer": "C"
-    },
-    {
-        "question": "Which quote did Steve Jobs attribute to Alan Kay regarding serious software makers?",
+        "question": "Which quote from Alan Kay is used to explain Apple’s approach to hardware and software?",
         "options": {
             "A": "Software is eating the world",
             "B": "People who are really serious about software should make their own hardware",
@@ -101,53 +91,63 @@
         "correct_answer": "B"
     },
     {
-        "question": "What screen size does the iPhone have as mentioned in the video?",
+        "question": "What screen size does the iPhone have?",
         "options": {
             "A": "3 inches",
             "B": "3.5 inches",
             "C": "4 inches",
-            "D": "4.5 inches"
+            "D": "2.8 inches"
         },
         "correct_answer": "B"
     },
     {
-        "question": "Which of these is NOT listed as something iTunes syncs to the iPhone?",
+        "question": "What does Jobs claim about the iPhone’s software compared to other phones?",
         "options": {
-            "A": "music",
-            "B": "bookmarks",
-            "C": "apps",
-            "D": "calendars"
+            "A": "It is open source",
+            "B": "It is 5 years ahead",
+            "C": "It is based on Linux",
+            "D": "It is compatible with Android"
+        },
+        "correct_answer": "B"
+    },
+    {
+        "question": "Which of these is NOT mentioned as something iTunes syncs to the iPhone?",
+        "options": {
+            "A": "Email accounts",
+            "B": "Bookmarks",
+            "C": "System preferences",
+            "D": "Calendars"
         },
         "correct_answer": "C"
     },
     {
-        "question": "What prior Apple user interface breakthrough was mentioned right before Multi-Touch?",
+        "question": "What prior Apple user interfaces are mentioned as revolutionary before multi-touch?",
         "options": {
-            "A": "trackpad",
-            "B": "click wheel",
-            "C": "touch bar",
-            "D": "force click"
+            "A": "Mouse and click wheel",
+            "B": "Keyboard and mouse",
+            "C": "Click wheel and stylus",
+            "D": "Trackpad and mouse"
         },
-        "correct_answer": "B"
+        "correct_answer": "A"
     },
     {
-        "question": "Which smartphone was specifically named as one of the usual suspects with a fixed keyboard?",
+        "question": "What does Jobs say about the accuracy of multi-touch compared to previous touch displays?",
         "options": {
-            "A": "HTC Dream",
-            "B": "Motorola Q",
-            "C": "Samsung Galaxy",
-            "D": "LG Voyager"
-        },
-        "correct_answer": "B"
-    },
-    {
-        "question": "What foundational OS feature was highlighted for already knowing how to power-manage mobile devices?",
-        "options": {
-            "A": "OS 9",
-            "B": "Darwin",
-            "C": "OS X",
-            "D": "iOS kernel"
+            "A": "It is slightly better",
+            "B": "It is the same",
+            "C": "It is far more accurate",
+            "D": "It is less accurate but faster"
         },
         "correct_answer": "C"
+    },
+    {
+        "question": "What metaphor does Jobs use to describe the iPhone’s position on the smart vs. easy-to-use graph?",
+        "options": {
+            "A": "Leapfrog product",
+            "B": "Sweet spot",
+            "C": "Game changer",
+            "D": "Paradigm shift"
+        },
+        "correct_answer": "A"
     }
 ]

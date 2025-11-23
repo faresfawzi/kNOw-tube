@@ -136,6 +136,7 @@ function CardList({
 
   return (
     <div
+      
       style={{
         padding: '8px 5%',
         ...containerStyle,
@@ -147,6 +148,7 @@ function CardList({
 
         return (
           <div
+            className="card-list-container"
             key={`${card.title}-${index}`}
           >
             <Card

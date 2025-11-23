@@ -111,7 +111,7 @@ function App() {
     return `https://www.youtube.com/watch?v=${v}`
   }, [])
 
-  const [sizeControl, setSizeControl] = useState(0.6)
+  const [sizeControl, setSizeControl] = useState(0.33)
   const [selectedIndex2, setSelectedIndex2] = useState<number | null>(null)
   const [selectedFeatureIndex, setSelectedFeatureIndex] = useState<number | null>(null)
   const [currentSmallWheelOffset, setCurrentSmallWheelOffset] = useState(0)

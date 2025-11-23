@@ -164,12 +164,8 @@ export function FlashcardBoard({ videoUrl, moveCardRight, setMoveCardRight, setS
 
   return (
     <div style={{ padding: '24px 5%' }}>
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', alignItems: 'center', justifyContent: 'space-between' }}>
-        <div>
-          <h2 style={{ margin: '0 0 4px 0' }}>Flashcard Workspace</h2>
-          {/* <p style={{ margin: 0, opacity: 0.7 }}>Video ID: {videoId}</p> */}
-        </div>
-        <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+      <div className="flashContainer" style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div className="buttonsFlashcards" style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
           <button
             type="button"
             onClick={() => setIsDeckPopoverOpen(true)}
@@ -210,25 +206,20 @@ export function FlashcardBoard({ videoUrl, moveCardRight, setMoveCardRight, setS
       </div>
 
       {error && !isLoading && <Card title="Unable to load flashcards" content={error} />}
-
+{/* 
       {isLoading && (
         <Card
           title="Working on it"
           content="We are generating both multi-type and Q&A flashcards from your video."
           isHighlighted
         />
-      )}
+      )} */}
 
       <section>
         {/* <h3 style={sectionTitleStyles}>Multitype Flashcards</h3> */}
         <CardList
           cards={multiTypeCardItems}
-          emptyState={(
-            <Card
-              title="No flashcards yet"
-              content="Click the regenerate button above to fetch contextual flashcards from the transcript."
-            />
-          )}
+          
           containerStyle={{ padding: 0 }}
         />
       </section>
