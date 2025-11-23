@@ -10,12 +10,12 @@
         "correct_answer": "B"
     },
     {
-        "question": "Which three products did Steve Jobs initially claim Apple was introducing before revealing they were one device?",
+        "question": "Which three products did Steve Jobs initially claim were being introduced before revealing they were one device?",
         "options": {
-            "A": "iPod, camera, phone",
+            "A": "iPod, tablet, camera",
             "B": "iPod, phone, internet communicator",
-            "C": "iPod, tablet, email device",
-            "D": "iPod, radio, browser"
+            "C": "laptop, phone, camera",
+            "D": "iPod, laptop, tablet"
         },
         "correct_answer": "B"
     },
@@ -30,14 +30,14 @@
         "correct_answer": "C"
     },
     {
-        "question": "Which operating system does the iPhone run?",
+        "question": "Which operating system does the iPhone run according to the video?",
         "options": {
             "A": "iOS",
-            "B": "OS X",
-            "C": "Windows Mobile",
-            "D": "Symbian"
+            "B": "OS 9",
+            "C": "OS X",
+            "D": "Windows Mobile"
         },
-        "correct_answer": "B"
+        "correct_answer": "C"
     },
     {
         "question": "How does the iPhone sync data with a computer?",
@@ -45,29 +45,29 @@
             "A": "Through iTunes",
             "B": "Through Bluetooth",
             "C": "Through AirDrop",
-            "D": "Through Finder"
+            "D": "Through iCloud"
         },
         "correct_answer": "A"
     },
     {
-        "question": "What problem did Steve Jobs identify with existing smartphone keyboards?",
+        "question": "What problem with existing smartphones does Steve Jobs highlight regarding their keyboards?",
         "options": {
-            "A": "They were too small",
-            "B": "They couldn’t change for different applications",
-            "C": "They used too much battery",
-            "D": "They lacked backlighting"
+            "A": "They are too small",
+            "B": "They are fixed and cannot change per application",
+            "C": "They break easily",
+            "D": "They lack backlighting"
         },
         "correct_answer": "B"
     },
     {
-        "question": "Which pointing device did Apple decide NOT to use for the iPhone?",
+        "question": "Which pointing device did Apple decide against using for the iPhone?",
         "options": {
-            "A": "Mouse",
+            "A": "Trackball",
             "B": "Stylus",
-            "C": "Trackball",
-            "D": "Both A and B"
+            "C": "Joystick",
+            "D": "Touchpad"
         },
-        "correct_answer": "D"
+        "correct_answer": "B"
     },
     {
         "question": "According to the video, how far ahead is iPhone’s software compared to other phones?",
@@ -81,57 +81,47 @@
     },
     {
         {
-        "question": "Which quote from Alan Kay did Steve Jobs reference to explain Apple’s hardware-software integration?",
+        "question": "Which quote from Alan Kay is used to explain Apple’s approach to hardware and software?",
         "options": {
-            "A": "Innovation distinguishes between a leader and a follower",
+            "A": "Software is eating the world",
             "B": "People who are really serious about software should make their own hardware",
             "C": "The best way to predict the future is to invent it",
-            "D": "Simple can be harder than complex"
+            "D": "Hardware is the soul of software"
         },
         "correct_answer": "B"
     },
     {
         "question": "What screen size does the iPhone have?",
         "options": {
-            "A": "3 inches",
-            "B": "3.5 inches",
-            "C": "4 inches",
-            "D": "4.5 inches"
+            "A": "2.5 inches",
+            "B": "3 inches",
+            "C": "3.5 inches",
+            "D": "4 inches"
         },
-        "correct_answer": "B"
+        "correct_answer": "C"
     },
     {
         "question": "Which of these is NOT listed as something iTunes syncs to the iPhone?",
         "options": {
             "A": "Music videos",
             "B": "Podcasts",
-            "C": "Voice memos",
-            "D": "Email account setup"
+            "C": "System preferences",
+            "D": "Email accounts"
         },
         "correct_answer": "C"
     },
     {
-        "question": "What metaphor did Jobs use to describe the iPhone’s position relative to existing phones on a smart-vs-easy graph?",
+        "question": "What metaphor does Jobs use to describe the iPhone’s position relative to existing phones on a smart-vs-easy graph?",
         "options": {
             "A": "Leapfrog product",
             "B": "Paradigm shift",
-            "C": "Disruptive innovation",
-            "D": "Quantum leap"
+            "C": "Quantum leap",
+            "D": "Disruptive innovation"
         },
         "correct_answer": "A"
     },
     {
-        "question": "Which component of OS X is specifically mentioned as being built into the iPhone for graphics?",
-        "options": {
-            "A": "Quartz Extreme",
-            "B": "Core Animation",
-            "C": "Metal",
-            "D": "OpenGL"
-        },
-        "correct_answer": "B"
-    },
-    {
-        "question": "What prior Apple user interface was cited as the second revolutionary UI after the mouse?",
+        "question": "Which previous Apple user interface is mentioned as the second revolutionary UI after the mouse?",
         "options": {
             "A": "Dock",
             "B": "Click Wheel",
@@ -141,13 +131,23 @@
         "correct_answer": "B"
     },
     {
-        "question": "Which smartphone was NOT shown among the four typical suspects when discussing UI problems?",
+        "question": "What specific networking capability of OS X is cited as beneficial for the iPhone?",
         "options": {
-            "A": "Motorola Q",
-            "B": "BlackBerry",
-            "C": "Palm Treo",
-            "D": "HTC Typhoon"
+            "A": "Wi-Fi 6",
+            "B": "Best networking",
+            "C": "5G support",
+            "D": "Ethernet over USB"
         },
-        "correct_answer": "D"
+        "correct_answer": "B"
+    },
+    {
+        "question": "Which of these smartphones is explicitly named as one of the usual suspects with outdated UI?",
+        "options": {
+            "A": "HTC Dream",
+            "B": "Nokia E62",
+            "C": "Samsung Galaxy",
+            "D": "LG Voyager"
+        },
+        "correct_answer": "B"
     }
 ]
