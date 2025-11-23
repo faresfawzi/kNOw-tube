@@ -6,6 +6,7 @@ interface YoutubeProps {
   width?: string | number
   height?: string | number
   currentSmallWheelOffset?: number
+  setTimestamp?: React.Dispatch<React.SetStateAction<number>>
   active?: boolean
 }
 
@@ -13,9 +14,11 @@ function Youtube({
   url = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
   width = '100%',
   height = '100%',
-  currentSmallWheelOffset = 0
+  currentSmallWheelOffset = 0,
+  setTimestamp
 }: YoutubeProps) {
   const [playbackRate, setPlaybackRate] = useState(1.0)
+  
 
   useEffect(() => {
     console.log('Youtube component - currentSmallWheelOffset changed:', currentSmallWheelOffset)
@@ -47,6 +50,7 @@ function Youtube({
         height={height}
         controls={true}
         playbackRate={playbackRate}
+        onTimeUpdate={(e) => setTimestamp && setTimestamp(e.timeStamp)}
       />
     </div>
   )

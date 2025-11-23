@@ -20,7 +20,7 @@ function App() {
     return `https://www.youtube.com/watch?v=${v}`
   }, [])
 
-  const [sizeControl, setSizeControl] = useState(0.33)
+  const [sizeControl, setSizeControl] = useState(0.6)
   const [selectedIndex2, setSelectedIndex2] = useState<number | null>(null)
   const [selectedFeatureIndex, setSelectedFeatureIndex] = useState<number | null>(null)
   const [currentSmallWheelOffset, setCurrentSmallWheelOffset] = useState(0)
@@ -33,7 +33,7 @@ function App() {
     { title: 'Community', content: 'Connect with other learners and share insights about your learning journey.' },
   ])
   const [keyText, setKeyText] = useState<string>('')
-  const [playbackRate, setPlaybackRate] = useState(1.0)
+  const [timestamp, setTimestamp] = useState(0)
 
   const SENSITIVITY = 1000
 
@@ -222,9 +222,9 @@ function App() {
             <Graph conceptTree={conceptTree} />
           )
         }
-        component2={<Youtube url={url} currentSmallWheelOffset={currentSmallWheelOffset} />}
+        component2={<Youtube url={url} currentSmallWheelOffset={currentSmallWheelOffset} setTimestamp={setTimestamp} />}
         component3={<FlashcardBoard videoUrl={url} moveCardRight={moveCardRight} setMoveCardRight={setMoveCardRight} setSendCardRight={setSendCardRight}
-          setKeyText={setKeyText} />}
+          setKeyText={setKeyText} timestamp={timestamp} />}
         component4={<CardList cards={cards2} selectedIndex={selectedIndex2} setSelectedIndex={setSelectedIndex2} currentSmallWheelOffset={currentSmallWheelOffset} />}
         sizeControl={sizeControl}
         setSizeControl={setSizeControl}

@@ -1,143 +1,153 @@
 [
     {
-        "question": "What year did Apple introduce the first iPod?",
+        "question": "What does the 'D' in DR ABC stand for?",
         "options": {
-            "A": "2000",
-            "B": "2001",
-            "C": "2002",
-            "D": "2003"
+            "A": "Diagnosis",
+            "B": "Danger",
+            "C": "Doctor",
+            "D": "Damage"
         },
         "correct_answer": "B"
     },
     {
-        "question": "Which three products did Steve Jobs initially claim Apple was introducing before revealing they were one device?",
+        "question": "Which scale is used to assess a casualty’s level of response?",
         "options": {
-            "A": "iPod, camera, phone",
-            "B": "iPod, phone, internet communicator",
-            "C": "iPod, tablet, email device",
-            "D": "iPod, radio, browser"
+            "A": "ABCD",
+            "B": "AVPU",
+            "C": "DRABC",
+            "D": "CPR"
         },
         "correct_answer": "B"
     },
     {
-        "question": "What is the name of the new touch technology Apple introduced with the iPhone?",
+        "question": "How long should you check for normal breathing?",
         "options": {
-            "A": "TouchFlow",
-            "B": "SmartTouch",
-            "C": "Multi-touch",
-            "D": "FingerSense"
+            "A": "5 seconds",
+            "B": "15 seconds",
+            "C": "10 seconds",
+            "D": "20 seconds"
         },
         "correct_answer": "C"
     },
     {
-        "question": "Which operating system does the iPhone run?",
+        "question": "What number should you call for emergency help in the UK according to the video?",
         "options": {
-            "A": "iOS",
-            "B": "OS X",
-            "C": "Windows Mobile",
-            "D": "Symbian"
+            "A": "911",
+            "B": "111",
+            "C": "999",
+            "D": "101"
         },
-        "correct_answer": "B"
+        "correct_answer": "C"
     },
     {
-        "question": "How does the iPhone sync data with a computer?",
+        "question": "What is the first step in the primary survey?",
         "options": {
-            "A": "Through iTunes",
-            "B": "Through Bluetooth",
-            "C": "Through AirDrop",
-            "D": "Through Finder"
+            "A": "Check airway",
+            "B": "Check for response",
+            "C": "Check for danger",
+            "D": "Check breathing"
         },
-        "correct_answer": "A"
-    },
-    {
-        "question": "What problem did Steve Jobs identify with existing smartphone keyboards?",
-        "options": {
-            "A": "They were too small",
-            "B": "They couldn’t change for different applications",
-            "C": "They used too much battery",
-            "D": "They lacked backlighting"
-        },
-        "correct_answer": "B"
-    },
-    {
-        "question": "Which pointing device did Apple decide NOT to use for the iPhone?",
-        "options": {
-            "A": "Mouse",
-            "B": "Stylus",
-            "C": "Trackball",
-            "D": "Both A and B"
-        },
-        "correct_answer": "D"
+        "correct_answer": "C"
     },
     {
         {
-        "question": "Which quote from Alan Kay is used to explain Apple’s approach to hardware and software?",
+        "question": "What does the 'U' in AVPU represent?",
         "options": {
-            "A": "Innovation distinguishes between a leader and a follower",
-            "B": "People who are really serious about software should make their own hardware",
-            "C": "The best way to predict the future is to invent it",
-            "D": "Simple can be harder than complex"
+            "A": "Unconscious but responsive",
+            "B": "Unresponsive to any stimuli",
+            "C": "Unable to speak",
+            "D": "Under stress"
         },
         "correct_answer": "B"
     },
     {
-        "question": "What screen size does the iPhone have?",
+        "question": "If a casualty is unresponsive and not breathing normally, what should you do first if you are alone?",
         "options": {
-            "A": "3 inches",
-            "B": "3.5 inches",
-            "C": "4 inches",
-            "D": "2.8 inches"
+            "A": "Begin CPR immediately without calling for help",
+            "B": "Call 999/112 on speaker phone and start chest compressions",
+            "C": "Look for an AED before calling",
+            "D": "Check for bleeding first"
         },
         "correct_answer": "B"
     },
     {
-        "question": "What does Jobs claim about the iPhone’s software compared to other phones?",
+        "question": "How should you open the airway of an unresponsive casualty?",
         "options": {
-            "A": "Music videos",
-            "B": "Podcasts",
-            "C": "Voice memos",
-            "D": "Email account setup"
+            "A": "Push the head forward forcefully",
+            "B": "Tilt the head back and lift the chin",
+            "C": "Turn the head to the side",
+            "D": "Place hands on both sides of the neck"
+        },
+        "correct_answer": "B"
+    },
+    {
+        "question": "What should you do if you find severe bleeding during the circulation check?",
+        "options": {
+            "A": "Continue with the primary survey",
+            "B": "Ignore it until help arrives",
+            "C": "Control the bleeding and call 999/112",
+            "D": "Give the casualty water"
         },
         "correct_answer": "C"
     },
     {
-        "question": "What metaphor did Jobs use to describe the iPhone’s position relative to existing phones on a smart-vs-easy graph?",
+        "question": "Which action indicates that the airway is clear?",
         "options": {
-            "A": "Leapfrog product",
-            "B": "Paradigm shift",
-            "C": "Disruptive innovation",
-            "D": "Quantum leap"
+            "A": "The casualty is alert and speaking",
+            "B": "The casualty is blinking",
+            "C": "The casualty is moving their arms",
+            "D": "The casualty is sweating"
         },
         "correct_answer": "A"
     },
     {
-        "question": "Which component of OS X is specifically mentioned as being built into the iPhone for graphics?",
+        "question": "According to the video, what should you do if the casualty responds only when you pinch their ear lobe?",
         "options": {
-            "A": "Quartz Extreme",
-            "B": "Core Animation",
-            "C": "Metal",
-            "D": "OpenGL"
+            "A": "Classify them as Alert on AVPU",
+            "B": "Classify them as responsive to Voice",
+            "C": "Classify them as responsive to Pain",
+            "D": "Classify them as Unresponsive"
         },
-        "correct_answer": "A"
+        "correct_answer": "C"
     },
     {
-        "question": "What prior Apple user interface was cited as the second revolutionary UI after the mouse?",
+        "question": "What is the purpose of gently shaking the casualty’s shoulders and speaking to them?",
         "options": {
-            "A": "Dock",
-            "B": "Click Wheel",
-            "C": "Touch Bar",
-            "D": "Force Touch"
+            "A": "To wake them up quickly",
+            "B": "To check for spinal injury",
+            "C": "To elicit a response and assess their level of consciousness",
+            "D": "To open their airway"
+        },
+        "correct_answer": "C"
+    },
+    {
+        "question": "In what order should life-threatening conditions be addressed during the primary survey?",
+        "options": {
+            "A": "Breathing, bleeding, danger, response",
+            "B": "Danger, response, airway, breathing, circulation",
+            "C": "Circulation, airway, breathing, response",
+            "D": "Response, danger, circulation, breathing"
         },
         "correct_answer": "B"
     },
     {
-        "question": "Which smartphone was NOT shown among the four typical suspects when discussing UI problems?",
+        "question": "Why is it emphasized to call for an AED when the casualty is not breathing normally?",
         "options": {
-            "A": "Motorola Q",
-            "B": "BlackBerry",
-            "C": "Palm Treo",
-            "D": "HTC Typhoon"
+            "A": "To treat shock",
+            "B": "To restart normal breathing and circulation through defibrillation if needed",
+            "C": "To check for bleeding",
+            "D": "To alert the hospital only"
         },
-        "correct_answer": "D"
+        "correct_answer": "B"
+    },
+    {
+        "question": "What is implied about treating shock in the video?",
+        "options": {
+            "A": "It is only necessary if the casualty is bleeding",
+            "B": "It may be required after controlling severe bleeding and calling for help",
+            "C": "It should be done before checking the airway",
+            "D": "It is never needed during the primary survey"
+        },
+        "correct_answer": "B"
     }
 ]
