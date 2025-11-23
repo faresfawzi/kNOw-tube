@@ -146,7 +146,7 @@ function App() {
 
           const transformedData: ConceptTree = {
             id: 'video',
-            name: 'Concepts',
+            name: '',
             type: 'video',
             data: {
               video_id: data.video_id

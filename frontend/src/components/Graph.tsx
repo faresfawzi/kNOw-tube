@@ -131,15 +131,17 @@ const mockConceptTree: ConceptTree = {
 export interface GraphDataNode {
   id: string;
   value?: number;
+  depth?: number;
   children?: GraphDataNode[];
   [key: string]: unknown;
 }
 
-export const transformConceptTreeToGraphData = (tree: ConceptTree): GraphDataNode => {
+export const transformConceptTreeToGraphData = (tree: ConceptTree, depth = 0): GraphDataNode => {
   return {
     id: tree.id,
     value: 10, // Default value to match mock data structure
-    children: tree.children?.map(transformConceptTreeToGraphData),
+    depth,
+    children: tree.children?.map((child) => transformConceptTreeToGraphData(child, depth + 1)),
     data: tree, // Store original data for label rendering
   };
 };
@@ -161,13 +163,36 @@ export const Graph = (props: GraphProps) => {
       node: {
         style: {
           size: 12,
+          fill: (d) => {
+            const depth = (d.depth as number) || 0;
+            if (depth === 0) return '#fff';
+            if (depth === 1) return '#ddd';
+            const nodeData = d.data as ConceptTree | undefined;
+            return nodeData?.type === 'video' ? '#f5222d' : '#ccc';
+          },
+          shadowColor: (d) => {
+            const depth = (d.depth as number) || 0;
+            if (depth === 0) return '#fff';
+            if (depth === 1) return '#ddd';
+            const nodeData = d.data as ConceptTree | undefined;
+            return nodeData?.type === 'video' ? '#f5222d' : '#ccc';
+          },
+          shadowBlur: 10,
           labelText: (d) => {
+            const depth = (d.depth as number) || 0;
+            if (depth === 0) return '';
             const nodeData = d.data as ConceptTree | undefined;
             return nodeData?.name || (d.id as string);
           },
-          labelBackground: true,
-          labelFontSize: 14,
+          labelFontSize: (d) => {
+            const depth = (d.depth as number) || 0;
+            // Base size 24, decrease by 2 for each level, minimum 12
+            return Math.max(14, 30 - depth * 10);
+          },
           labelFontFamily: 'Gill Sans',
+          labelFill: '#fff', // White text
+          labelFontWeight: 'bold', // Bold text
+          labelPlacement: 'right',
         },
       },
       edge: {
@@ -196,8 +221,88 @@ export const Graph = (props: GraphProps) => {
           inactiveState: 'inactive',
         },
       ],
-      transforms: ['place-radial-labels'],
+      transforms: [
+        {
+          type: 'place-radial-labels',
+          offset: 10,
+        },
+      ],
       animation: false,
+      plugins: [
+        {
+          type: 'tooltip',
+          trigger: 'hover',
+          enterable: true,
+          getContent: (_: any, items: any[]) => {
+            // items[0] is the node being hovered
+            if (!items || items.length === 0) return '';
+
+            const model = items[0];
+            const nodeData = model.data as ConceptTree | undefined;
+
+            if (nodeData?.type === 'concept' && nodeData.data) {
+              const description = (nodeData.data as ConceptData).description;
+              const nodeTitle = nodeData.name || 'Untitled';
+              return `
+                <div style="
+                  background: rgba(0, 0, 0, 0.75);
+                  padding: 12px 16px;
+                  color: #fff;
+                  border-radius: 4px;
+                  font-family: 'Gill Sans', sans-serif;
+                  max-width: 500px;
+                  pointer-events: none;
+                ">
+                  <div style="
+                    font-size: 18px;
+                    font-weight: bold;
+                    margin-bottom: 8px;
+                  ">
+                    ${nodeTitle}
+                  </div>
+                  <div style="
+                    font-size: 16px;
+                  ">
+                    ${description || 'No description available'}
+                  </div>
+                </div>
+              `;
+            } else if (nodeData?.type === 'video' && nodeData.data) {
+              const videoId = (nodeData.data as VideoData).video_id;
+              const nodeTitle = nodeData.name || 'Video';
+              return `
+                <div style="
+                  display: inline-block;
+                  background: rgba(0, 0, 0, 0.75);
+                  padding: 12px 16px;
+                  color: #fff;
+                  border-radius: 4px;
+                  font-family: 'Gill Sans', sans-serif;
+                  width: 350px;
+                  box-sizing: border-box;
+                ">
+                  <div style="
+                    font-size: 18px;
+                    font-weight: bold;
+                    margin-bottom: 8px;
+                  ">
+                    ${nodeTitle}
+                  </div>
+                  <iframe 
+                    style="width: 100%; height: 225px; display: block; border: none;"
+                    src="https://www.youtube.com/embed/${videoId}" 
+                    title="${nodeTitle}"
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    allowfullscreen
+                  ></iframe>
+                </div>
+              `;
+            }
+            return '';
+          },
+        },
+      ],
     };
 
     const dataTree = conceptTree;
