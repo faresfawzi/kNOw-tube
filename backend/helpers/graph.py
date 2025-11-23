@@ -2,7 +2,7 @@ import httpx
 import logging
 import json
 import uuid
-from typing import Dict, Any, List, TYPE_CHECKING
+from typing import Dict, Any, List, Optional, TYPE_CHECKING
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
 if TYPE_CHECKING:
@@ -682,10 +682,155 @@ Generate sub-concepts for the parent concept above:
         # Transform all items to ConceptTree format
         concept_trees = [transform_to_concept_tree(item) for item in validated_items]
         
+        # Helper function to extract YouTube video ID from URL
+        def extract_youtube_video_id(url: str) -> Optional[str]:
+            """Extract YouTube video ID from various URL formats"""
+            import re
+            from urllib.parse import urlparse, parse_qs
+            
+            # Pattern for youtu.be URLs
+            youtu_be_match = re.search(r'youtu\.be/([A-Za-z0-9_-]{11})', url)
+            if youtu_be_match:
+                return youtu_be_match.group(1)
+            
+            # Pattern for youtube.com URLs
+            try:
+                parsed = urlparse(url)
+                if 'youtube.com' in parsed.netloc:
+                    # Check query parameters
+                    query_params = parse_qs(parsed.query)
+                    if 'v' in query_params:
+                        return query_params['v'][0]
+                    # Check path for embed URLs
+                    embed_match = re.search(r'/embed/([A-Za-z0-9_-]{11})', parsed.path)
+                    if embed_match:
+                        return embed_match.group(1)
+            except Exception:
+                pass
+            
+            # Fallback: try to find any 11-character video ID pattern
+            video_id_match = re.search(r'[A-Za-z0-9_-]{11}', url)
+            if video_id_match:
+                return video_id_match.group(0)
+            
+            return None
+        
+        # Gather videos for each concept
+        def gather_videos_for_concept(concept_tree: Dict[str, Any]) -> Dict[str, Any]:
+            """Gather YouTube videos for a concept and add them as children"""
+            try:
+                concept_name = concept_tree.get("name", "")
+                if not concept_name:
+                    return concept_tree
+                
+                logger.debug(f"Gathering videos for concept: {concept_name}")
+                video_results = gather_links(concept_name, max_results=3)
+                
+                # Transform video results to ConceptTree format
+                video_children = []
+                for video in video_results.get("videos", []):
+                    video_url = video.get("link", "")
+                    video_id = extract_youtube_video_id(video_url)
+                    
+                    if video_id:
+                        video_children.append({
+                            "id": str(uuid.uuid4()),
+                            "name": video.get("title", "Untitled Video"),
+                            "type": "video",
+                            "data": {
+                                "video_id": video_id
+                            }
+                        })
+                
+                # Add video children to existing children or create new children list
+                if video_children:
+                    if "children" in concept_tree and concept_tree["children"]:
+                        concept_tree["children"].extend(video_children)
+                    else:
+                        concept_tree["children"] = video_children
+                    logger.info(f"Added {len(video_children)} videos to concept '{concept_name}'")
+                
+                return concept_tree
+            except Exception as e:
+                logger.warning(f"Error gathering videos for concept '{concept_tree.get('name', 'unknown')}': {str(e)}")
+                return concept_tree
+        
+        # Gather videos for all concepts in parallel
+        with ThreadPoolExecutor(max_workers=min(len(concept_trees), 10)) as executor:
+            # Submit all video gathering tasks with index tracking
+            future_to_index = {
+                executor.submit(gather_videos_for_concept, tree): idx 
+                for idx, tree in enumerate(concept_trees)
+            }
+            
+            # Process results and maintain order
+            updated_trees = [None] * len(concept_trees)
+            for future in as_completed(future_to_index):
+                idx = future_to_index[future]
+                updated_tree = future.result()
+                updated_trees[idx] = updated_tree
+        
+        # All futures should complete successfully (errors are handled in gather_videos_for_concept)
+        concept_trees = updated_trees
+        
         return concept_trees
 
     except Exception as e:
         logger.error(f"Error in transcript_to_item_descriptions: {str(e)}", exc_info=True)
         raise e
+
+
+def gather_links(topic: str, max_results: int = 10) -> Dict[str, List[Dict[str, str]]]:
+    """
+    Search DuckDuckGo for YouTube videos related to a topic.
+    
+    Args:
+        topic: The search topic/keywords
+        max_results: Maximum number of results to return (default: 10)
+    
+    Returns:
+        Dictionary with one key:
+        - "videos": List of dictionaries with "title" and "link" keys (YouTube videos only)
+    """
+    from duckduckgo_search import DDGS
+    
+    logger.debug(f"🔍 Searching DuckDuckGo for YouTube videos: {topic}...")
+    
+    results = {
+        "videos": []
+    }
+    
+    try:
+        with DDGS() as ddgs:
+            # Get Video Links and filter for YouTube only
+            video_gen = ddgs.videos(
+                keywords=topic,
+                max_results=max_results * 2,  # Get more results to account for filtering
+                safesearch='moderate',
+                region="wt-wt"  # "wt-wt" means global/no region
+            )
+            
+            for r in video_gen:
+                title = r.get("title", "")
+                link = r.get("content", "")  # In DDGS, video URL is often in 'content'
+                
+                # Filter for YouTube videos only
+                if title and link and ("youtube.com" in link.lower() or "youtu.be" in link.lower()):
+                    results["videos"].append({
+                        "title": title,
+                        "link": link
+                    })
+                    
+                    # Stop once we have enough YouTube videos
+                    if len(results["videos"]) >= max_results:
+                        break
+        
+        logger.info(f"Found {len(results['videos'])} YouTube videos for topic: {topic}")
+        return results
+        
+    except Exception as e:
+        logger.error(f"Error searching DuckDuckGo for topic '{topic}': {str(e)}", exc_info=True)
+        # Return empty results on error rather than raising
+        return results
 
 
