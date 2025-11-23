@@ -204,10 +204,18 @@ function App() {
   }, [sendCardRight])
 
   useEffect(() => {
-    // send message to websocket
-    if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
-      wsRef.current.send(keyText)
+    console.log('keyText changed:', keyText)
+    // post to action id: 1, text: keyText
+    const sendKeyTextToBackend = async () => {
+      await fetch(`/api/action`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ id: 1, text: keyText }),
+      })
     }
+    sendKeyTextToBackend()
   }, [keyText])
 
   return (
