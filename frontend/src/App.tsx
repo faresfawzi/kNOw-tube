@@ -180,7 +180,7 @@ function App() {
     <>
       <div>
 
-        <div>
+        {/* <div>
           <input
             type="text"
             value={keyText}
@@ -188,7 +188,7 @@ function App() {
             placeholder="Enter key text"
             style={{ width: '100%', padding: '8px', fontSize: '1rem' }}
           />
-        </div>
+        </div> */}
         {/* <div>
           <label>Card List 1</label>
           <div>
