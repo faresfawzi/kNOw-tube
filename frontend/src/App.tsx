@@ -2,103 +2,12 @@ import { useMemo, useEffect, useRef, useState, use } from 'react'
 import Layout from './components/Layout'
 import Youtube from './components/Youtube'
 import CardList from './components/CardList'
-import { Graph } from './components/Graph'
+import { Graph, isConceptTree } from './components/Graph'
 import type { ConceptTree } from './components/Graph'
+import LoadingSpinner from './components/LoadingSpinner'
 
 import { FlashcardBoard } from './components/FlashcardBoard'
 import type { Flashcard } from './components/card/representations/types';
-
-// Mock concept tree data
-const mockConceptTree: ConceptTree = {
-  id: 'root',
-  name: 'Learning Topics',
-  type: 'concept',
-  data: {
-    concepts: 'Educational Content',
-    description: 'Root node containing various learning topics and related videos',
-    context: 'This is the main concept tree for organizing educational content'
-  },
-  children: [
-    {
-      id: 'ml-basics',
-      name: 'Machine Learning Basics',
-      type: 'concept',
-      data: {
-        concepts: 'Machine Learning',
-        description: 'Fundamental concepts and techniques in machine learning including supervised and unsupervised learning',
-        context: 'Covers neural networks, decision trees, and regression models'
-      },
-      children: [
-        {
-          id: 'neural-networks',
-          name: 'Neural Networks',
-          type: 'concept',
-          data: {
-            concepts: 'Neural Networks',
-            description: 'Deep dive into artificial neural networks, backpropagation, and activation functions',
-            context: 'Includes feedforward and convolutional neural network architectures'
-          },
-          children: [
-            {
-              id: 'video-nn-intro',
-              name: 'Introduction to Neural Networks',
-              type: 'video',
-              data: {
-                video_id: 'dQw4w9WgXcQ'
-              }
-            }
-          ]
-        },
-        {
-          id: 'video-ml-overview',
-          name: 'ML Overview Video',
-          type: 'video',
-          data: {
-            video_id: 'aircAruvnKk'
-          }
-        }
-      ]
-    },
-    {
-      id: 'data-science',
-      name: 'Data Science',
-      type: 'concept',
-      data: {
-        concepts: 'Data Science',
-        description: 'Comprehensive guide to data science workflows, data preprocessing, and analysis techniques',
-        context: 'Covers data collection, cleaning, visualization, and statistical analysis'
-      },
-      children: [
-        {
-          id: 'data-visualization',
-          name: 'Data Visualization',
-          type: 'concept',
-          data: {
-            concepts: 'Data Visualization',
-            description: 'Techniques for creating effective visualizations and dashboards',
-            context: 'Includes matplotlib, seaborn, and plotly examples'
-          }
-        },
-        {
-          id: 'video-ds-tutorial',
-          name: 'Data Science Tutorial',
-          type: 'video',
-          data: {
-            video_id: 'ua-CiDNNj30'
-          }
-        }
-      ]
-    },
-    {
-      id: 'video-main',
-      name: 'Main Learning Video',
-      type: 'video',
-      data: {
-        video_id: 'RBmOgQi4Fr0'
-      }
-    }
-  ]
-}
 
 function App() {
   // Extract 'v' parameter from URL query string
@@ -123,8 +32,8 @@ function App() {
     { title: 'Progress Tracker', content: 'Monitor your learning progress and track your achievements over time.' },
     { title: 'Community', content: 'Connect with other learners and share insights about your learning journey.' },
   ])
-  const [ keyText, setKeyText ] = useState<string>('')
-   const [playbackRate, setPlaybackRate] = useState(1.0)
+  const [keyText, setKeyText] = useState<string>('')
+  const [playbackRate, setPlaybackRate] = useState(1.0)
 
   const SENSITIVITY = 1000
 
@@ -132,6 +41,8 @@ function App() {
   const [wsStatus, setWsStatus] = useState<string>('Disconnected')
   const [wsMessages, setWsMessages] = useState<string[]>([])
   const wsRef = useRef<WebSocket | null>(null)
+  const [conceptTree, setConceptTree] = useState<ConceptTree | undefined>(undefined)
+  const [isLoadingGraph, setIsLoadingGraph] = useState(false)
 
   useEffect(() => {
     const connectWebSocket = () => {
@@ -191,14 +102,14 @@ function App() {
     return () => wsRef.current?.close()
   }, [])
 
-  
+
   useEffect(() => {
     console.log('sendCardRight changed:', sendCardRight)
     if (sendCardRight) {
       console.log('Sending card right:', sendCardRight)
       // setCards2((prevCards2) => [...prevCards2, { title: sendCardRight.question, content: sendCardRight.answer }])
       //
-      
+
       setSendCardRight(null)
     }
   }, [sendCardRight])
@@ -218,10 +129,57 @@ function App() {
     sendKeyTextToBackend()
   }, [keyText])
 
+  // Fetch graph data when url changes
+  useEffect(() => {
+    if (!url) return
+
+    const videoId = new URLSearchParams(new URL(url).search).get('v')
+    if (!videoId) return
+
+    const fetchGraphData = async () => {
+      setIsLoadingGraph(true)
+      try {
+        const response = await fetch(`/api/graph/video-item-descriptions?video_id=${videoId}`)
+        if (response.ok) {
+          const data = await response.json()
+          // console.log('Graph data:', data)
+
+          const transformedData: ConceptTree = {
+            id: 'video',
+            name: 'Concepts',
+            type: 'video',
+            data: {
+              video_id: data.video_id
+            },
+            children: data.items
+          }
+
+          console.log('APP passing in graph data:', transformedData)
+
+          if (isConceptTree(transformedData)) {
+            setConceptTree(transformedData)
+          } else {
+            console.error('Invalid graph data format:', transformedData)
+          }
+        } else {
+          console.error('Failed to fetch graph data')
+        }
+      } catch (error) {
+        console.error('Error fetching graph data:', error)
+      } finally {
+        setIsLoadingGraph(false)
+      }
+    }
+
+    fetchGraphData()
+  }, [url])
+
+
+
   return (
     <>
       <div>
-        
+
         <div>
           <input
             type="text"
@@ -257,7 +215,13 @@ function App() {
         </div> */}
       </div>
       <Layout
-        component1={<Graph conceptTree={mockConceptTree} />}
+        component1={
+          isLoadingGraph ? (
+            <LoadingSpinner />
+          ) : (
+            <Graph conceptTree={conceptTree} />
+          )
+        }
         component2={<Youtube url={url} currentSmallWheelOffset={currentSmallWheelOffset} />}
         component3={<FlashcardBoard videoUrl={url} moveCardRight={moveCardRight} setMoveCardRight={setMoveCardRight} setSendCardRight={setSendCardRight}
           setKeyText={setKeyText} />}
