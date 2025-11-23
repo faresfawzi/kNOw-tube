@@ -21,9 +21,10 @@ export interface FlashcardBoardProps {
   setMoveCardRight: React.Dispatch<React.SetStateAction<boolean>>,
   setSendCardRight?: React.Dispatch<React.SetStateAction<Flashcard | null>>,
   setKeyText?: React.Dispatch<React.SetStateAction<string>>,
+  timestamp?: number,
 }
 
-export function FlashcardBoard({ videoUrl, moveCardRight, setMoveCardRight, setSendCardRight, setKeyText }: FlashcardBoardProps) {
+export function FlashcardBoard({ videoUrl, moveCardRight, setMoveCardRight, setSendCardRight, setKeyText, timestamp }: FlashcardBoardProps) {
   const videoId = useMemo(() => extractVideoId(videoUrl), [videoUrl])
   const [multitypeFlashcards, setMultitypeFlashcards] = useState<Flashcard[]>([])
   const [qaFlashcards, setQaFlashcards] = useState<Flashcard[]>([])
@@ -52,56 +53,57 @@ export function FlashcardBoard({ videoUrl, moveCardRight, setMoveCardRight, setS
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             video_id: videoId,
-            time_stamp: 0,
+            time_stamp: (timestamp && timestamp > 0 ? 60 : 0),
             context_seconds: MULTITYPE_CONTEXT_SECONDS,
           }),
         })
 
-        const quizPromise = fetch(`${API_BASE_PATH}/quiz?video_id=${encodeURIComponent(videoId)}&difficulty_level=medium`)
+        // const quizPromise = fetch(`${API_BASE_PATH}/quiz?video_id=${encodeURIComponent(videoId)}&difficulty_level=medium`)
 
-        const [multiResponse, quizResponse] = await Promise.all([multiPromise, quizPromise])
+        const [multiResponse,] = await Promise.all([multiPromise])
+        // const [quizResponse] = await Promise.all([multiPromise, quizPromise])
 
-        if (!multiResponse.ok) {
-          throw new Error('Failed to generate multi-type flashcards')
-        }
-        if (!quizResponse.ok) {
-          throw new Error('Failed to load quiz questions')
-        }
+        // if (!multiResponse.ok) {
+        //   throw new Error('Failed to generate multi-type flashcards')
+        // }
+        // if (!quizResponse.ok) {
+        //   throw new Error('Failed to load quiz questions')
+        // }
 
         const multiJson = await multiResponse.json()
-        const quizJson = await quizResponse.json()
+        // const quizJson = await quizResponse.json()
 
         const multiCards = extractMultiTypeFlashcards(multiJson?.flashcards ?? multiJson)
-        const quizQuestions: QuizQuestion[] = Array.isArray(quizJson?.quiz) ? quizJson.quiz : []
+       // const quizQuestions: QuizQuestion[] = Array.isArray(quizJson?.quiz) ? quizJson.quiz : []
 
-        const wrongAnswersPayload = quizQuestions
-          .slice(0, MAX_WRONG_ANSWERS)
-          .map(buildWrongAnswerPayload)
-          .filter((entry): entry is WrongAnswerPayload => entry !== null)
+        // const wrongAnswersPayload = quizQuestions
+        //   .slice(0, MAX_WRONG_ANSWERS)
+        //   .map(buildWrongAnswerPayload)
+        //   .filter((entry): entry is WrongAnswerPayload => entry !== null)
 
         let qaCards: Flashcard[] = []
-        if (wrongAnswersPayload.length) {
-          const qaResponse = await fetch(`${API_BASE_PATH}/generate_qa_flashcards`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              quiz_questions_with_wrong_answers: wrongAnswersPayload,
-              video_id: videoId,
-            }),
-          })
+        // if (wrongAnswersPayload.length) {
+        //   const qaResponse = await fetch(`${API_BASE_PATH}/generate_qa_flashcards`, {
+        //     method: 'POST',
+        //     headers: { 'Content-Type': 'application/json' },
+        //     body: JSON.stringify({
+        //       quiz_questions_with_wrong_answers: wrongAnswersPayload,
+        //       video_id: videoId,
+        //     }),
+        //   })
 
-          if (!qaResponse.ok) {
-            throw new Error('Failed to generate QA flashcards')
-          }
+        //   if (!qaResponse.ok) {
+        //     throw new Error('Failed to generate QA flashcards')
+        //   }
 
-          const qaJson = await qaResponse.json()
-          qaCards = extractQaFlashcards(qaJson?.flashcards ?? qaJson)
-        }
+        //   const qaJson = await qaResponse.json()
+        //   qaCards = extractQaFlashcards(qaJson?.flashcards ?? qaJson)
+        // }
 
         // setKeyText && setKeyText(qaCards[0] ? qaCards[0].answer : '')
         if (!cancelled) {
-          setMultitypeFlashcards(multiCards)
-          setQaFlashcards(qaCards)
+          setMultitypeFlashcards([...multitypeFlashcards, ...multiCards])
+          setQaFlashcards([...qaFlashcards, ...qaCards])
         }
       } catch (err) {
         if (!cancelled) {
@@ -164,12 +166,8 @@ export function FlashcardBoard({ videoUrl, moveCardRight, setMoveCardRight, setS
 
   return (
     <div style={{ padding: '24px 5%' }}>
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', alignItems: 'center', justifyContent: 'space-between' }}>
-        <div>
-          <h2 style={{ margin: '0 0 4px 0' }}>Flashcard Workspace</h2>
-          {/* <p style={{ margin: 0, opacity: 0.7 }}>Video ID: {videoId}</p> */}
-        </div>
-        <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+      <div className="flashContainer" style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div className="buttonsFlashcards" style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
           <button
             type="button"
             onClick={() => setIsDeckPopoverOpen(true)}
@@ -210,25 +208,20 @@ export function FlashcardBoard({ videoUrl, moveCardRight, setMoveCardRight, setS
       </div>
 
       {error && !isLoading && <Card title="Unable to load flashcards" content={error} />}
-
+{/* 
       {isLoading && (
         <Card
           title="Working on it"
           content="We are generating both multi-type and Q&A flashcards from your video."
           isHighlighted
         />
-      )}
+      )} */}
 
       <section>
         {/* <h3 style={sectionTitleStyles}>Multitype Flashcards</h3> */}
         <CardList
           cards={multiTypeCardItems}
-          emptyState={(
-            <Card
-              title="No flashcards yet"
-              content="Click the regenerate button above to fetch contextual flashcards from the transcript."
-            />
-          )}
+          
           containerStyle={{ padding: 0 }}
         />
       </section>

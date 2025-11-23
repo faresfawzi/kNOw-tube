@@ -1,0 +1,34 @@
+{
+    "flashcards": {
+        "flashcards": [
+            {
+                "card_type": "knowledge",
+                "title": "DRABC in primary survey",
+                "knowledge_summary": "The primary survey for a collapsed person follows DRABC: Danger, Response, Airway, Breathing, Circulation. First ensure scene safety, then check for patient response."
+            },
+            {
+                "card_type": "multiple_choice",
+                "question": "What does the letter R stand for in the DRABC primary survey mnemonic?",
+                "choices": [
+                    "Rescue",
+                    "Response",
+                    "Recovery",
+                    "Respiration"
+                ],
+                "correct_choice_index": 1,
+                "explanation": "R stands for Response: check if the casualty responds to questions or stimuli."
+            },
+            {
+                "card_type": "cloze",
+                "cloze_text": "The initials DR. ABC or DRABC remind us of the steps: Danger, {{c1::Response}}, Airway, Breathing and Circulation.",
+                "hint": "What you check after ensuring danger is clear."
+            },
+            {
+                "card_type": "qa",
+                "question": "After checking for danger, what is the next step in the DRABC primary survey?",
+                "answer": "Check for a response from the casualty by introducing yourself and asking questions.",
+                "explanation": "This ensures the person is conscious and can provide information before further assessment."
+            }
+        ]
+    }
+}

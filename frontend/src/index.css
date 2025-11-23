@@ -76,16 +76,29 @@ button:focus-visible {
   }
 }
 
-.card {
+.card-list-container {
   container-type: inline-size;
+  container-name: card;
 }
 
-@container (max-width: 200px) {
+@container card (max-width: 250px) {
   .title {
     display: none;
   }
 
-  .card-content {
+  .card {
     display: none;
+  }
+} 
+
+
+.flashContainer {
+  container-type: inline-size;
+  container-name: flash;
+}
+
+@container flash (max-width: 250px) {
+  .buttonsFlashcards {
+    flex-direction: column;
   }
 } 

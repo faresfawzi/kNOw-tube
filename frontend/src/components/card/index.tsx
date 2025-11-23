@@ -77,12 +77,12 @@ function Card({
 
   return (
     <div
-      className="card"
       style={{
         background: 'rgba(255, 255, 255, 0.1)',
         backdropFilter: 'blur(10px)',
         WebkitBackdropFilter: 'blur(10px)',
         borderRadius: '16px',
+        paddingBottom: '50px',
         border: isHighlighted
           ? '2px solid rgba(147, 197, 253, 0.6)'
           : '1px solid rgba(255, 255, 255, 0.2)',
@@ -131,7 +131,7 @@ function Card({
 
       {/* Representation Picker */}
       {hasRepresentations && representations.length > 1 && (
-        <div style={{ position: 'absolute', top: '20px', right: '20px', zIndex: 10 }}>
+        <div className="card" style={{ position: 'absolute', bottom: '10px', right: '20px', zIndex: 10 }}>
           <div style={{ position: 'relative', minWidth: '180px' }}>
             <select
               value={selectedRepresentationIndex}
@@ -181,7 +181,7 @@ function Card({
           {displayTitle}
         </h3>
       )}
-      {body}
+      <div className="card">{body}</div>
     </div>
   )
 }
