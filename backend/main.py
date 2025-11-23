@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 from together import Together
-from routes import transcript, quiz, flashcard, graph, actions
+from routes import transcript, quiz, flashcard, graph, buttons
 
 app = FastAPI()
 
@@ -66,4 +66,4 @@ app.include_router(transcript.router)
 app.include_router(quiz.router)
 app.include_router(flashcard.router)
 app.include_router(graph.router)
-app.include_router(actions.router)
+app.include_router(buttons.router)
