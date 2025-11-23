@@ -221,16 +221,6 @@ function App() {
   return (
     <>
       <div>
-        
-        <div>
-          <input
-            type="text"
-            value={keyText}
-            onChange={(e) => setKeyText(e.target.value)}
-            placeholder="Enter key text"
-            style={{ width: '100%', padding: '8px', fontSize: '1rem' }}
-          />
-        </div>
         {/* <div>
           <label>Card List 1</label>
           <div>

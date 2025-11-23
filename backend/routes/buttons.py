@@ -31,3 +31,29 @@ def write_file(payload: ActionInput):
         raise HTTPException(status_code=500, detail=str(e))
 
     return {"status": "ok", "id": payload.id}
+
+
+@router.get("/color/{item_id}")
+def read_file(item_id: int) -> str:
+    file_path = Path("colors") / f"{item_id}.txt"
+
+    if not file_path.exists():
+        raise HTTPException(status_code=404, detail="File not found")
+
+    try:
+        return responses.PlainTextResponse(file_path.read_text(encoding="utf-8"))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.post("/color")
+def write_file(payload: ActionInput):
+    print(f"Received payload: {payload}")
+    file_path = Path("colors") / f"{payload.id}.txt"
+
+    try:
+        file_path.parent.mkdir(parents=True, exist_ok=True)
+        file_path.write_text(payload.text, encoding="utf-8")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+    return {"status": "ok", "id": payload.id}
