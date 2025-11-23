@@ -32,6 +32,7 @@ function App() {
     { title: 'Progress Tracker', content: 'Monitor your learning progress and track your achievements over time.' },
     { title: 'Community', content: 'Connect with other learners and share insights about your learning journey.' },
   ])
+  const [givenAnswer, setGivenAnswer] = useState<string>('')
   const [keyText, setKeyText] = useState<string>('')
   const [timestamp, setTimestamp] = useState(0)
 
@@ -84,6 +85,10 @@ function App() {
             if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
               wsRef.current.send("test")
             }
+          } else if (dataString.includes('option')) {
+            const answer = dataString.charAt(dataString.length - 1)
+            setGivenAnswer(answer)
+            console.log('Given answer:', answer)
           }
         }
       }
@@ -224,7 +229,7 @@ function App() {
         }
         component2={<Youtube url={url} currentSmallWheelOffset={currentSmallWheelOffset} setTimestamp={setTimestamp} />}
         component3={<FlashcardBoard videoUrl={url} moveCardRight={moveCardRight} setMoveCardRight={setMoveCardRight} setSendCardRight={setSendCardRight}
-          setKeyText={setKeyText} timestamp={timestamp} />}
+          setKeyText={setKeyText} timestamp={timestamp} givenAnswer={givenAnswer} setGivenAnswer={setGivenAnswer} />}
         component4={<CardList cards={cards2} selectedIndex={selectedIndex2} setSelectedIndex={setSelectedIndex2} currentSmallWheelOffset={currentSmallWheelOffset} />}
         sizeControl={sizeControl}
         setSizeControl={setSizeControl}

@@ -16,6 +16,8 @@ interface CardProps {
   onMouseLeave?: () => void
   hideTitle?: boolean
   isDeckPopoverOpen?: boolean
+  givenAnswer?: string
+  setGivenAnswer?: React.Dispatch<React.SetStateAction<string>>
 }
 
 function Card({
@@ -26,7 +28,9 @@ function Card({
   onMouseEnter,
   onMouseLeave,
   hideTitle = false,
-  isDeckPopoverOpen
+  isDeckPopoverOpen,
+  givenAnswer,
+  setGivenAnswer
 }: CardProps) {
   const [selectedRepresentationIndex, setSelectedRepresentationIndex] = useState(0)
 
@@ -39,37 +43,38 @@ function Card({
   }
 
   const hasRepresentations = representations && representations.length > 0
-  const currentRepresentation = hasRepresentations ? representations[selectedRepresentationIndex] : null
+  const currentRepresentation = hasRepresentations ? representations[isDeckPopoverOpen ? 1: selectedRepresentationIndex] : null
 
   // Determine title and content based on whether we have representations or simple content
   let displayTitle = title
   let displayContent = content
   let shouldHideTitle = hideTitle
 
- 
-     if (currentRepresentation) {
-       if (isDeckPopoverOpen) {
-          displayTitle = 'Multiple Choice Challenge'
-          displayContent = <MultipleChoiceCardContent card={currentRepresentation} />
-          shouldHideTitle = true
-      } else {
-        if (currentRepresentation.card_type === 'knowledge') {
-          displayTitle = currentRepresentation.title || title
-          displayContent = <KnowledgeCardContent card={currentRepresentation} />
-          // Knowledge cards usually show the title
-        } else if (currentRepresentation.card_type === 'multiple_choice') {
-          displayTitle = 'Multiple Choice Challenge'
-          displayContent = <MultipleChoiceCardContent card={currentRepresentation} />
-          shouldHideTitle = true
-        } else if (currentRepresentation.card_type === 'cloze') {
-          displayTitle = 'Cloze Recall Card'
-          displayContent = <ClozeCardContent card={currentRepresentation} />
-          shouldHideTitle = true
-        } else if (currentRepresentation.card_type === 'qa') {
-          displayTitle = 'Q&A Flashcard'
-          displayContent = <QACardContent card={currentRepresentation} />
-          shouldHideTitle = true
-        }
+
+
+    if (currentRepresentation) {
+      if (isDeckPopoverOpen) {
+        displayTitle = 'Multiple Choice Challenge'
+        displayContent = <MultipleChoiceCardContent card={currentRepresentation} isQuiz={isDeckPopoverOpen} givenAnswer={givenAnswer}  />
+        shouldHideTitle = true
+    } else {
+      if (currentRepresentation.card_type === 'knowledge') {
+        displayTitle = currentRepresentation.title || title
+        displayContent = <KnowledgeCardContent card={currentRepresentation} />
+        // Knowledge cards usually show the title
+      } else if (currentRepresentation.card_type === 'multiple_choice') {
+        displayTitle = 'Multiple Choice Challenge'
+        displayContent = <MultipleChoiceCardContent card={currentRepresentation} isQuiz={isDeckPopoverOpen} givenAnswer={givenAnswer} />
+        shouldHideTitle = true
+      } else if (currentRepresentation.card_type === 'cloze') {
+        displayTitle = 'Cloze Recall Card'
+        displayContent = <ClozeCardContent card={currentRepresentation} />
+        shouldHideTitle = true
+      } else if (currentRepresentation.card_type === 'qa') {
+        displayTitle = 'Q&A Flashcard'
+        displayContent = <QACardContent card={currentRepresentation} />
+        shouldHideTitle = true
+      }
     }
   }
  

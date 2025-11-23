@@ -22,9 +22,11 @@ export interface FlashcardBoardProps {
   setSendCardRight?: React.Dispatch<React.SetStateAction<Flashcard | null>>,
   setKeyText?: React.Dispatch<React.SetStateAction<string>>,
   timestamp?: number,
+  givenAnswer: string,
+  setGivenAnswer: React.Dispatch<React.SetStateAction<string>>,
 }
 
-export function FlashcardBoard({ videoUrl, moveCardRight, setMoveCardRight, setSendCardRight, setKeyText, timestamp }: FlashcardBoardProps) {
+export function FlashcardBoard({ videoUrl, moveCardRight, setMoveCardRight, setSendCardRight, setKeyText, timestamp, givenAnswer, setGivenAnswer }: FlashcardBoardProps) {
   const videoId = useMemo(() => extractVideoId(videoUrl), [videoUrl])
   const [multitypeFlashcards, setMultitypeFlashcards] = useState<Flashcard[]>([])
   const [qaFlashcards, setQaFlashcards] = useState<Flashcard[]>([])
@@ -142,6 +144,8 @@ export function FlashcardBoard({ videoUrl, moveCardRight, setMoveCardRight, setS
           content="Add ?v=YOUTUBE_VIDEO_ID to the URL or interact with the player to generate AI flashcards for that video."
           isHighlighted
           isDeckPopoverOpen={isDeckPopoverOpen}
+          givenAnswer={givenAnswer}
+          setGivenAnswer={setGivenAnswer}
         />
       </div>
     )
@@ -151,7 +155,7 @@ export function FlashcardBoard({ videoUrl, moveCardRight, setMoveCardRight, setS
     console.log("moveCardRight changed:", moveCardRight);
     console.log("Current qaFlashcards:", qaFlashcards);
     if (moveCardRight && qaFlashcards.length > 0) {
-      // const selectedCard = qaFlashcards[currentCardView];
+      // const selectedCard = qaFlashcards[select];
       // console.log('Preparing to send card right:', selectedCard)
       // setSendCardRight && setSendCardRight(() => selectedCard)
       // setMoveCardRight(false)
@@ -210,7 +214,7 @@ export function FlashcardBoard({ videoUrl, moveCardRight, setMoveCardRight, setS
         <div className="buttonsFlashcards" style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
           <button
             type="button"
-            onClick={() => setIsDeckPopoverOpen(true)}
+            onClick={() => {setIsDeckPopoverOpen(true); setGivenAnswer('');}}
             disabled={isLoading || multitypeFlashcards.length === 0}
             style={{
               padding: '10px 16px',
@@ -261,8 +265,10 @@ export function FlashcardBoard({ videoUrl, moveCardRight, setMoveCardRight, setS
         {/* <h3 style={sectionTitleStyles}>Multitype Flashcards</h3> */}
         <CardList
           cards={multiTypeCardItems}
-          
+          isDeckPopoverOpen={isDeckPopoverOpen}
           containerStyle={{ padding: 0 }}
+          givenAnswer={givenAnswer}
+              setGivenAnswer={setGivenAnswer}
         />
       </section>
 
@@ -281,6 +287,7 @@ export function FlashcardBoard({ videoUrl, moveCardRight, setMoveCardRight, setS
       </section> */}
 
       {/* Deck Popover */}
+      
       {isDeckPopoverOpen && (
         <div
           style={{
@@ -299,6 +306,7 @@ export function FlashcardBoard({ videoUrl, moveCardRight, setMoveCardRight, setS
           }}
           onClick={() => setIsDeckPopoverOpen(false)}
         >
+          
           <div
             style={{
               backgroundColor: 'rgba(15, 23, 42, 0.95)',
@@ -343,10 +351,15 @@ export function FlashcardBoard({ videoUrl, moveCardRight, setMoveCardRight, setS
             <CardList
               cards={multiTypeCardItems}
               displayFormat="quiz"
+              isDeckPopoverOpen={isDeckPopoverOpen}
+               givenAnswer={givenAnswer}
+                setGivenAnswer={setGivenAnswer}
               emptyState={(
                 <Card
                   title="No flashcards in quiz"
                   content="Generate flashcards to see them in quiz view."
+                  givenAnswer={givenAnswer}
+                setGivenAnswer={setGivenAnswer}
                 />
               )}
               containerStyle={{ padding: 0 }}

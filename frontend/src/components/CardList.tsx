@@ -19,6 +19,7 @@ interface CardListProps {
   currentSmallWheelOffset?: number
   active?: boolean
   displayFormat?: 'list' | 'quiz'
+  isDeckPopoverOpen?: boolean
 }
 
 function CardList({
@@ -31,6 +32,9 @@ function CardList({
   currentSmallWheelOffset = 0,
   active = false,
   displayFormat = 'list',
+  isDeckPopoverOpen,
+  givenAnswer,
+  setGivenAnswer,
 }: CardListProps) {
   const [hoverIndex, setHoverIndex] = useState<number | null>(null)
   const [quizIndex, setQuizIndex] = useState(0)
@@ -90,13 +94,16 @@ function CardList({
             representations={currentCard.representations}
             isHighlighted={true}
             hideTitle={currentCard.hideTitle}
+            isDeckPopoverOpen={isDeckPopoverOpen}
+            givenAnswer={givenAnswer}
+              setGivenAnswer={setGivenAnswer}
           />
         </div>
 
         <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
           <button
             type="button"
-            onClick={() => setQuizIndex(Math.max(0, quizIndex - 1))}
+            onClick={() => { setQuizIndex(Math.max(0, quizIndex - 1)); setGivenAnswer(''); }}
             disabled={!hasPrevious}
             style={{
               padding: '8px 16px',
@@ -115,7 +122,7 @@ function CardList({
           </span>
           <button
             type="button"
-            onClick={() => setQuizIndex(Math.min(cards.length - 1, quizIndex + 1))}
+            onClick={() => { setQuizIndex(Math.min(cards.length - 1, quizIndex + 1)); setGivenAnswer(''); }}
             disabled={!hasNext}
             style={{
               padding: '8px 16px',
@@ -159,6 +166,8 @@ function CardList({
               hideTitle={card.hideTitle}
               onMouseEnter={() => handleEnter(index)}
               onMouseLeave={handleLeave}
+              givenAnswer={givenAnswer}
+              setGivenAnswer={setGivenAnswer}
             />
           </div>
         )
