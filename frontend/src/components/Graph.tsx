@@ -14,19 +14,19 @@ export interface VideoData {
 
 export type ConceptTree =
   | {
-      id: string;
-      name: string;
-      type: 'concept';
-      data: ConceptData;
-      children?: ConceptTree[];
-    }
+    id: string;
+    name: string;
+    type: 'concept';
+    data: ConceptData;
+    children?: ConceptTree[];
+  }
   | {
-      id: string;
-      name: string;
-      type: 'video';
-      data: VideoData;
-      children?: ConceptTree[];
-    };
+    id: string;
+    name: string;
+    type: 'video';
+    data: VideoData;
+    children?: ConceptTree[];
+  };
 
 export interface GraphProps {
   conceptTree?: ConceptTree;
@@ -35,6 +35,117 @@ export interface GraphProps {
   onDestroy?: () => void;
 }
 
+
+const mockConceptTree: ConceptTree = {
+  id: 'root',
+  name: 'Learning Topics',
+  type: 'concept',
+  data: {
+    concepts: 'Educational Content',
+    description: 'Root node containing various learning topics and related videos',
+    context: 'This is the main concept tree for organizing educational content'
+  },
+  children: [
+    {
+      id: 'ml-basics',
+      name: 'Machine Learning Basics',
+      type: 'concept',
+      data: {
+        concepts: 'Machine Learning',
+        description: 'Fundamental concepts and techniques in machine learning including supervised and unsupervised learning',
+        context: 'Covers neural networks, decision trees, and regression models'
+      },
+      children: [
+        {
+          id: 'neural-networks',
+          name: 'Neural Networks',
+          type: 'concept',
+          data: {
+            concepts: 'Neural Networks',
+            description: 'Deep dive into artificial neural networks, backpropagation, and activation functions',
+            context: 'Includes feedforward and convolutional neural network architectures'
+          },
+          children: [
+            {
+              id: 'video-nn-intro',
+              name: 'Introduction to Neural Networks',
+              type: 'video',
+              data: {
+                video_id: 'dQw4w9WgXcQ'
+              }
+            }
+          ]
+        },
+        {
+          id: 'video-ml-overview',
+          name: 'ML Overview Video',
+          type: 'video',
+          data: {
+            video_id: 'aircAruvnKk'
+          }
+        }
+      ]
+    },
+    {
+      id: 'data-science',
+      name: 'Data Science',
+      type: 'concept',
+      data: {
+        concepts: 'Data Science',
+        description: 'Comprehensive guide to data science workflows, data preprocessing, and analysis techniques',
+        context: 'Covers data collection, cleaning, visualization, and statistical analysis'
+      },
+      children: [
+        {
+          id: 'data-visualization',
+          name: 'Data Visualization',
+          type: 'concept',
+          data: {
+            concepts: 'Data Visualization',
+            description: 'Techniques for creating effective visualizations and dashboards',
+            context: 'Includes matplotlib, seaborn, and plotly examples'
+          }
+        },
+        {
+          id: 'video-ds-tutorial',
+          name: 'Data Science Tutorial',
+          type: 'video',
+          data: {
+            video_id: 'ua-CiDNNj30'
+          }
+        }
+      ]
+    },
+    {
+      id: 'video-main',
+      name: 'Main Learning Video',
+      type: 'video',
+      data: {
+        video_id: 'RBmOgQi4Fr0'
+      }
+    }
+  ]
+}
+
+
+export interface GraphDataNode {
+  id: string;
+  value?: number;
+  children?: GraphDataNode[];
+  [key: string]: unknown;
+}
+
+export const transformConceptTreeToGraphData = (tree: ConceptTree): GraphDataNode => {
+  return {
+    id: tree.id,
+    value: 10, // Default value to match mock data structure
+    children: tree.children?.map(transformConceptTreeToGraphData),
+    data: tree, // Store original data for label rendering
+  };
+};
+
+
+
 export const Graph = (props: GraphProps) => {
   const { conceptTree, options: customOptions, onRender, onDestroy } = props;
   const graphRef = useRef<G6Graph | undefined>(undefined);
@@ -42,7 +153,10 @@ export const Graph = (props: GraphProps) => {
 
   const graphOptions = useMemo<GraphOptions>(() => {
     const baseOptions: GraphOptions = {
-      autoFit: 'view',
+      // Use container size or default
+      width: containerRef.current?.clientWidth || 800,
+      height: containerRef.current?.clientHeight || 600,
+      autoFit: 'center', // Center the graph in the viewport
       padding: 50,
       node: {
         style: {
@@ -86,8 +200,14 @@ export const Graph = (props: GraphProps) => {
       animation: false,
     };
 
-    if (conceptTree) {
-      baseOptions.data = treeToGraphData(conceptTree);
+    const dataTree = conceptTree;
+
+    if (dataTree) {
+      const transformedData = transformConceptTreeToGraphData(dataTree);
+      // console.log('Transformed Graph Data:', transformedData);
+      const graphData = treeToGraphData(transformedData || mockConceptTree)
+      // console.log(graphData);
+      baseOptions.data = graphData;
     }
 
     return { ...baseOptions, ...customOptions };
@@ -102,7 +222,7 @@ export const Graph = (props: GraphProps) => {
 
     return () => {
       const graph = graphRef.current;
-      if (graph) {
+      if (graph && !graph.destroyed) {
         graph.destroy();
         onDestroy?.();
         graphRef.current = undefined;
@@ -114,14 +234,95 @@ export const Graph = (props: GraphProps) => {
     const container = containerRef.current;
     const graph = graphRef.current;
 
-    if (!graphOptions || !container || !graph || graph.destroyed) return;
+    if (!graphOptions || !container || !graph) return;
 
-    graph.setOptions(graphOptions);
-    graph
-      .render()
-      .then(() => onRender?.(graph))
-      .catch((error: unknown) => console.debug(error));
+    // Check if graph is destroyed before any operations
+    if (graph.destroyed) return;
+
+    try {
+      graph.setOptions(graphOptions);
+      graph
+        .render()
+        .then(() => {
+          // Check if graph is still valid before calling onRender
+          const currentGraph = graphRef.current;
+          if (currentGraph && !currentGraph.destroyed) {
+            onRender?.(currentGraph);
+          }
+        })
+        .catch((error: unknown) => {
+          // Only log if graph wasn't destroyed (which is expected during cleanup)
+          const currentGraph = graphRef.current;
+          if (currentGraph && !currentGraph.destroyed) {
+            console.debug(error);
+          }
+        });
+    } catch (error) {
+      // Graph might have been destroyed during setOptions
+      if (graphRef.current && !graphRef.current.destroyed) {
+        console.debug(error);
+      }
+    }
   }, [graphOptions, onRender]);
 
+  // Handle container resize
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    let resizeTimeout: ReturnType<typeof setTimeout>;
+
+    const resizeObserver = new ResizeObserver(() => {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(() => {
+        const graph = graphRef.current;
+        if (!graph || graph.destroyed) return;
+
+        const width = container.clientWidth;
+        const height = container.clientHeight;
+
+        if (width === 0 || height === 0) return;
+
+        try {
+          graph.resize(width, height);
+          graph.fitView();
+        } catch (error) {
+          if (graphRef.current && !graphRef.current.destroyed) {
+            console.debug('Error during graph resize:', error);
+          }
+        }
+      }, 100);
+    });
+
+    resizeObserver.observe(container);
+
+    return () => {
+      clearTimeout(resizeTimeout);
+      resizeObserver.disconnect();
+    };
+  }, []);
+
   return <div ref={containerRef} style={{ width: '100%', height: '100%' }} />;
+};
+
+export const isConceptTree = (node: any): node is ConceptTree => {
+  if (typeof node !== 'object' || node === null) return false;
+  if (typeof node.id !== 'string') return false;
+  if (typeof node.name !== 'string') return false;
+
+  if (node.type === 'concept') {
+    if (typeof node.data?.concepts !== 'string') return false;
+    if (typeof node.data?.description !== 'string') return false;
+  } else if (node.type === 'video') {
+    if (typeof node.data?.video_id !== 'string') return false;
+  } else {
+    return false;
+  }
+
+  if (node.children) {
+    if (!Array.isArray(node.children)) return false;
+    return node.children.every(isConceptTree);
+  }
+
+  return true;
 };

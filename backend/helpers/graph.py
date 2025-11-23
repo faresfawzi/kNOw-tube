@@ -1,7 +1,9 @@
 import httpx
 import logging
 import json
+import uuid
 from typing import Dict, Any, List, TYPE_CHECKING
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 if TYPE_CHECKING:
     from together import Together
@@ -380,7 +382,7 @@ def transcript_to_item_descriptions(
     model: str = "meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo",
     temperature: float = 0.7,
     max_transcript_chars: int = 20000,
-) -> List[Dict[str, str]]:
+) -> List[Dict[str, Any]]:
     """
     Extract a list of key themes from a transcript as JSON objects suitable for semantic search with Wikidata.
     
@@ -392,10 +394,12 @@ def transcript_to_item_descriptions(
         max_transcript_chars: Maximum characters from transcript to send (default: 20000)
     
     Returns:
-        List of dictionaries, where each dictionary contains:
-        - concepts: 1-3 words describing the key concept
-        - description: ~50 words describing the concept
-        - context: transcript context and related information for further subtopic generation
+        List of ConceptTree dictionaries, where each dictionary contains:
+        - id: unique identifier string
+        - name: the concept name (from concepts field)
+        - type: 'concept'
+        - data: ConceptData with concepts, description, and optional context
+        - children: optional list of ConceptTree for sub-concepts
     """
     import re
     
@@ -410,8 +414,8 @@ Requirements:
 1. Identify distinct, substantial conceptual themes.
 2. For each theme, create a JSON object with:
    - "concepts": A concise 1-3 word phrase identifying the key concept
-   - "description": A detailed description (approx. 50 words) that includes context and details
-   - "context": Relevant transcript context and related information that could guide further generation of subtopics
+   - "description": A general description (approx. 50 words) about the concept itself - this should be pure conceptual knowledge, not containing any information about the video or transcript
+   - "context": A longer, detailed description (approx. 100-150 words) that is specific to how this concept appears in the video transcript, including relevant details, examples, and information from the transcript that could guide further generation of subtopics
 3. Output MUST be a valid JSON Array of objects.
 
 Example Output Format:
@@ -419,12 +423,12 @@ Example Output Format:
     {{
         "concepts": "Machine Learning",
         "description": "Machine learning is a subset of artificial intelligence that enables systems to learn and improve from experience without being explicitly programmed. It uses algorithms to analyze data, identify patterns, and make predictions or decisions based on historical information.",
-        "context": "The transcript discusses various machine learning algorithms including neural networks, decision trees, and support vector machines. It covers applications in image recognition, natural language processing, and predictive analytics."
+        "context": "The transcript discusses various machine learning algorithms including neural networks, decision trees, and support vector machines. It covers applications in image recognition, natural language processing, and predictive analytics. The speaker explains how neural networks are particularly effective for complex pattern recognition tasks, while decision trees offer interpretability for business applications. Specific examples from the video include using machine learning for fraud detection in financial systems and recommendation engines in e-commerce platforms."
     }},
     {{
         "concepts": "Data Science",
         "description": "Data science is an interdisciplinary field that combines statistics, programming, and domain expertise to extract insights from large datasets. It involves data collection, cleaning, analysis, and visualization to support decision-making processes.",
-        "context": "The discussion focuses on data science workflows, including data preprocessing techniques, exploratory data analysis methods, and the importance of feature engineering in building effective models."
+        "context": "The discussion focuses on data science workflows, including data preprocessing techniques, exploratory data analysis methods, and the importance of feature engineering in building effective models. The transcript emphasizes the iterative nature of data science projects, highlighting how data quality issues discovered during preprocessing can significantly impact model performance. The speaker provides detailed examples of handling missing values, outlier detection, and feature scaling techniques used in their recent project."
     }}
 ]
 
@@ -493,9 +497,195 @@ Transcript:
                 logger.warning(f"Skipping non-dict item: {item}")
         
         logger.info(f"Successfully extracted {len(validated_items)} items")
-        return validated_items
+        
+        # Helper function to decompose each item into sub-concepts
+        def decompose_item_description(
+            concepts: str,
+            description: str,
+            context: str,
+        ) -> List[Dict[str, str]]:
+            """
+            Decompose a parent concept into sub-concepts using an LLM.
+            
+            Args:
+                concepts: The parent concept name (1-3 words)
+                description: The parent concept description (~50 words)
+                context: Context information about how the concept appears in the transcript
+            
+            Returns:
+                List of dictionaries, where each dictionary contains:
+                - concepts: 1-3 words describing the sub-concept
+                - description: ~50 words describing the sub-concept
+            """
+            prompt = f"""Given a parent concept, decompose it into meaningful sub-concepts that are more specific and detailed.
+
+Parent Concept Information:
+- Concepts: {concepts}
+- Description: {description}
+- Context: {context}
+
+Requirements:
+1. Identify 3-7 distinct sub-concepts that are components, aspects, or specialized areas within the parent concept.
+2. Each sub-concept should be more specific than the parent but still substantial enough to be meaningful.
+3. For each sub-concept, create a JSON object with:
+   - "concepts": A concise 1-3 word phrase identifying the sub-concept
+   - "description": A general description (approx. 50 words) about the sub-concept itself - this should be pure conceptual knowledge
+4. Output MUST be a valid JSON Array of objects.
+
+Example Output Format:
+[
+    {{
+        "concepts": "Neural Networks",
+        "description": "Neural networks are computing systems inspired by biological neural networks. They consist of interconnected nodes (neurons) organized in layers that process information through weighted connections and activation functions."
+    }},
+    {{
+        "concepts": "Decision Trees",
+        "description": "Decision trees are tree-like models used for classification and regression. They make decisions by splitting data based on feature values, creating a flowchart-like structure that is easy to interpret."
+    }}
+]
+
+Generate sub-concepts for the parent concept above:
+"""
+
+            try:
+                logger.debug(f"Calling Together API to decompose concept '{concepts}' with model={model}")
+
+                # API Call
+                response = client.chat.completions.create(
+                    model=model,
+                    messages=[
+                        {"role": "user", "content": prompt},
+                    ],
+                    temperature=temperature,
+                )
+
+                # Clean Extraction
+                try:
+                    content = response.choices[0].message.content
+                    if not content:
+                        raise ValueError("API returned empty content")
+                except (AttributeError, IndexError) as e:
+                    logger.error(f"Malformed API response: {response}")
+                    raise ValueError(f"API response error: {e}")
+
+                # Robust JSON Extraction (Regex)
+                # Finds the first '[' and the last ']' to ignore markdown or chatty intros
+                json_match = re.search(r'\[.*\]', content, re.DOTALL)
+                
+                if json_match:
+                    json_str = json_match.group(0)
+                else:
+                    # Fallback: try parsing the whole string if regex failed
+                    json_str = content
+
+                try:
+                    sub_items = json.loads(json_str)
+                except json.JSONDecodeError as e:
+                    logger.error(f"JSON Decode failed. Raw content: {content[:1000]}")
+                    raise
+
+                # Validation
+                if not isinstance(sub_items, list):
+                    logger.warning("Model returned a single item not wrapped in a list. Wrapping now.")
+                    sub_items = [sub_items]
+
+                # Validate and filter items
+                validated_sub_items = []
+                for sub_item in sub_items:
+                    if isinstance(sub_item, dict):
+                        # Ensure all required fields are present and are strings
+                        validated_sub_item = {
+                            "concepts": str(sub_item.get("concepts", "")).strip(),
+                            "description": str(sub_item.get("description", "")).strip()
+                        }
+                        # Only add if concepts and description are not empty
+                        if validated_sub_item["concepts"] and validated_sub_item["description"]:
+                            validated_sub_items.append(validated_sub_item)
+                        else:
+                            logger.warning(f"Skipping sub-item with missing required fields: {sub_item}")
+                    else:
+                        logger.warning(f"Skipping non-dict sub-item: {sub_item}")
+                
+                logger.info(f"Successfully decomposed '{concepts}' into {len(validated_sub_items)} sub-concepts")
+                return validated_sub_items
+
+            except Exception as e:
+                logger.error(f"Error decomposing item '{concepts}': {str(e)}", exc_info=True)
+                # Return empty list on error to not break the main flow
+                return []
+        
+        # Decompose each item into sub-concepts asynchronously
+        def decompose_with_error_handling(item):
+            """Wrapper to handle errors during decomposition"""
+            try:
+                sub_concepts = decompose_item_description(
+                    concepts=item["concepts"],
+                    description=item["description"],
+                    context=item["context"]
+                )
+                return item, sub_concepts
+            except Exception as e:
+                logger.warning(f"Failed to decompose item '{item.get('concepts', 'unknown')}': {str(e)}")
+                return item, []
+        
+        # Use ThreadPoolExecutor to run decompositions in parallel
+        with ThreadPoolExecutor(max_workers=min(len(validated_items), 10)) as executor:
+            # Submit all decomposition tasks
+            future_to_item = {
+                executor.submit(decompose_with_error_handling, item): item 
+                for item in validated_items
+            }
+            
+            # Process results as they complete
+            for future in as_completed(future_to_item):
+                item, sub_concepts = future.result()
+                item["sub_concepts"] = sub_concepts
+        
+        # Transform to ConceptTree format
+        def transform_to_concept_tree(item: Dict[str, Any]) -> Dict[str, Any]:
+            """Transform an item with sub_concepts to ConceptTree format"""
+            concept_id = str(uuid.uuid4())
+            
+            # Build data object
+            data: Dict[str, Any] = {
+                "concepts": item["concepts"],
+                "description": item["description"]
+            }
+            # Add context if it exists and is not empty
+            if item.get("context", "").strip():
+                data["context"] = item["context"]
+            
+            # Build children from sub_concepts
+            children = None
+            if item.get("sub_concepts"):
+                children = [
+                    {
+                        "id": str(uuid.uuid4()),
+                        "name": sub_item["concepts"],
+                        "type": "concept",
+                        "data": {
+                            "concepts": sub_item["concepts"],
+                            "description": sub_item["description"]
+                        }
+                    }
+                    for sub_item in item["sub_concepts"]
+                ]
+            
+            return {
+                "id": concept_id,
+                "name": item["concepts"],
+                "type": "concept",
+                "data": data,
+                **({"children": children} if children else {})
+            }
+        
+        # Transform all items to ConceptTree format
+        concept_trees = [transform_to_concept_tree(item) for item in validated_items]
+        
+        return concept_trees
 
     except Exception as e:
         logger.error(f"Error in transcript_to_item_descriptions: {str(e)}", exc_info=True)
         raise e
+
 
