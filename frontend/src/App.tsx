@@ -20,7 +20,7 @@ function App() {
     return `https://www.youtube.com/watch?v=${v}`
   }, [])
 
-  const [sizeControl, setSizeControl] = useState(0.6)
+  const [sizeControl, setSizeControl] = useState(0.33)
   const [selectedIndex2, setSelectedIndex2] = useState<number | null>(null)
   const [selectedFeatureIndex, setSelectedFeatureIndex] = useState<number | null>(null)
   const [currentSmallWheelOffset, setCurrentSmallWheelOffset] = useState(0)
@@ -87,8 +87,14 @@ function App() {
             }
           } else if (dataString.includes('option')) {
             const answer = dataString.charAt(dataString.length - 1)
-            setGivenAnswer(answer)
-            console.log('Given answer:', answer)
+            // remap 4 to 1, 5 to 2, 6 to 3, 8 to 4
+            let mappedAnswer = answer
+            if (answer === '4') mappedAnswer = '1'
+            else if (answer === '5') mappedAnswer = '2'
+            else if (answer === '6') mappedAnswer = '3'
+            else if (answer === '8') mappedAnswer = '4'
+            setGivenAnswer(mappedAnswer)
+            console.log('Given answer:', mappedAnswer)
           }
         }
       }
@@ -233,7 +239,7 @@ function App() {
         component4={<CardList cards={cards2} selectedIndex={selectedIndex2} setSelectedIndex={setSelectedIndex2} currentSmallWheelOffset={currentSmallWheelOffset} />}
         sizeControl={sizeControl}
         setSizeControl={setSizeControl}
-        shouldSizeControlBeVisible={true}
+        shouldSizeControlBeVisible={false}
       />
     </>
   )

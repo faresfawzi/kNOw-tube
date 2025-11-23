@@ -402,11 +402,13 @@ def transcript_to_item_descriptions(
         - children: optional list of ConceptTree for sub-concepts
     """
     import re
+
     
     # Truncate transcript if too long
     if len(transcript) > max_transcript_chars:
         transcript = transcript[:max_transcript_chars]
         logger.debug(f"Truncated transcript to {max_transcript_chars} characters")
+
     
     prompt = f"""Analyze the transcript below. Extract key themes, topics, and concepts suitable for Wikidata semantic search.
 
@@ -627,6 +629,8 @@ Generate sub-concepts for the parent concept above:
             except Exception as e:
                 logger.warning(f"Failed to decompose item '{item.get('concepts', 'unknown')}': {str(e)}")
                 return item, []
+            
+        print(validated_items)
         
         # Use ThreadPoolExecutor to run decompositions in parallel
         with ThreadPoolExecutor(max_workers=min(len(validated_items), 10)) as executor:

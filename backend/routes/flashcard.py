@@ -50,7 +50,7 @@ def generate_multitype_flashcards_api(
     Generate a flashcard for a given quiz questions using Together's chat completions.
     """
     print(f"Generating flashcards for video ID: {body.video_id} {body.time_stamp} {body.context_seconds} {body.language_code}")
-
+   
     if os.path.exists(f"flashcards_{body.video_id}_{body.time_stamp}.json"):
         with open(f"flashcards_{body.video_id}_{body.time_stamp}.json", "r") as f:
             data = json.load(f)

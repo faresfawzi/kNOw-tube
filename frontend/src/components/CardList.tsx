@@ -70,7 +70,31 @@ function CardList({
   }
 
   const isQuizFormat = displayFormat === 'quiz'
+  
+  function discoFunction(overrideColor?: string) {
+      const COLORS = ['blue', 'green', 'red'];
 
+      function randomColor() {
+        return COLORS[Math.floor(Math.random() * COLORS.length)];
+      }
+
+      function sendRandomColors() {
+        for (let id = 1; id <= 9; id++) {
+          fetch('/api/color', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id, text: overrideColor ?? randomColor() })
+          });
+        }
+      }
+
+      // 5 waves within 500 ms
+      for (let i = 0; i < 5; i++) {
+        setTimeout(sendRandomColors, i * 500); // 0, 100, 200, 300, 400 ms
+      }
+
+
+    }
   if (isQuizFormat) {
     const currentCard = cards[quizIndex]
     const hasPrevious = quizIndex > 0
@@ -103,7 +127,7 @@ function CardList({
         <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
           <button
             type="button"
-            onClick={() => { setQuizIndex(Math.max(0, quizIndex - 1)); setGivenAnswer(''); }}
+            onClick={() => { setQuizIndex(Math.max(0, quizIndex - 1)); setGivenAnswer('');  discoFunction("hi"); }}
             disabled={!hasPrevious}
             style={{
               padding: '8px 16px',
@@ -122,7 +146,7 @@ function CardList({
           </span>
           <button
             type="button"
-            onClick={() => { setQuizIndex(Math.min(cards.length - 1, quizIndex + 1)); setGivenAnswer(''); }}
+            onClick={() => { setQuizIndex(Math.min(cards.length - 1, quizIndex + 1)); setGivenAnswer(''); discoFunction("hi") }}
             disabled={!hasNext}
             style={{
               padding: '8px 16px',

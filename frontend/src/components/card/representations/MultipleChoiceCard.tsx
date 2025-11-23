@@ -1,7 +1,41 @@
-import type { ReactNode } from 'react'
+import { useEffect, type ReactNode } from 'react'
 import type { Flashcard } from './types'
 
 export function MultipleChoiceCardContent({ card, isQuiz, givenAnswer }: { card: Flashcard, isQuiz?: boolean, givenAnswer?: string }): ReactNode {
+
+  function discoFunction(overrideColor?: string) {
+      const COLORS = ['blue', 'green', 'red'];
+
+      function randomColor() {
+        return COLORS[Math.floor(Math.random() * COLORS.length)];
+      }
+
+      function sendRandomColors() {
+        for (let id = 1; id <= 9; id++) {
+          fetch('/api/color', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id, text: overrideColor ?? randomColor() })
+          });
+        }
+      }
+
+      // 5 waves within 500 ms
+      for (let i = 0; i < 5; i++) {
+        setTimeout(sendRandomColors, i * 500); // 0, 100, 200, 300, 400 ms
+      }
+
+
+    }
+
+  // useEffect(() => {
+  //   if (givenAnswer !== undefined && isQuiz && (parseInt(givenAnswer || '')+1 == card.correct_choice_index)) {
+  //     discoFunction("green");
+  //   } else {
+  //     discoFunction("red");
+  //   }
+  // }, [givenAnswer])
+  
   return (
     <div>
       <p style={{ margin: '0 0 8px 0' }}>{card.question}</p>

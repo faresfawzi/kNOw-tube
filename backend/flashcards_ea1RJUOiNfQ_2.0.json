@@ -1,0 +1,34 @@
+{
+  "flashcards": {
+    "flashcards": [
+      {
+        "card_type": "knowledge",
+        "title": "Why Danger Comes First",
+        "knowledge_summary": "Danger is assessed first because rescuers must ensure the environment is safe before approaching a casualty."
+      },
+      {
+        "card_type": "multiple_choice",
+        "question": "Why is Danger the first step in DRABC?",
+        "choices": [
+          "To check for breathing sooner",
+          "To avoid becoming a casualty",
+          "To speed up CPR",
+          "To identify the casualty’s identity"
+        ],
+        "correct_choice_index": 1,
+        "explanation": "A rescuer must not enter a hazardous situation."
+      },
+      {
+        "card_type": "cloze",
+        "cloze_text": "Danger is checked first to ensure the rescuer does not {{c1::become a casualty}}.",
+        "hint": "Safety priority."
+      },
+      {
+        "card_type": "qa",
+        "question": "Why is assessing danger the first priority in DRABC?",
+        "answer": "Because entering an unsafe scene could put the rescuer at risk.",
+        "explanation": "Rescuer safety is essential before any intervention."
+      }
+    ]
+  }
+}

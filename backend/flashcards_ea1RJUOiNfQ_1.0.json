@@ -1,0 +1,34 @@
+{
+  "flashcards": {
+    "flashcards": [
+      {
+        "card_type": "knowledge",
+        "title": "Opening the Airway",
+        "knowledge_summary": "The correct method to open an airway in an unresponsive adult is the head-tilt–chin-lift technique."
+      },
+      {
+        "card_type": "multiple_choice",
+        "question": "What is the standard method to open an airway in DRABC?",
+        "choices": [
+          "Jaw thrust only",
+          "Head-tilt and chin-lift",
+          "Tilting the casualty to the side",
+          "Using a tongue depressor"
+        ],
+        "correct_choice_index": 1,
+        "explanation": "Head-tilt–chin-lift is the routine airway-opening manoeuvre."
+      },
+      {
+        "card_type": "cloze",
+        "cloze_text": "The airway is opened using the {{c1::head-tilt–chin-lift}} technique.",
+        "hint": "Two-part manoeuvre."
+      },
+      {
+        "card_type": "qa",
+        "question": "What technique should be used to open an airway before assessing breathing?",
+        "answer": "The head-tilt–chin-lift manoeuvre.",
+        "explanation": "This creates a clear airway for breathing assessment."
+      }
+    ]
+  }
+}

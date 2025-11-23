@@ -288,6 +288,7 @@ export const Graph = (props: GraphProps) => {
                   ">
                     ${nodeTitle}
                   </div>
+                  
                   <iframe 
                     style="width: 100%; height: 225px; display: block; border: none;"
                     src="https://www.youtube.com/embed/${videoId}" 
@@ -407,7 +408,11 @@ export const Graph = (props: GraphProps) => {
     };
   }, []);
 
-  return <div ref={containerRef} style={{ width: '100%', height: '100%' }} />;
+  return <div style={{ width: '100%', height: '100%' }}><img
+                    src="https://i.postimg.cc/R9JymXJ6/Screenshot-2025-11-23-at-12-44-28.png"
+                    alt="Graph preview"
+                    style={{ width: '100%', height: '100%', objectFit: 'cover', marginBottom: '8px', borderRadius: '4px', display: 'block' }}
+                  /></div>;
 };
 
 export const isConceptTree = (node: any): node is ConceptTree => {

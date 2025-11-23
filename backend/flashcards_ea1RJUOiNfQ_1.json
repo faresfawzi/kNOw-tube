@@ -1,0 +1,12 @@
+{
+  "card_type": "multiple_choice",
+  "question": "During the Airway step of DRABC, what is the correct action?",
+  "choices": [
+    "Check for a pulse",
+    "Tilt the head back and lift the chin",
+    "Begin chest compressions",
+    "Place the casualty in the recovery position immediately"
+  ],
+  "correct_choice_index": 1,
+  "explanation": "Opening the airway with a head-tilt–chin-lift allows you to assess for normal breathing."
+}

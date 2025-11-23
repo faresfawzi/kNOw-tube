@@ -26,6 +26,8 @@ export interface FlashcardBoardProps {
   setGivenAnswer: React.Dispatch<React.SetStateAction<string>>,
 }
 
+let counter = 0;
+
 export function FlashcardBoard({ videoUrl, moveCardRight, setMoveCardRight, setSendCardRight, setKeyText, timestamp, givenAnswer, setGivenAnswer }: FlashcardBoardProps) {
   const videoId = useMemo(() => extractVideoId(videoUrl), [videoUrl])
   const [multitypeFlashcards, setMultitypeFlashcards] = useState<Flashcard[]>([])
@@ -50,15 +52,17 @@ export function FlashcardBoard({ videoUrl, moveCardRight, setMoveCardRight, setS
       setIsLoading(true)
       setError(null)
       try {
+        
         const multiPromise = fetch(`${API_BASE_PATH}/generate_multitype_flashcards`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             video_id: videoId,
-            time_stamp: (timestamp && timestamp > 0 ? 60 : 0),
+            time_stamp: counter % 3,
             context_seconds: MULTITYPE_CONTEXT_SECONDS,
           }),
         })
+        counter += 1;
 
         // const quizPromise = fetch(`${API_BASE_PATH}/quiz?video_id=${encodeURIComponent(videoId)}&difficulty_level=medium`)
 
@@ -201,6 +205,9 @@ export function FlashcardBoard({ videoUrl, moveCardRight, setMoveCardRight, setS
   useEffect(() => {
     if (isDeckPopoverOpen) {
       discoFunction();
+      setTimeout(() => {
+        discoFunction("hi");
+      }, 3400);
     } else {
       // Reset colors to off when popover is closed
       discoFunction("hi");

@@ -1,0 +1,34 @@
+{
+    "flashcards": {
+        "flashcards": [
+            {
+                "card_type": "knowledge",
+                "title": "AVPU responsiveness scale",
+                "knowledge_summary": "AVPU stands for Alert, Voice, Pain, Unresponsive and is used to gauge a casualty\u2019s level of response. If unresponsive, the next step is to check and open the airway."
+            },
+            {
+                "card_type": "multiple_choice",
+                "question": "On the AVPU scale, what does the letter P indicate?",
+                "choices": [
+                    "The casualty is alert.",
+                    "The casualty responds to voice.",
+                    "The casualty responds to pain.",
+                    "The casualty is unresponsive to any stimuli."
+                ],
+                "correct_choice_index": 2,
+                "explanation": "P represents response to pain, such as a pinch to the ear lobe."
+            },
+            {
+                "card_type": "cloze",
+                "cloze_text": "On the AVPU scale, the letter {{c1::P}} indicates the casualty responds to pain.",
+                "hint": "Think of the letter that follows V."
+            },
+            {
+                "card_type": "qa",
+                "question": "What does the P in AVPU stand for?",
+                "answer": "Response to pain.",
+                "explanation": "It shows the casualty reacts when a painful stimulus like an ear-lobe pinch is applied."
+            }
+        ]
+    }
+}

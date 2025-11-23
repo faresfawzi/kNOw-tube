@@ -1,34 +1,29 @@
 {
-    "flashcards": {
-        "flashcards": [
-            {
-                "card_type": "knowledge",
-                "title": "DRABC in primary survey",
-                "knowledge_summary": "The primary survey for a collapsed person follows DRABC: Danger, Response, Airway, Breathing, Circulation. First ensure scene safety, then check for patient response."
-            },
-            {
-                "card_type": "multiple_choice",
-                "question": "What does the letter R stand for in the DRABC primary survey mnemonic?",
-                "choices": [
-                    "Rescue",
-                    "Response",
-                    "Recovery",
-                    "Respiration"
-                ],
-                "correct_choice_index": 1,
-                "explanation": "R stands for Response: check if the casualty responds to questions or stimuli."
-            },
-            {
-                "card_type": "cloze",
-                "cloze_text": "The initials DR. ABC or DRABC remind us of the steps: Danger, {{c1::Response}}, Airway, Breathing and Circulation.",
-                "hint": "What you check after ensuring danger is clear."
-            },
-            {
-                "card_type": "qa",
-                "question": "After checking for danger, what is the next step in the DRABC primary survey?",
-                "answer": "Check for a response from the casualty by introducing yourself and asking questions.",
-                "explanation": "This ensures the person is conscious and can provide information before further assessment."
-            }
-        ]
-    }
+  "flashcards": {
+    "flashcards": [
+      {
+        "card_type": "knowledge",
+        "title": "Meaning of R in DRABC",
+        "knowledge_summary": "In the DRABC primary survey, the letter R stands for Response, indicating you must check whether the casualty reacts to voice or touch."
+      },
+      {
+        "card_type": "multiple_choice",
+        "question": "What does the R in DRABC refer to?",
+        "choices": ["Recovery", "Response", "Rescue", "Respiration"],
+        "correct_choice_index": 1,
+        "explanation": "R means Response—assessing whether the casualty is conscious or reacts."
+      },
+      {
+        "card_type": "cloze",
+        "cloze_text": "In DRABC, the letter R stands for {{c1::Response}}.",
+        "hint": "It determines consciousness."
+      },
+      {
+        "card_type": "qa",
+        "question": "What is checked at the R-stage of DRABC?",
+        "answer": "Whether the casualty responds to verbal or physical stimulation.",
+        "explanation": "Response assessment forms the second step of the primary survey."
+      }
+    ]
+  }
 }

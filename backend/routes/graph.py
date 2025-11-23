@@ -62,15 +62,15 @@ def video_item_descriptions_endpoint(
     
     # Fetch transcript
     print(f"[DEBUG] Fetching transcript for video_id: {video_id}")
-    fetched_transcript = fetch_transcript(video_id)
-    print(f"[DEBUG] Fetched {len(fetched_transcript)} transcript snippets")
-    
-    # Convert to raw text
-    text_parts = [snippet.text for snippet in fetched_transcript]
-    transcript_text = " ".join(text_parts)
-    print(f"[DEBUG] Transcript text length: {len(transcript_text)} characters")
-    print(f"[DEBUG] Transcript preview (first 200 chars): {transcript_text[:200]}")
-    
+    # fetched_transcript = fetch_transcript(video_id)
+    # print(f"[DEBUG] Fetched {len(fetched_transcript)} transcript snippets")
+
+    # # Convert to raw text
+    # text_parts = [snippet.text for snippet in fetched_transcript]
+    # transcript_text = " ".join(text_parts)
+    # print(f"[DEBUG] Transcript text length: {len(transcript_text)} characters")
+    # print(f"[DEBUG] Transcript preview (first 200 chars): {transcript_text[:200]}")
+    transcript_text = "dsuahdiuashidajshosdjsaoidjasoidjoasda"
     try:
         print(f"[DEBUG] Calling transcript_to_item_descriptions with model={model}, temperature={temperature}, max_transcript_chars={max_transcript_chars}")
         items = transcript_to_item_descriptions(

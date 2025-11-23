@@ -1,7 +1,8 @@
+import json
 from fastapi import HTTPException
 from youtube_transcript_api import YouTubeTranscriptApi
 from typing import Optional, TYPE_CHECKING
-
+import os
 if TYPE_CHECKING:
     from youtube_transcript_api._types import FetchedTranscript
 
@@ -20,6 +21,17 @@ def fetch_transcript(video_id: str, language_code: Optional[str] = None) -> "Fet
     Raises:
         HTTPException: If transcript cannot be fetched
     """
+    file_path = f"transcript_{video_id}.json"
+
+    # 1. Try to use cache
+    if os.path.exists(file_path):
+        try:
+            with open(file_path, "r", encoding="utf-8") as f:
+                return json.load(f)
+        except json.JSONDecodeError:
+            # Cache is corrupted; delete and regenerate
+            os.remove(file_path)
+
     try:
         ytt_api = YouTubeTranscriptApi()
         
