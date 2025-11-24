@@ -3,7 +3,10 @@ function getVideoIdFromUrl(url) {
   return urlParams.get('v');
 }
 
+
 document.addEventListener('DOMContentLoaded', function() {
+    
+
     document.querySelector('.main-button').addEventListener('click', function() {
         (async () => {
             const [tab] = await chrome.tabs.query({active: true, lastFocusedWindow: true});
@@ -11,6 +14,12 @@ document.addEventListener('DOMContentLoaded', function() {
             chrome.tabs.create({ url: `http://localhost:5173/?v=${getVideoIdFromUrl(tab.url)}` });
         })();
     });
+
+    (async () => {
+        const [tab] = await chrome.tabs.query({active: true, lastFocusedWindow: true});
+        const isYouTubeVideo = tab.url.includes("youtube.com/watch");
+        document.querySelector('.main-button').disabled = !isYouTubeVideo;
+    })();
 
     const aboutLink = document.querySelector('.about-link');
     const originalText = aboutLink.textContent;

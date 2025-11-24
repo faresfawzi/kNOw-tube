@@ -409,9 +409,9 @@ export const Graph = (props: GraphProps) => {
   }, []);
 
   return <div style={{ width: '100%', height: '100%' }}><img
-                    src="https://i.postimg.cc/R9JymXJ6/Screenshot-2025-11-23-at-12-44-28.png"
+                    src="file:///Users/dominikglandorf/Code/EPFL/kNOw-tube/frontend/src/graph.png"
                     alt="Graph preview"
-                    style={{ width: '100%', height: '100%', objectFit: 'cover', marginBottom: '8px', borderRadius: '4px', display: 'block' }}
+                    style={{ width: '100%', height: '120px', objectFit: 'cover', marginBottom: '8px', borderRadius: '4px', display: 'block' }}
                   /></div>;
 };
 

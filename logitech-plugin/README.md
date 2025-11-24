@@ -25,3 +25,5 @@ Install the plugin:
 ```bash
 logiplugintool install ./Example.lplug4
 ```
+
+

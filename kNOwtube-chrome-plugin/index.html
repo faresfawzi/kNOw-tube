@@ -2,7 +2,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>kNOwTube</title>
+    <title>KnowTube</title>
     <style>
       body {
         width: 300px;
@@ -35,10 +35,21 @@
         text-decoration: none;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
       }
+
+      .main-button:disabled {
+        background: #cccccc;
+        cursor: not-allowed;
+        box-shadow: none;
+      }
       
       .main-button:hover {
         transform: translateY(-2px);
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      }
+
+      .main-button:disabled:hover {
+        transform: none;
+        box-shadow: none;
       }
       
       .main-button:active {
@@ -65,7 +76,7 @@
   </head>
   <body>
     <div class="container">
-      <button class="main-button">Open in kNOwTube</button>
+      <button class="main-button">Open in KnowTube</button>
       <a href="#" class="about-link">About</a>
     </div>
   </body>

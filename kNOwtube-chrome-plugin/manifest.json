@@ -1,6 +1,6 @@
 {
-  "name": "kNOwtube Chrome Plugin",
-  "description": "kNOwtube Chrome Plugin",
+  "name": "KnowTube",
+  "description": "KnowTube",
   "version": "1.0",
   "manifest_version": 3,
   "action": {
@@ -11,7 +11,6 @@
     "tabs"
   ],
   "host_permissions": [
-    "http://*/*",
-    "https://*/*"
+    "https://www.youtube.com/*"
   ]
 }

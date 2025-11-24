@@ -1,4 +1,4 @@
-import React, { useState, type ReactNode } from 'react'
+import React, { useState, useEffect, type ReactNode } from 'react'
 
 interface LayoutProps {
   component1: ReactNode
@@ -75,6 +75,7 @@ function Layout({ component1, component2, component3, component4, sizeControl, s
     }
     return element
   }
+
 
   return (
     <>
