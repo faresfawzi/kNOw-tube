@@ -12,6 +12,13 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+::-webkit-scrollbar {
+  display: none; /* Safari/Chrome */
+}
+
+.layout-container::-webkit-scrollbar {
+  display: none; /* Safari/Chrome */
+}
 
 a {
   font-weight: 500;

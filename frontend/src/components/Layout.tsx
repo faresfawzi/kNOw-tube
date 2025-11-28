@@ -76,6 +76,25 @@ function Layout({ component1, component2, component3, component4, sizeControl, s
     return element
   }
 
+  useEffect(() => {
+    const onScroll = () => {
+      const maxScroll =
+        document.documentElement.scrollWidth - window.innerWidth;
+      const t = maxScroll > 0 ? window.scrollX / maxScroll : 0;
+      setSizeControl(t);
+    };
+
+    const maxScroll =
+        document.documentElement.scrollWidth - window.innerWidth;
+    window.scrollTo({
+      left: sizeControl * maxScroll,
+      top: 0
+    });
+    console.log('Layout scrollTo called', sizeControl);
+
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   return (
     <>
@@ -114,15 +133,17 @@ function Layout({ component1, component2, component3, component4, sizeControl, s
             />
         </div>
       )}
-      <div style={{
-        display: 'flex',
+      <div className="layout-container" style={{
         height: '100vh',
-        width: '100vw',
+        width: '400vw',
         margin: 0,
         padding: 0
       }}>
       <div style={{
-        flexBasis: `${width1}vw`,
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        width: `${width1}vw`,
         flexShrink: 0,
         flexGrow: 0,
         height: '100%',
@@ -134,9 +155,10 @@ function Layout({ component1, component2, component3, component4, sizeControl, s
         {cloneWithActive(component1, active1)}
       </div>
       <div style={{
-        flexBasis: `${width2}vw`,
-        flexShrink: 0,
-        flexGrow: 0,
+        position: 'fixed',
+        top: 0,
+        left: `${width1}vw`,
+        width: `${width2}vw`,
         height: '100%',
         overflow: 'auto',
         borderLeft: active2 ? '3px solid rgba(147, 197, 253, 0.6)' : 'none',
@@ -147,9 +169,10 @@ function Layout({ component1, component2, component3, component4, sizeControl, s
         {cloneWithActive(component2, active2)}
       </div>
       <div style={{
-        flexBasis: `${width3}vw`,
-        flexShrink: 0,
-        flexGrow: 0,
+        position: 'fixed',
+        top: 0,
+        left: `${width1 + width2}vw`,
+        width: `${width3}vw`,
         height: '100%',
         overflow: 'auto',
         borderLeft: active3 ? '3px solid rgba(147, 197, 253, 0.6)' : 'none',
@@ -160,9 +183,10 @@ function Layout({ component1, component2, component3, component4, sizeControl, s
         {cloneWithActive(component3, active3)}
       </div>
       <div style={{
-        flexBasis: `${width4}vw`,
-        flexShrink: 0,
-        flexGrow: 0,
+        position: 'fixed',
+        top: 0,
+        left: `${width1 + width2 + width3}vw`,
+        width: `${width4}vw`,
         height: '100%',
         overflow: 'auto',
         borderLeft: active4 ? '3px solid rgba(147, 197, 253, 0.6)' : 'none',

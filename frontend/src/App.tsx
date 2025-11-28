@@ -1,4 +1,4 @@
-import { useMemo, useEffect, useRef, useState, use } from 'react'
+import { useMemo, useEffect, useRef, useState } from 'react'
 import Layout from './components/Layout'
 import Youtube from './components/Youtube'
 import CardList from './components/CardList'
